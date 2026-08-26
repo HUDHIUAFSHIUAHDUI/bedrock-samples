@@ -4,7 +4,8 @@
     "description": {
       "identifier": "minepiece:fruit_slime",
       "menu_category": {
-        "category": "none"
+        "category": "items",
+        "group": "minepiece:minepiece"
       }
     },
     "components": {

@@ -4,7 +4,8 @@
     "description": {
       "identifier": "minepiece:ability_sculk_sense",
       "menu_category": {
-        "category": "none"
+        "category": "items",
+        "group": "minepiece:minepiece"
       }
     },
     "components": {
