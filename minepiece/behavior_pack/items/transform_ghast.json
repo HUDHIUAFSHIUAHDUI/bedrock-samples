@@ -14,7 +14,7 @@
       },
       "minecraft:icon": {
         "textures": {
-          "default": "transform_ghast"
+          "default": "number_transform"
         }
       },
       "minecraft:max_stack_size": 1,

@@ -1,7 +1,7 @@
 import { BlockPermutation } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getEntitiesInRadius, traceBeam } from "../core/targeting.js";
+import { getEntitiesInRadius, traceBeam, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { blockKey, getLastFootBlock, setLastFootBlock, isBeaconBoostActive, setBeaconBoostActive } from "../core/playerState.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
@@ -38,8 +38,8 @@ registerFruit({
         playSound(dimension, "random.totem", player.location);
 
         for (const target of getEntitiesInRadius(dimension, player.location, 8, player)) {
-          target.addEffect("blindness", 20 * 2, { amplifier: 0, showParticles: false });
-          target.addEffect("nausea", 20 * 2, { amplifier: 0, showParticles: false });
+          safeAddEffect(target, "blindness", 20 * 2, { amplifier: 0, showParticles: false });
+          safeAddEffect(target, "nausea", 20 * 2, { amplifier: 0, showParticles: false });
         }
       },
     },
@@ -56,7 +56,7 @@ registerFruit({
         playSound(dimension, "beacon.power", origin);
 
         for (const entity of entities) {
-          entity.applyDamage(12, { cause: "magic", damagingEntity: player });
+          safeApplyDamage(entity, 12, { cause: "magic", damagingEntity: player });
         }
       },
     },

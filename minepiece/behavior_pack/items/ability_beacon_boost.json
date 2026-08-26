@@ -14,7 +14,7 @@
       },
       "minecraft:icon": {
         "textures": {
-          "default": "ability_beacon_boost"
+          "default": "number_3"
         }
       },
       "minecraft:max_stack_size": 1,

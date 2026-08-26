@@ -61,7 +61,13 @@ function handleImpact(event, location) {
 /** Convenience for abilities that just want "damage + knock back everything within radius of a point". */
 export function damageAndKnockbackArea(dimension, center, radius, exclude, damage, horizontalKnockback, verticalKnockback) {
   for (const entity of getEntitiesInRadius(dimension, center, radius, exclude)) {
-    entity.applyDamage(damage, { cause: "entityAttack", damagingEntity: exclude });
+    try {
+      entity.applyDamage(damage, { cause: "entityAttack", damagingEntity: exclude });
+    } catch (error) {
+      // One entity rejecting damage (e.g. mid-removal) must never stop the rest of the crowd
+      // from taking damage/knockback.
+      console.error(`Minepiece: damageAndKnockbackArea applyDamage threw: ${error}`);
+    }
     knockbackAwayFrom(entity, center, horizontalKnockback, verticalKnockback);
   }
 }

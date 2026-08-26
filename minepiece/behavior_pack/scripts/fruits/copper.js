@@ -1,6 +1,6 @@
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getLookedAtEntity, shootProjectile } from "../core/targeting.js";
+import { getLookedAtEntity, shootProjectile, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { PROJECTILE_FX, damageAndKnockbackArea } from "../core/projectileEffects.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
@@ -22,9 +22,9 @@ registerFruit({
         const target = getLookedAtEntity(player, 4);
         if (!target) return;
 
-        target.applyDamage(3, { cause: "entityAttack", damagingEntity: player });
-        target.addEffect("slowness", 20 * 5, { amplifier: 0, showParticles: true });
-        target.addEffect("nausea", 20 * 5, { amplifier: 0, showParticles: true });
+        safeApplyDamage(target, 3, { cause: "entityAttack", damagingEntity: player });
+        safeAddEffect(target, "slowness", 20 * 5, { amplifier: 0, showParticles: true });
+        safeAddEffect(target, "nausea", 20 * 5, { amplifier: 0, showParticles: true });
         spawnParticle(dimension, "minecraft:critical_hit_emitter", target.location);
       },
     },

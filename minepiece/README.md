@@ -31,35 +31,31 @@ real bug — send it over and it's fixable directly instead of guessing.
 
 ## Fruit art
 
-Every fruit's item icon, its abilities' icons, and its Zoan transform icon
-(where it has one) are all real crops taken directly from a supplied 3D head
-model pack ("CraftyCraft") — specifically from each fruit's own head *skin
-texture*, using the same UV unfold Minecraft itself uses to turn a cube into
-a flat texture sheet. `scratchpad`-side script `derive_icons.py` reads each
-head's `.geo.json` to find its cube's real UV rectangle, so it crops the
-literal front/top/side faces of that 3D model, not a hand-picked guess. One
-fruit's whole item set (fruit + abilities + transform) is therefore always a
-set of *different views of the same head*, not unrelated art.
+Every fruit item **is its actual 3D head model** — in the inventory, in
+hand, on the ground, and placed — using the exact same trick every vanilla
+mob head item (zombie head, skeleton skull, etc.) uses: the item has a
+`minecraft:block_placer` component and *no* `minecraft:icon` override, so
+the game falls back to rendering the placed block's own geometry as the
+item's appearance everywhere. The block it places
+(`behavior_pack/blocks/head_<id>.json`) uses the real 3D geometry + full
+skin texture pulled straight from the supplied "CraftyCraft" head pack
+(`resource_pack/models/blocks/`, `resource_pack/textures/blocks/`) — not a
+flat icon standing in for it. That geometry's coordinates needed re-basing
+from "worn on a player's head bone" space into "sitting on the floor of one
+block" space first (see the comment atop `tools/rebase_head_geometry.py`),
+since the source pack built these heads to be worn, not placed.
 
-Each fruit item is **eatable, placeable, and (once placed) a real 3D
-model**:
-- Eating it (hold to consume, same as any vanilla food) grants that Devil
-  Fruit's power — unchanged from before.
-- Looking at a block and using the item instead **places it** as a small
-  decorative head block (`behavior_pack/blocks/head_<id>.json`), rendered
-  with the actual 3D geometry + full skin texture from the same head pack
-  (`resource_pack/models/blocks/`, `resource_pack/textures/blocks/`) —
-  not a flat icon. The geometry's coordinates are re-based from "worn on a
-  player's head bone" space into "sitting on the floor of one block" space
-  (see the comment atop `rebase_head_geometry.py`) so it doesn't render
-  floating above the block.
-- There's no supported way in the current data-driven item format to make
-  the *held/dropped* item itself render as a 3D model the way vanilla's
-  hardcoded trident/shield do (no `minecraft:geometry` item component
-  exists) — only the wearable/armor attachable system gets real 3D
-  rendering, and combining that with `minecraft:food` risks breaking
-  eating outright, so it isn't used here. In hand, the fruit shows its
-  derived 2D icon; the real 3D model appears once it's placed.
+Each fruit item is both of these at once, same as a vanilla mob head:
+- **Eat it** (hold to consume, same as any vanilla food) to gain that Devil
+  Fruit's power.
+- **Place it** (use the item while looking at a block face) as a small
+  decorative head.
+
+Ability and Zoan-transform items don't have a block to fall back on, so
+they're still flat icons — currently a plain pixelated "1"/"2"/"3" (that
+ability's position in its fruit's list) or "T" for a transform
+(`tools/gen_number_icons.py`), deliberately simple rather than trying to
+guess real art for them.
 
 The three Zoan transformation forms (Warden, Ender Dragon, Ghast) are a
 separate thing from the fruit heads above — they reuse the **real vanilla

@@ -14,7 +14,7 @@
       },
       "minecraft:icon": {
         "textures": {
-          "default": "ability_wind_burst"
+          "default": "number_1"
         }
       },
       "minecraft:max_stack_size": 1,

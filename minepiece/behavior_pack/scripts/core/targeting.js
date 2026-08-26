@@ -104,18 +104,65 @@ export function rotateAroundY(direction, degrees) {
  * thrown_trident, etc.) from `origin` toward `direction` at `speed`,
  * attributing hits to `owner` and tagging it so projectileEffects.js can
  * give it special on-impact behavior.
- * @returns {import("@minecraft/server").Entity} the spawned projectile
+ *
+ * Swallows and logs any failure to spawn (e.g. an unloaded chunk at an
+ * unusual spawn point, like Arrow Rain's high-altitude spawn points) rather
+ * than throwing — this is called in loops that fire several projectiles per
+ * ability, and one bad spawn point should never cancel the rest of them.
+ * @returns {import("@minecraft/server").Entity | undefined} the spawned projectile, or undefined on failure
  */
 export function shootProjectile(dimension, projectileEntityId, origin, direction, speed, owner, tags = []) {
-  const projectile = dimension.spawnEntity(projectileEntityId, origin);
-  for (const tag of tags) projectile.addTag(tag);
+  try {
+    const projectile = dimension.spawnEntity(projectileEntityId, origin);
+    for (const tag of tags) projectile.addTag(tag);
 
-  const projectileComponent = projectile.getComponent("minecraft:projectile");
-  if (projectileComponent) {
-    projectileComponent.owner = owner;
-    projectileComponent.shoot(scale(direction, speed));
+    const projectileComponent = projectile.getComponent("minecraft:projectile");
+    if (projectileComponent) {
+      projectileComponent.owner = owner;
+      projectileComponent.shoot(scale(direction, speed));
+    }
+    return projectile;
+  } catch (error) {
+    console.error(`Minepiece: shootProjectile(${projectileEntityId}) threw: ${error}`);
+    return undefined;
   }
-  return projectile;
+}
+
+/**
+ * Applies damage to `entity`, swallowing any throw (e.g. the entity became invalid between being
+ * queried and being hit, in the same tick). Every ability that damages more than one entity per
+ * cast should loop with this instead of calling entity.applyDamage directly, so one bad entity in
+ * a crowd can't cut the rest of that crowd out of the ability.
+ */
+export function safeApplyDamage(entity, amount, options) {
+  try {
+    entity.applyDamage(amount, options);
+  } catch (error) {
+    console.error(`Minepiece: applyDamage threw: ${error}`);
+  }
+}
+
+/** Same reasoning as {@link safeApplyDamage}, for entity.addEffect. */
+export function safeAddEffect(entity, effectType, duration, options) {
+  try {
+    entity.addEffect(effectType, duration, options);
+  } catch (error) {
+    console.error(`Minepiece: addEffect(${effectType}) threw: ${error}`);
+  }
+}
+
+/**
+ * Applies knockback to `entity`, swallowing any throw. Some entities (e.g. Zoan mount entities, or
+ * an entity that just became invalid) can reject applyKnockback — every knockback call in this add-on
+ * goes through here (or {@link knockbackAwayFrom}) instead of calling entity.applyKnockback directly,
+ * so one troublesome entity in a crowd can never abort the rest of an ability partway through.
+ */
+export function safeApplyKnockback(entity, horizontalForce, verticalStrength) {
+  try {
+    entity.applyKnockback(horizontalForce, verticalStrength);
+  } catch {
+    // Best-effort; not every entity accepts knockback.
+  }
 }
 
 /** Knocks `entity` directly away from `sourceLocation` on the horizontal plane. */
@@ -123,9 +170,5 @@ export function knockbackAwayFrom(entity, sourceLocation, horizontalStrength, ve
   const dx = entity.location.x - sourceLocation.x;
   const dz = entity.location.z - sourceLocation.z;
   const length = Math.sqrt(dx * dx + dz * dz) || 1;
-  try {
-    entity.applyKnockback({ x: (dx / length) * horizontalStrength, z: (dz / length) * horizontalStrength }, verticalStrength);
-  } catch {
-    // Some entities (e.g. other Zoan mounts) can reject knockback; never let VFX/CC break the rest of an ability.
-  }
+  safeApplyKnockback(entity, { x: (dx / length) * horizontalStrength, z: (dz / length) * horizontalStrength }, verticalStrength);
 }

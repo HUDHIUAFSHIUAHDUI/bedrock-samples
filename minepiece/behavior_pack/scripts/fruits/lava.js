@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getLookedAtEntity, getEntitiesInRadius, knockbackAwayFrom } from "../core/targeting.js";
+import { getLookedAtEntity, getEntitiesInRadius, knockbackAwayFrom, safeApplyDamage } from "../core/targeting.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
 const POOL_REVERT_TICKS = 20 * 6;
@@ -18,7 +18,13 @@ function createTemporaryLavaPool(dimension, center, radius, durationTicks) {
       if (!block || !block.isAir) continue;
 
       dimension.setBlockType(location, "minecraft:lava");
-      system.runTimeout(() => dimension.setBlockType(location, "minecraft:air"), durationTicks);
+      system.runTimeout(() => {
+        try {
+          dimension.setBlockType(location, "minecraft:air");
+        } catch (error) {
+          console.error(`Minepiece: lava pool revert threw: ${error}`);
+        }
+      }, durationTicks);
     }
   }
 }
@@ -49,7 +55,7 @@ registerFruit({
 
         const target = getLookedAtEntity(player, 4);
         if (!target) return;
-        target.applyDamage(5, { cause: "entityAttack", damagingEntity: player });
+        safeApplyDamage(target, 5, { cause: "entityAttack", damagingEntity: player });
         target.setOnFire(3, true);
       },
     },
@@ -84,22 +90,28 @@ registerFruit({
         const fallSteps = 10;
         for (let i = 0; i <= fallSteps; i++) {
           system.runTimeout(() => {
-            const progress = i / fallSteps;
-            const point = {
-              x: skyStart.x,
-              y: skyStart.y - (skyStart.y - targetGround.y) * progress,
-              z: skyStart.z,
-            };
-            spawnParticle(dimension, "minecraft:lava_particle", point);
+            try {
+              const progress = i / fallSteps;
+              const point = {
+                x: skyStart.x,
+                y: skyStart.y - (skyStart.y - targetGround.y) * progress,
+                z: skyStart.z,
+              };
+              spawnParticle(dimension, "minecraft:lava_particle", point);
 
-            if (i === fallSteps) {
-              spawnParticle(dimension, "minecraft:large_explosion", targetGround);
-              playSound(dimension, "random.explode", targetGround);
-              for (const entity of getEntitiesInRadius(dimension, targetGround, 3, player)) {
-                entity.applyDamage(7, { cause: "magic", damagingEntity: player });
-                knockbackAwayFrom(entity, targetGround, 1, 0.3);
+              if (i === fallSteps) {
+                spawnParticle(dimension, "minecraft:large_explosion", targetGround);
+                playSound(dimension, "random.explode", targetGround);
+                for (const entity of getEntitiesInRadius(dimension, targetGround, 3, player)) {
+                  entity.applyDamage(7, { cause: "magic", damagingEntity: player });
+                  knockbackAwayFrom(entity, targetGround, 1, 0.3);
+                }
+                createTemporaryLavaPool(dimension, targetGround, 2, POOL_REVERT_TICKS);
               }
-              createTemporaryLavaPool(dimension, targetGround, 2, POOL_REVERT_TICKS);
+            } catch (error) {
+              // Scheduled callbacks run outside abilityEngine's try/catch around the original
+              // execute() call, so each needs its own — otherwise a throw here is unreported.
+              console.error(`Minepiece: lava_meteor step ${i} threw: ${error}`);
             }
           }, i * 2);
         }
@@ -120,8 +132,12 @@ registerFruit({
 
           dimension.setBlockType(location, "minecraft:magma");
           system.runTimeout(() => {
-            const current = dimension.getBlock(location);
-            if (current?.typeId === "minecraft:magma") dimension.setBlockType(location, "minecraft:water");
+            try {
+              const current = dimension.getBlock(location);
+              if (current?.typeId === "minecraft:magma") dimension.setBlockType(location, "minecraft:water");
+            } catch (error) {
+              console.error(`Minepiece: magma walker revert threw: ${error}`);
+            }
           }, MAGMA_WALKER_REVERT_TICKS);
         }
       }

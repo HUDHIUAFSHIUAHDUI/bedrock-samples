@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getHostileTargetsInRadius } from "../core/targeting.js";
+import { getHostileTargetsInRadius, safeApplyKnockback, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { damageAndKnockbackArea } from "../core/projectileEffects.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
@@ -35,12 +35,18 @@ registerFruit({
           if (block && !block.isAir) {
             const previousTypeId = block.typeId;
             dimension.setBlockType(blockLocation, "minecraft:sculk");
-            system.runTimeout(() => dimension.setBlockType(blockLocation, previousTypeId), SPIKE_BLOCK_REVERT_TICKS);
+            system.runTimeout(() => {
+              try {
+                dimension.setBlockType(blockLocation, previousTypeId);
+              } catch (error) {
+                console.error(`Minepiece: sculk spike revert threw: ${error}`);
+              }
+            }, SPIKE_BLOCK_REVERT_TICKS);
           }
 
           spawnParticle(dimension, "minecraft:sculk_charge_particle", target.location);
-          target.applyDamage(3, { cause: "magic", damagingEntity: player });
-          target.applyKnockback({ x: 0, z: 0 }, 0.5);
+          safeApplyDamage(target, 3, { cause: "magic", damagingEntity: player });
+          safeApplyKnockback(target, { x: 0, z: 0 }, 0.5);
         }
       },
     },
@@ -54,7 +60,7 @@ registerFruit({
         playSound(dimension, "use.sculk_sensor", player.location);
 
         for (const target of getHostileTargetsInRadius(dimension, player.location, 24, player)) {
-          target.addEffect("glowing", 20 * 5, { amplifier: 0, showParticles: false });
+          safeAddEffect(target, "glowing", 20 * 5, { amplifier: 0, showParticles: false });
         }
       },
     },

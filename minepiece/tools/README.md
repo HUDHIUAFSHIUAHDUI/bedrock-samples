@@ -14,20 +14,37 @@ supplied, not something this add-on redistributes:
    of the CraftyCraft pack into `resource_pack/models/blocks/` and re-bases
    their coordinates from "worn on a player's head bone" space into
    "sitting on the floor of one block" space, in place.
-2. **`derive_icons.py`** — crops each head's real UV faces (front/top/side/
-   etc., computed from the same `.geo.json`) out of its skin texture and
-   writes them as `resource_pack/textures/items/{fruit,ability,transform}_*.png`.
+2. **`gen_number_icons.py`** — draws the 4 shared pixelated placeholder
+   icons abilities/transforms use ("1"/"2"/"3"/"T") into
+   `resource_pack/textures/items/number_*.png`. Fruit items intentionally
+   have no icon of their own — see below.
 3. **`gen_head_blocks.py`** — writes the 13 placeable head block definitions
    (`behavior_pack/blocks/head_*.json`), `resource_pack/textures/terrain_texture.json`,
    and `resource_pack/blocks.json`, using the geometry from step 1.
 4. **`gen_items.py`** — writes all 52 item JSON files
    (`behavior_pack/items/*.json`), `resource_pack/textures/item_texture.json`,
-   and `resource_pack/texts/en_US.lang`, using the icons from step 2 and
-   referencing the block ids from step 3.
+   and `resource_pack/texts/en_US.lang`, using the number icons from step 2
+   and referencing the block ids from step 3.
 5. **`validate_components.py`** — validates every generated item/entity/block
    file's components against this repo's own bundled Bedrock JSON schemas
    (`metadata/json_schemas/`). Run this after any of the above, or after any
    manual edit to a generated file.
+
+## Why fruit items have no `minecraft:icon`
+
+That's deliberate, not an oversight: a fruit item's `minecraft:block_placer`
+component (see `gen_items.py`) has no icon override, so the item falls back
+to rendering its placed block's real 3D geometry as its own
+inventory/hand/dropped appearance — the exact same trick every vanilla mob
+head item uses. That's how each fruit ends up as an actual 3D head instead
+of a flat icon, without needing any item-side geometry component (there
+isn't one in the current data-driven item format).
+
+Ability and transform items don't have a block to fall back on, so they
+still use a plain flat icon — currently the shared pixelated number/letter
+placeholders from `gen_number_icons.py`, swappable later the same way as
+any other icon (new PNG + a `resource_pack/textures/item_texture.json`
+entry, no script changes needed).
 
 Each script has hardcoded absolute paths near the top (`EXTRACT`, `BASE`,
 etc.) rather than argv parsing — adjust those for your own checkout location

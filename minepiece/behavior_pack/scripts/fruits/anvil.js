@@ -6,14 +6,20 @@ import { spawnParticle, playSound } from "../core/vfx.js";
 
 /** Drops a real vanilla anvil block above a point — vanilla's own gravity-block physics does the
  * falling and the "anvil" landing damage, so no manual damage/knockback call is needed here. */
-function dropAnvilAbove(dimension, groundLocation, heightAboveGround) {
+function dropAnvilAbove(dimension, groundLocation, heightAboveGround, caster) {
   const spawnPoint = {
     x: Math.floor(groundLocation.x),
     y: Math.floor(groundLocation.y) + heightAboveGround,
     z: Math.floor(groundLocation.z),
   };
   const block = dimension.getBlock(spawnPoint);
-  if (block?.isAir) dimension.setBlockType(spawnPoint, "minecraft:anvil");
+  if (block?.isAir) {
+    dimension.setBlockType(spawnPoint, "minecraft:anvil");
+  } else if (caster) {
+    // The drop point is obstructed (ceiling, another block, etc.) — say so instead of the
+    // ability silently doing nothing with zero feedback.
+    caster.sendMessage("§cNo room to drop an anvil there.");
+  }
 }
 
 registerFruit({
@@ -33,7 +39,7 @@ registerFruit({
       execute({ player, dimension }) {
         const target = getLookedAtEntity(player, 20);
         const groundLocation = target ? target.location : getForwardPoint(player, 12);
-        dropAnvilAbove(dimension, groundLocation, 12);
+        dropAnvilAbove(dimension, groundLocation, 12, player);
       },
     },
     {
@@ -47,7 +53,7 @@ registerFruit({
         // it still lands on whatever's directly ahead of you, just via a short vertical drop rather
         // than a long thrown arc.
         const forwardPoint = getForwardPoint(player, 5);
-        dropAnvilAbove(dimension, { x: forwardPoint.x, y: player.getHeadLocation().y, z: forwardPoint.z }, 2);
+        dropAnvilAbove(dimension, { x: forwardPoint.x, y: player.getHeadLocation().y, z: forwardPoint.z }, 2, player);
       },
     },
     {

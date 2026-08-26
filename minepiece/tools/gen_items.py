@@ -14,9 +14,14 @@ FRUIT_IDS = [
     "anvil", "core", "slime", "copper", "beacon", "trident",
 ]
 
-# Every fruit/ability/transform item's icon is its own crop of the CraftyCraft 3D head model's real
-# UV texture — see derive_icons.py, which writes these PNGs into resource_pack/textures/items/.
-FRUIT_HEAD_ICON = {fruit_id: f"textures/items/fruit_{fruit_id}" for fruit_id in FRUIT_IDS}
+# Ability/transform items use simple, honest placeholders: a pixelated "1"/"2"/"3" (by that
+# ability's position in its fruit's list) or "T" for a transform — see gen_number_icons.py.
+NUMBER_ICON = {
+    1: "textures/items/number_1",
+    2: "textures/items/number_2",
+    3: "textures/items/number_3",
+    "transform": "textures/items/number_transform",
+}
 
 # id, displayName, category, abilities: [(abilityKey, displayName)], transform: bool
 FRUITS = [
@@ -107,10 +112,10 @@ def item_shell(identifier, components):
     }
 
 
-for fruit_id, display_name, category, abilities, has_transform in FRUITS:
-    icon_key = f"fruit_{fruit_id}"
-    texture_data[icon_key] = {"textures": FRUIT_HEAD_ICON[fruit_id]}
+for number, path in NUMBER_ICON.items():
+    texture_data[f"number_{number}"] = {"textures": path}
 
+for fruit_id, display_name, category, abilities, has_transform in FRUITS:
     fruit_identifier = f"{NAMESPACE}:fruit_{fruit_id}"
     lang_lines.append(f"item.{fruit_identifier}.name={display_name}")
 
@@ -120,7 +125,9 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
             fruit_identifier,
             {
                 "minecraft:display_name": {"value": f"item.{fruit_identifier}.name"},
-                "minecraft:icon": {"textures": {"default": icon_key}},
+                # No minecraft:icon here on purpose — exactly like a vanilla mob head, omitting it
+                # makes block_placer render the placed block's own 3D geometry as the item's
+                # inventory/hand appearance instead of a flat icon (see block_placer's schema note).
                 "minecraft:max_stack_size": 1,
                 "minecraft:food": {"nutrition": 4, "saturation_modifier": 0.3, "can_always_eat": True},
                 "minecraft:use_animation": {"value": "eat"},
@@ -133,10 +140,8 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
         ),
     )
 
-    # Ability emblem icons are their own crop of the same fruit's 3D head texture — see derive_icons.py.
-    for ability_key, ability_name in abilities:
+    for ability_index, (ability_key, ability_name) in enumerate(abilities, start=1):
         ability_identifier = f"{NAMESPACE}:ability_{ability_key}"
-        texture_data[f"ability_{ability_key}"] = {"textures": f"textures/items/ability_{ability_key}"}
         lang_lines.append(f"item.{ability_identifier}.name={ability_name}")
 
         write_json(
@@ -145,7 +150,7 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
                 ability_identifier,
                 {
                     "minecraft:display_name": {"value": f"item.{ability_identifier}.name"},
-                    "minecraft:icon": {"textures": {"default": f"ability_{ability_key}"}},
+                    "minecraft:icon": {"textures": {"default": f"number_{ability_index}"}},
                     "minecraft:max_stack_size": 1,
                     "minecraft:hand_equipped": True,
                     "minecraft:cooldown": {"category": ability_identifier, "duration": 10, "type": "use"},
@@ -156,7 +161,6 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
     if has_transform:
         transform_identifier = f"{NAMESPACE}:transform_{fruit_id}"
         transform_name = f"Transform: {display_name.split('-')[0]}"
-        texture_data[f"transform_{fruit_id}"] = {"textures": f"textures/items/transform_{fruit_id}"}
         lang_lines.append(f"item.{transform_identifier}.name={transform_name}")
 
         write_json(
@@ -165,7 +169,7 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
                 transform_identifier,
                 {
                     "minecraft:display_name": {"value": f"item.{transform_identifier}.name"},
-                    "minecraft:icon": {"textures": {"default": f"transform_{fruit_id}"}},
+                    "minecraft:icon": {"textures": {"default": "number_transform"}},
                     "minecraft:max_stack_size": 1,
                     "minecraft:hand_equipped": True,
                     # Not a real 10s ability cooldown (transforms are exempt) — just a tiny debounce

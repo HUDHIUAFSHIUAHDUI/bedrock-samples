@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getLookedAtEntity, shootProjectile } from "../core/targeting.js";
+import { getLookedAtEntity, shootProjectile, safeApplyKnockback } from "../core/targeting.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
 const SLIME_TRAP_REVERT_TICKS = 20 * 5;
@@ -35,9 +35,13 @@ registerFruit({
       name: "Slime Bounce",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        player.applyImpulse({ x: 0, y: 1.8, z: 0 });
         spawnParticle(dimension, "minecraft:egg_destroy_emitter", player.location);
         playSound(dimension, "mob.slime.jump", player.location);
+        try {
+          player.applyImpulse({ x: 0, y: 1.8, z: 0 });
+        } catch (error) {
+          console.error(`Minepiece: slime_bounce applyImpulse threw: ${error}`);
+        }
       },
     },
     {
@@ -54,10 +58,16 @@ registerFruit({
         if (block && !block.isAir) {
           const previousTypeId = block.typeId;
           dimension.setBlockType(blockLocation, "minecraft:slime");
-          system.runTimeout(() => dimension.setBlockType(blockLocation, previousTypeId), SLIME_TRAP_REVERT_TICKS);
+          system.runTimeout(() => {
+            try {
+              dimension.setBlockType(blockLocation, previousTypeId);
+            } catch (error) {
+              console.error(`Minepiece: slime trap revert threw: ${error}`);
+            }
+          }, SLIME_TRAP_REVERT_TICKS);
         }
 
-        target.applyKnockback({ x: 0, z: 0 }, 1.2);
+        safeApplyKnockback(target, { x: 0, z: 0 }, 1.2);
         spawnParticle(dimension, "minecraft:egg_destroy_emitter", target.location);
         playSound(dimension, "mob.slime.big", target.location);
       },

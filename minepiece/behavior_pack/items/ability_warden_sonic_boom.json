@@ -14,7 +14,7 @@
       },
       "minecraft:icon": {
         "textures": {
-          "default": "ability_warden_sonic_boom"
+          "default": "number_1"
         }
       },
       "minecraft:max_stack_size": 1,

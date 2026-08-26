@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { getLookedAtEntity, shootProjectile } from "../core/targeting.js";
+import { getLookedAtEntity, shootProjectile, safeApplyDamage } from "../core/targeting.js";
 import { damageAndKnockbackArea } from "../core/projectileEffects.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
@@ -38,7 +38,7 @@ registerFruit({
         const target = getLookedAtEntity(player, 4);
         if (!target) return;
 
-        target.applyDamage(15, { cause: "entityAttack", damagingEntity: player });
+        safeApplyDamage(target, 15, { cause: "entityAttack", damagingEntity: player });
         spawnParticle(dimension, "minecraft:critical_hit_emitter", target.location);
         spawnParticle(dimension, "minecraft:knockback_roar_particle", target.location);
       },
@@ -49,19 +49,31 @@ registerFruit({
       name: "Land Crash",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        player.applyImpulse({ x: 0, y: 1.4, z: 0 });
         spawnParticle(dimension, "minecraft:wind_explosion_emitter", player.location);
+        try {
+          player.applyImpulse({ x: 0, y: 1.4, z: 0 });
+        } catch (error) {
+          console.error(`Minepiece: land_crash applyImpulse threw: ${error}`);
+        }
 
         let ticksWaited = 0;
         const intervalId = system.runInterval(() => {
-          ticksWaited++;
-          const landed = ticksWaited > LAND_CRASH_MIN_AIR_TICKS && player.isOnGround;
-          if (landed || ticksWaited > LAND_CRASH_TIMEOUT_TICKS) {
+          try {
+            ticksWaited++;
+            const landed = ticksWaited > LAND_CRASH_MIN_AIR_TICKS && player.isOnGround;
+            if (landed || ticksWaited > LAND_CRASH_TIMEOUT_TICKS) {
+              system.clearRun(intervalId);
+              spawnParticle(dimension, "minecraft:smash_ground_particle", player.location);
+              playSound(dimension, "mob.breeze.land", player.location);
+              // Excludes the player themselves — they take no self-damage from their own slam.
+              damageAndKnockbackArea(dimension, player.location, 4, player, 9, 1.5, 0.4);
+            }
+          } catch (error) {
+            // A scheduled callback like this runs outside abilityEngine's try/catch around the
+            // original execute() call, so it needs its own — otherwise a throw here would be a
+            // silent, unreported failure well after "Land Crash failed" would have made any sense.
             system.clearRun(intervalId);
-            spawnParticle(dimension, "minecraft:smash_ground_particle", player.location);
-            playSound(dimension, "mob.breeze.land", player.location);
-            // Excludes the player themselves — they take no self-damage from their own slam.
-            damageAndKnockbackArea(dimension, player.location, 4, player, 9, 1.5, 0.4);
+            console.error(`Minepiece: land_crash landing check threw: ${error}`);
           }
         }, 2);
       },

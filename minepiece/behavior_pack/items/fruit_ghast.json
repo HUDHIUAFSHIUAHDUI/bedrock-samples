@@ -12,11 +12,6 @@
       "minecraft:display_name": {
         "value": "item.minepiece:fruit_ghast.name"
       },
-      "minecraft:icon": {
-        "textures": {
-          "default": "fruit_ghast"
-        }
-      },
       "minecraft:max_stack_size": 1,
       "minecraft:food": {
         "nutrition": 4,

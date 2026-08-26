@@ -1,7 +1,7 @@
 import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
-import { traceBeam, getLookedAtEntity } from "../core/targeting.js";
+import { traceBeam, getLookedAtEntity, safeApplyKnockback } from "../core/targeting.js";
 import { spawnParticle, playSound } from "../core/vfx.js";
 
 const PRISON_REVERT_TICKS = 20 * 4;
@@ -30,7 +30,7 @@ registerFruit({
         playSound(dimension, "entity.generic.splash", origin);
 
         for (const entity of entities) {
-          entity.applyKnockback({ x: forward.x * 3, z: forward.z * 3 }, 0.2);
+          safeApplyKnockback(entity, { x: forward.x * 3, z: forward.z * 3 }, 0.2);
         }
       },
     },
@@ -52,7 +52,13 @@ registerFruit({
               if (!block || !block.isAir) continue;
 
               dimension.setBlockType(location, "minecraft:water");
-              system.runTimeout(() => dimension.setBlockType(location, "minecraft:air"), PRISON_REVERT_TICKS);
+              system.runTimeout(() => {
+                try {
+                  dimension.setBlockType(location, "minecraft:air");
+                } catch (error) {
+                  console.error(`Minepiece: water prison revert threw: ${error}`);
+                }
+              }, PRISON_REVERT_TICKS);
             }
           }
         }
@@ -75,7 +81,7 @@ registerFruit({
         playSound(dimension, "mob.dolphin.splash", origin);
 
         for (const entity of entities) {
-          entity.applyKnockback({ x: forward.x * 2.5, z: forward.z * 2.5 }, 0.5);
+          safeApplyKnockback(entity, { x: forward.x * 2.5, z: forward.z * 2.5 }, 0.5);
         }
       },
     },

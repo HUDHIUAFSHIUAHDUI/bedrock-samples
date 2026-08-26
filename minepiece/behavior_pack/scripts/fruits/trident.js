@@ -42,10 +42,14 @@ registerFruit({
       name: "Whirlpool",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        // Riptide's launch, without needing to actually be standing in water.
-        player.applyImpulse({ x: 0, y: 2.2, z: 0 });
         spawnParticle(dimension, "minecraft:water_splash_particle", player.location);
         playSound(dimension, "item.trident.riptide_2", player.location);
+        // Riptide's launch, without needing to actually be standing in water.
+        try {
+          player.applyImpulse({ x: 0, y: 2.2, z: 0 });
+        } catch (error) {
+          console.error(`Minepiece: whirlpool applyImpulse threw: ${error}`);
+        }
       },
     },
   ],
