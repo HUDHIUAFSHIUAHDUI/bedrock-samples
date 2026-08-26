@@ -63,6 +63,10 @@ for fruit_id in FRUIT_IDS:
                     "minecraft:destructible_by_mining": {"seconds_to_destroy": 1},
                     "minecraft:light_dampening": 0,
                     "minecraft:map_color": "#8a8a8a",
+                    # The geometry assumes it's sitting upright on a floor (see rebase_head_geometry.py)
+                    # — placing it against a wall or ceiling would render it sideways/embedded, so
+                    # restrict placement to the top face of whatever block it's placed against.
+                    "minecraft:placement_filter": {"conditions": [{"allowed_faces": ["up"]}]},
                 },
             },
         },

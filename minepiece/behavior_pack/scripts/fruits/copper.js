@@ -2,7 +2,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getLookedAtEntity, shootProjectile, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { PROJECTILE_FX, damageAndKnockbackArea } from "../core/projectileEffects.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticleBurst, playSound } from "../core/vfx.js";
 
 registerFruit({
   id: "copper",
@@ -25,7 +25,7 @@ registerFruit({
         safeApplyDamage(target, 3, { cause: "entityAttack", damagingEntity: player });
         safeAddEffect(target, "slowness", 20 * 5, { amplifier: 0, showParticles: true });
         safeAddEffect(target, "nausea", 20 * 5, { amplifier: 0, showParticles: true });
-        spawnParticle(dimension, "minecraft:critical_hit_emitter", target.location);
+        spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", target.location, 8, 0.6);
       },
     },
     {
@@ -37,7 +37,7 @@ registerFruit({
         shootProjectile(dimension, "minecraft:arrow", player.getHeadLocation(), player.getViewDirection(), 2.5, player, [
           PROJECTILE_FX.LIGHTNING,
         ]);
-        spawnParticle(dimension, "minecraft:electric_spark_particle", player.getHeadLocation());
+        spawnParticleBurst(dimension, "minecraft:electric_spark_particle", player.getHeadLocation(), 6, 0.4);
       },
     },
     {
@@ -46,7 +46,7 @@ registerFruit({
       name: "Copper Overload",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:electric_spark_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:electric_spark_particle", player.location, 16, 2.5);
         playSound(dimension, "ambient.weather.lightning.impact", player.location);
         damageAndKnockbackArea(dimension, player.location, 5, player, 7, 1, 0.3);
       },

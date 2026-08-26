@@ -2,7 +2,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { shootProjectile } from "../core/targeting.js";
 import { PROJECTILE_FX } from "../core/projectileEffects.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 registerFruit({
   id: "trident",
@@ -33,7 +33,7 @@ registerFruit({
         shootProjectile(dimension, "minecraft:arrow", player.getHeadLocation(), player.getViewDirection(), 2.5, player, [
           PROJECTILE_FX.LIGHTNING,
         ]);
-        spawnParticle(dimension, "minecraft:electric_spark_particle", player.getHeadLocation());
+        spawnParticleBurst(dimension, "minecraft:electric_spark_particle", player.getHeadLocation(), 6, 0.4);
       },
     },
     {
@@ -42,7 +42,7 @@ registerFruit({
       name: "Whirlpool",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:water_splash_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:water_splash_particle", player.location, 14, 1.5);
         playSound(dimension, "item.trident.riptide_2", player.location);
         // Riptide's launch, without needing to actually be standing in water.
         try {

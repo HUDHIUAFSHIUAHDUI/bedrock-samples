@@ -2,7 +2,7 @@ import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { traceBeam, getLookedAtEntity, safeApplyKnockback } from "../core/targeting.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const PRISON_REVERT_TICKS = 20 * 4;
 
@@ -26,6 +26,7 @@ registerFruit({
         const forward = player.getViewDirection();
         const { points, entities } = traceBeam(dimension, origin, forward, 12, 1.5, player);
 
+        spawnParticleBurst(dimension, "minecraft:water_splash_particle", origin, 8, 0.6);
         for (const point of points) spawnParticle(dimension, "minecraft:water_wake_particle", point);
         playSound(dimension, "entity.generic.splash", origin);
 
@@ -63,7 +64,7 @@ registerFruit({
           }
         }
 
-        spawnParticle(dimension, "minecraft:water_splash_particle", target.location);
+        spawnParticleBurst(dimension, "minecraft:water_splash_particle", target.location, 10, 1);
         playSound(dimension, "random.splash", target.location);
       },
     },
@@ -77,6 +78,7 @@ registerFruit({
         const forward = player.getViewDirection();
         const { points, entities } = traceBeam(dimension, origin, forward, 10, 4, player);
 
+        spawnParticleBurst(dimension, "minecraft:water_splash_particle", origin, 12, 1.5);
         for (const point of points) spawnParticle(dimension, "minecraft:water_splash_particle", point);
         playSound(dimension, "mob.dolphin.splash", origin);
 

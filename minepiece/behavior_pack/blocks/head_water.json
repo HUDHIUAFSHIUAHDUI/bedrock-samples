@@ -43,7 +43,16 @@
         "seconds_to_destroy": 1
       },
       "minecraft:light_dampening": 0,
-      "minecraft:map_color": "#8a8a8a"
+      "minecraft:map_color": "#8a8a8a",
+      "minecraft:placement_filter": {
+        "conditions": [
+          {
+            "allowed_faces": [
+              "up"
+            ]
+          }
+        ]
+      }
     }
   }
 }

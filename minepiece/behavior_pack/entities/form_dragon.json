@@ -33,10 +33,9 @@
           "position": [0.0, 3.5, 1.0]
         }
       },
+      "minecraft:is_tamed": {},
       "minecraft:free_camera_controlled": {},
-      "minecraft:behavior.player_ride_tamed": {
-        "priority": 0
-      }
+      "minecraft:behavior.player_ride_tamed": {}
     }
   }
 }

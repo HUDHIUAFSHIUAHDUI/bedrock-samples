@@ -152,7 +152,8 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
                     "minecraft:display_name": {"value": f"item.{ability_identifier}.name"},
                     "minecraft:icon": {"textures": {"default": f"number_{ability_index}"}},
                     "minecraft:max_stack_size": 1,
-                    "minecraft:hand_equipped": True,
+                    # No hand_equipped: abilities are techniques, not weapons/tools — held with the
+                    # plain small item pose instead of the big two-handed tool-hold animation.
                     "minecraft:cooldown": {"category": ability_identifier, "duration": 10, "type": "use"},
                 },
             ),
@@ -171,7 +172,6 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
                     "minecraft:display_name": {"value": f"item.{transform_identifier}.name"},
                     "minecraft:icon": {"textures": {"default": "number_transform"}},
                     "minecraft:max_stack_size": 1,
-                    "minecraft:hand_equipped": True,
                     # Not a real 10s ability cooldown (transforms are exempt) — just a tiny debounce
                     # so one physical click can't fire the toggle twice.
                     "minecraft:cooldown": {"category": transform_identifier, "duration": 0.5, "type": "use"},

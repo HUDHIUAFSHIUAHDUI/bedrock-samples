@@ -2,7 +2,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { shootProjectile, rotateAroundY, getForwardPoint } from "../core/targeting.js";
 import { PROJECTILE_FX } from "../core/projectileEffects.js";
-import { playSound } from "../core/vfx.js";
+import { playSound, spawnParticleBurst } from "../core/vfx.js";
 
 const ARROW_SPEED = 3;
 
@@ -37,6 +37,7 @@ registerFruit({
         const forward = player.getViewDirection();
         const spreadAngles = [-20, -12, -4, 4, 12, 20];
 
+        spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", origin, 6, 0.4);
         for (const angle of spreadAngles) {
           shootProjectile(dimension, "minecraft:arrow", origin, rotateAroundY(forward, angle), ARROW_SPEED, player);
         }
@@ -53,6 +54,7 @@ registerFruit({
         const arrowCount = 10;
         const areaRadius = 4;
 
+        spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", center, 10, areaRadius);
         for (let i = 0; i < arrowCount; i++) {
           const offsetX = (Math.random() - 0.5) * 2 * areaRadius;
           const offsetZ = (Math.random() - 0.5) * 2 * areaRadius;

@@ -20,6 +20,22 @@ export function spawnParticleTrail(dimension, particleId, points) {
   for (const point of points) spawnParticle(dimension, particleId, point);
 }
 
+/**
+ * Spawns `count` copies of a particle scattered randomly within `spread` blocks of `center` —
+ * a single spawnParticle call reads as a small puff; this reads as a proper burst/impact.
+ * Used for the "big hit" moment abilities want to sell (an explosion, a slam, a cast-off).
+ */
+export function spawnParticleBurst(dimension, particleId, center, count = 8, spread = 1.5) {
+  for (let i = 0; i < count; i++) {
+    const point = {
+      x: center.x + (Math.random() - 0.5) * 2 * spread,
+      y: center.y + Math.random() * spread,
+      z: center.z + (Math.random() - 0.5) * 2 * spread,
+    };
+    spawnParticle(dimension, particleId, point);
+  }
+}
+
 /** @param {import("@minecraft/server").Dimension} dimension */
 export function playSound(dimension, soundId, location, options) {
   try {

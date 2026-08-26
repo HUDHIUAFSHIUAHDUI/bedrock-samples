@@ -40,9 +40,9 @@
           "position": [0.0, 2.2, 0.0]
         }
       },
-      "minecraft:behavior.controlled_by_player": {
-        "priority": 0
-      }
+      "minecraft:is_tamed": {},
+      "minecraft:input_ground_controlled": {},
+      "minecraft:behavior.player_ride_tamed": {}
     }
   }
 }

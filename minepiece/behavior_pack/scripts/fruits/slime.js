@@ -2,7 +2,7 @@ import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getLookedAtEntity, shootProjectile, safeApplyKnockback } from "../core/targeting.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const SLIME_TRAP_REVERT_TICKS = 20 * 5;
 
@@ -35,7 +35,7 @@ registerFruit({
       name: "Slime Bounce",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:egg_destroy_emitter", player.location);
+        spawnParticleBurst(dimension, "minecraft:egg_destroy_emitter", player.location, 8, 0.5);
         playSound(dimension, "mob.slime.jump", player.location);
         try {
           player.applyImpulse({ x: 0, y: 1.8, z: 0 });
@@ -68,7 +68,7 @@ registerFruit({
         }
 
         safeApplyKnockback(target, { x: 0, z: 0 }, 1.2);
-        spawnParticle(dimension, "minecraft:egg_destroy_emitter", target.location);
+        spawnParticleBurst(dimension, "minecraft:egg_destroy_emitter", target.location, 10, 0.7);
         playSound(dimension, "mob.slime.big", target.location);
       },
     },

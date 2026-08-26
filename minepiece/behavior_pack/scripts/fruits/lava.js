@@ -2,7 +2,7 @@ import { system } from "@minecraft/server";
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getLookedAtEntity, getEntitiesInRadius, knockbackAwayFrom, safeApplyDamage } from "../core/targeting.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const POOL_REVERT_TICKS = 20 * 6;
 const MAGMA_WALKER_REVERT_TICKS = 20 * 5;
@@ -55,6 +55,7 @@ registerFruit({
 
         const target = getLookedAtEntity(player, 4);
         if (!target) return;
+        spawnParticleBurst(dimension, "minecraft:basic_flame_particle", target.location, 8, 0.6);
         safeApplyDamage(target, 5, { cause: "entityAttack", damagingEntity: player });
         target.setOnFire(3, true);
       },
@@ -70,7 +71,7 @@ registerFruit({
 
         const center = { x: hit.block.location.x, y: hit.block.location.y + 1, z: hit.block.location.z };
         createTemporaryLavaPool(dimension, center, 2, POOL_REVERT_TICKS);
-        spawnParticle(dimension, "minecraft:lava_particle", center);
+        spawnParticleBurst(dimension, "minecraft:lava_particle", center, 10, 2);
         playSound(dimension, "bucket.empty_lava", center);
       },
     },
@@ -101,6 +102,8 @@ registerFruit({
 
               if (i === fallSteps) {
                 spawnParticle(dimension, "minecraft:large_explosion", targetGround);
+                spawnParticleBurst(dimension, "minecraft:lava_particle", targetGround, 16, 3);
+                spawnParticleBurst(dimension, "minecraft:basic_flame_particle", targetGround, 10, 2.5);
                 playSound(dimension, "random.explode", targetGround);
                 for (const entity of getEntitiesInRadius(dimension, targetGround, 3, player)) {
                   entity.applyDamage(7, { cause: "magic", damagingEntity: player });

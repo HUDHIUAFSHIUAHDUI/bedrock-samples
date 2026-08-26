@@ -3,7 +3,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getLookedAtEntity, shootProjectile, safeApplyDamage } from "../core/targeting.js";
 import { damageAndKnockbackArea } from "../core/projectileEffects.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const HOMETOWN_LINK_DURATION_TICKS = 1_000_000;
 const LAND_CRASH_MIN_AIR_TICKS = 10;
@@ -25,6 +25,7 @@ registerFruit({
       cooldownSeconds: 10,
       execute({ player, dimension }) {
         // The real vanilla Breeze wind charge — its own impact explosion/knockback is vanilla-native.
+        spawnParticleBurst(dimension, "minecraft:wind_explosion_emitter", player.getHeadLocation(), 4, 0.4);
         shootProjectile(dimension, "minecraft:wind_charge_projectile", player.getHeadLocation(), player.getViewDirection(), 1.5, player);
         playSound(dimension, "mob.breeze.shoot", player.location);
       },
@@ -39,7 +40,7 @@ registerFruit({
         if (!target) return;
 
         safeApplyDamage(target, 15, { cause: "entityAttack", damagingEntity: player });
-        spawnParticle(dimension, "minecraft:critical_hit_emitter", target.location);
+        spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", target.location, 10, 0.7);
         spawnParticle(dimension, "minecraft:knockback_roar_particle", target.location);
       },
     },
@@ -63,7 +64,8 @@ registerFruit({
             const landed = ticksWaited > LAND_CRASH_MIN_AIR_TICKS && player.isOnGround;
             if (landed || ticksWaited > LAND_CRASH_TIMEOUT_TICKS) {
               system.clearRun(intervalId);
-              spawnParticle(dimension, "minecraft:smash_ground_particle", player.location);
+              spawnParticleBurst(dimension, "minecraft:smash_ground_particle", player.location, 14, 2.5);
+              spawnParticleBurst(dimension, "minecraft:wind_explosion_emitter", player.location, 6, 1.5);
               playSound(dimension, "mob.breeze.land", player.location);
               // Excludes the player themselves — they take no self-damage from their own slam.
               damageAndKnockbackArea(dimension, player.location, 4, player, 9, 1.5, 0.4);

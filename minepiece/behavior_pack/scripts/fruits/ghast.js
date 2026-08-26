@@ -1,7 +1,7 @@
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { shootProjectile, rotateAroundY } from "../core/targeting.js";
-import { playSound } from "../core/vfx.js";
+import { spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const FIRE_RESISTANCE_DURATION_TICKS = 1_000_000;
 
@@ -20,6 +20,7 @@ registerFruit({
       name: "Ghast Fireball",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
+        spawnParticleBurst(dimension, "minecraft:basic_flame_particle", player.getHeadLocation(), 6, 0.5);
         shootProjectile(dimension, "minecraft:fireball", player.getHeadLocation(), player.getViewDirection(), 1.3, player);
         playSound(dimension, "mob.ghast.fireball", player.location);
       },
@@ -33,6 +34,7 @@ registerFruit({
         const origin = player.getHeadLocation();
         const forward = player.getViewDirection();
 
+        spawnParticleBurst(dimension, "minecraft:basic_flame_particle", origin, 10, 0.7);
         for (const spreadDegrees of [-15, 0, 15]) {
           shootProjectile(dimension, "minecraft:small_fireball", origin, rotateAroundY(forward, spreadDegrees), 1.3, player);
         }

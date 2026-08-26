@@ -18,7 +18,6 @@
         }
       },
       "minecraft:max_stack_size": 1,
-      "minecraft:hand_equipped": true,
       "minecraft:cooldown": {
         "category": "minepiece:ability_slime_shot",
         "duration": 10,

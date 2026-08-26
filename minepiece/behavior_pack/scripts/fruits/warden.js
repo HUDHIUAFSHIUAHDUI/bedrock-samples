@@ -1,7 +1,7 @@
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { traceBeam, getEntitiesInRadius, getLookedAtEntity, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const SUPER_HEARING_RADIUS = 20;
 /** playerId -> Set<entityId> currently inside the Super Hearing radius, so we only announce new arrivals. */
@@ -30,6 +30,7 @@ registerFruit({
         const origin = player.getHeadLocation();
         const { points, entities } = traceBeam(dimension, origin, player.getViewDirection(), 20, 2, player);
 
+        spawnParticleBurst(dimension, "minecraft:sonic_explosion", origin, 10, 1);
         for (const point of points) spawnParticle(dimension, "minecraft:sonic_explosion", point);
         playSound(dimension, "mob.warden.sonic_boom", origin);
 
@@ -50,7 +51,7 @@ registerFruit({
 
         safeApplyDamage(target, 4, { cause: "entityAttack", damagingEntity: player });
         safeAddEffect(target, "blindness", 20 * 5, { amplifier: 0, showParticles: true });
-        spawnParticle(dimension, "minecraft:critical_hit_emitter", target.location);
+        spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", target.location, 8, 0.6);
       },
     },
   ],

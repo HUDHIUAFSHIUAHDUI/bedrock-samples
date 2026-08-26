@@ -1,7 +1,7 @@
 import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getEntitiesInRadius, knockbackAwayFrom, shootProjectile } from "../core/targeting.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const HEALTH_BOOST_DURATION_TICKS = 1_000_000; // refreshed every passive tick anyway; just needs to outlast one tick
 
@@ -22,6 +22,7 @@ registerFruit({
       execute({ player, dimension }) {
         // The Ender Dragon's own projectile: on impact it leaves a lingering damage cloud, exactly
         // like the boss fight attack this ability is named after — vanilla handles all of that for us.
+        spawnParticleBurst(dimension, "minecraft:dragon_breath_trail", player.getHeadLocation(), 6, 0.5);
         shootProjectile(dimension, "minecraft:dragon_fireball", player.getHeadLocation(), player.getViewDirection(), 1.5, player);
         playSound(dimension, "mob.enderdragon.growl", player.location);
       },
@@ -33,7 +34,7 @@ registerFruit({
       cooldownSeconds: 10,
       execute({ player, dimension }) {
         const radius = 6;
-        spawnParticle(dimension, "minecraft:knockback_roar_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:knockback_roar_particle", player.location, 10, 2);
         playSound(dimension, "mob.enderdragon.growl", player.location);
 
         for (const entity of getEntitiesInRadius(dimension, player.location, radius, player)) {

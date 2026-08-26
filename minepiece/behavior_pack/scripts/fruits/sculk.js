@@ -3,7 +3,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getHostileTargetsInRadius, safeApplyKnockback, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { damageAndKnockbackArea } from "../core/projectileEffects.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const SPIKE_BLOCK_REVERT_TICKS = 20 * 4;
 
@@ -44,7 +44,7 @@ registerFruit({
             }, SPIKE_BLOCK_REVERT_TICKS);
           }
 
-          spawnParticle(dimension, "minecraft:sculk_charge_particle", target.location);
+          spawnParticleBurst(dimension, "minecraft:sculk_charge_particle", target.location, 6, 0.6);
           safeApplyDamage(target, 3, { cause: "magic", damagingEntity: player });
           safeApplyKnockback(target, { x: 0, z: 0 }, 0.5);
         }
@@ -56,7 +56,7 @@ registerFruit({
       name: "Sculk Sense",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:sculk_soul_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:sculk_soul_particle", player.location, 8, 1.2);
         playSound(dimension, "use.sculk_sensor", player.location);
 
         for (const target of getHostileTargetsInRadius(dimension, player.location, 24, player)) {
@@ -71,7 +71,8 @@ registerFruit({
       cooldownSeconds: 10,
       execute({ player, dimension }) {
         const radius = 6;
-        spawnParticle(dimension, "minecraft:sculk_charge_pop_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:sculk_charge_pop_particle", player.location, 14, radius * 0.6);
+        spawnParticleBurst(dimension, "minecraft:sculk_soul_particle", player.location, 8, radius * 0.4);
         playSound(dimension, "shriek.sculk_shrieker", player.location);
 
         damageAndKnockbackArea(dimension, player.location, radius, player, 6, 1.5, 0.4);

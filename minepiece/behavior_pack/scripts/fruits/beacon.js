@@ -3,7 +3,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getEntitiesInRadius, traceBeam, safeApplyDamage, safeAddEffect } from "../core/targeting.js";
 import { blockKey, getLastFootBlock, setLastFootBlock, isBeaconBoostActive, setBeaconBoostActive } from "../core/playerState.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 
 const BEACON_BOOST_EFFECTS = ["speed", "haste", "resistance", "jump_boost", "strength"];
 const BEACON_BOOST_DURATION_TICKS = 1_000_000;
@@ -34,7 +34,7 @@ registerFruit({
       name: "Flashbang",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:totem_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:totem_particle", player.location, 16, 2.5);
         playSound(dimension, "random.totem", player.location);
 
         for (const target of getEntitiesInRadius(dimension, player.location, 8, player)) {
@@ -57,6 +57,7 @@ registerFruit({
 
         for (const entity of entities) {
           safeApplyDamage(entity, 12, { cause: "magic", damagingEntity: player });
+          spawnParticleBurst(dimension, "minecraft:critical_hit_emitter", entity.location, 6, 0.6);
         }
       },
     },

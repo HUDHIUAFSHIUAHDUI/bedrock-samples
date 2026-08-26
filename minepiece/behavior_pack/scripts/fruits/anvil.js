@@ -2,7 +2,7 @@ import { NAMESPACE } from "../core/constants.js";
 import { registerFruit } from "../core/fruitRegistry.js";
 import { getLookedAtEntity, getForwardPoint } from "../core/targeting.js";
 import { damageAndKnockbackArea } from "../core/projectileEffects.js";
-import { spawnParticle, playSound } from "../core/vfx.js";
+import { spawnParticleBurst, playSound } from "../core/vfx.js";
 
 /** Drops a real vanilla anvil block above a point — vanilla's own gravity-block physics does the
  * falling and the "anvil" landing damage, so no manual damage/knockback call is needed here. */
@@ -15,6 +15,7 @@ function dropAnvilAbove(dimension, groundLocation, heightAboveGround, caster) {
   const block = dimension.getBlock(spawnPoint);
   if (block?.isAir) {
     dimension.setBlockType(spawnPoint, "minecraft:anvil");
+    spawnParticleBurst(dimension, "minecraft:falling_dust_gravel_particle", spawnPoint, 6, 0.5);
   } else if (caster) {
     // The drop point is obstructed (ceiling, another block, etc.) — say so instead of the
     // ability silently doing nothing with zero feedback.
@@ -62,7 +63,7 @@ registerFruit({
       name: "Anvil Slam",
       cooldownSeconds: 10,
       execute({ player, dimension }) {
-        spawnParticle(dimension, "minecraft:smash_ground_particle", player.location);
+        spawnParticleBurst(dimension, "minecraft:smash_ground_particle", player.location, 14, 2.5);
         playSound(dimension, "random.anvil_land", player.location);
         damageAndKnockbackArea(dimension, player.location, 5, player, 4, 1.8, 0.3);
       },
