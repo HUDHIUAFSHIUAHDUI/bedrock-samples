@@ -5,7 +5,7 @@
     "description": "Minepiece - One Piece inspired Devil Fruit ability system (Resource Pack)",
     "uuid": "bcd2cb0f-c4cb-46b8-947c-d9d6b8d09626",
     "version": [1, 0, 0],
-    "min_engine_version": [1, 21, 60]
+    "min_engine_version": [1, 21, 80]
   },
   "modules": [
     {

@@ -1,5 +1,5 @@
 {
-  "format_version": "1.21.60",
+  "format_version": "1.21.80",
   "minecraft:item": {
     "description": {
       "identifier": "minepiece:fruit_beacon",
@@ -26,7 +26,6 @@
         "value": "eat"
       },
       "minecraft:use_modifiers": {
-        "start_using": "always",
         "use_duration": 1.6,
         "movement_modifier": 0.35
       },
