@@ -24,7 +24,7 @@ export const RADIUS_SCAN_TICK_INTERVAL = 20;
 
 /** Dynamic property keys stored on the Player entity. See core/playerState.js for accessors. */
 export const PROPERTY = {
-  /** The fruit id (e.g. "warden") the player has eaten, or undefined if none. */
+  /** The fruit id (e.g. "sculk") the player has eaten, or undefined if none. */
   FRUIT_ID: `${NAMESPACE}:fruit_id`,
   /** "1" while the player is currently transformed (Zoan fruits only). */
   TRANSFORMED: `${NAMESPACE}:transformed`,

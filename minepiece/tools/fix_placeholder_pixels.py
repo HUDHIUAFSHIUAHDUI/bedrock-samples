@@ -84,8 +84,7 @@ def inpaint(img, is_bad):
 # (its dominant color really is unfinished placeholder magenta) — either way, patch-diffusion from
 # neighbors can't invent a whole new majority color and produces a worse result than leaving it
 # untouched, so both are left out of scope here (small-patch fixes only, as asked).
-FRUIT_IDS = ["warden", "dragon", "ghast", "arrow",
-             "core", "slime", "copper", "beacon", "trident", "anvil", "water"]
+FRUIT_IDS = ["arrow", "core", "slime", "copper", "beacon", "trident", "anvil", "water"]
 
 for fruit_id in ("lava", "sculk"):
     print(f"{fruit_id}: excluded (see comment above)")
@@ -104,9 +103,9 @@ for fruit_id in FRUIT_IDS:
     # isn't a stray-pixel bug anymore, it's that fruit's actual (if unfortunate) main body color —
     # diffusing from neighbors can't invent a whole new majority color, so leave it alone rather
     # than mangle it (this is what happened with lava and sculk during manual review).
-    # anvil is force-fixed even though it trips this ratio: unlike the lava/sculk/dragon
-    # judgment calls below, the user explicitly confirmed teal is the correct body color and
-    # the orange is the bug ("No the teal is right the orange is off").
+    # anvil is force-fixed even though it trips this ratio: unlike the lava/sculk judgment
+    # calls above, the user explicitly confirmed teal is the correct body color and the
+    # orange is the bug ("No the teal is right the orange is off").
     if fruit_id != "anvil" and before / max(opaque, 1) > 0.15:
         print(f"{fruit_id}: SKIPPED, {before}/{opaque} opaque pixels are placeholder-family (looks like main body color, not a stray patch)")
         continue

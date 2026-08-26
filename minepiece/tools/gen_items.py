@@ -10,7 +10,7 @@ os.makedirs(RP_TEXTURES, exist_ok=True)
 os.makedirs(RP_TEXTS, exist_ok=True)
 
 FRUIT_IDS = [
-    "warden", "dragon", "ghast", "sculk", "lava", "water", "arrow",
+    "sculk", "lava", "water", "arrow",
     "anvil", "core", "slime", "copper", "beacon", "trident",
 ]
 
@@ -25,18 +25,6 @@ NUMBER_ICON = {
 
 # id, displayName, category, abilities: [(abilityKey, displayName)], transform: bool
 FRUITS = [
-    ("warden", "Warden-Warden Fruit", "zoan", [
-        ("warden_sonic_boom", "Warden Sonic Boom"),
-        ("warden_blinding_punch", "Blinding Punch"),
-    ], True),
-    ("dragon", "Dragon-Dragon Fruit", "zoan", [
-        ("dragon_breath", "Dragon Breath"),
-        ("dragon_roar", "Dragon Roar"),
-    ], True),
-    ("ghast", "Ghast-Ghast Fruit", "zoan", [
-        ("ghast_fireball", "Ghast Fireball"),
-        ("ghast_barrage", "Ghast Barrage"),
-    ], True),
     ("sculk", "Sculk-Sculk Fruit", "logia", [
         ("sculk_spikes", "Sculk Spikes"),
         ("sculk_sense", "Sculk Sense"),
@@ -187,11 +175,7 @@ item_texture_json = {
 }
 write_json(os.path.join(RP_TEXTURES, "item_texture.json"), item_texture_json)
 
-# --- lang file (also carries the three transform-form entity names) ---
-lang_lines.append(f"entity.{NAMESPACE}:form_warden.name=Warden Form")
-lang_lines.append(f"entity.{NAMESPACE}:form_dragon.name=Ender Dragon Form")
-lang_lines.append(f"entity.{NAMESPACE}:form_ghast.name=Ghast Form")
-
+# --- lang file ---
 with open(os.path.join(RP_TEXTS, "en_US.lang"), "w") as f:
     f.write("\n".join(lang_lines) + "\n")
 

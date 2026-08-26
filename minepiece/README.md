@@ -13,7 +13,7 @@ vanilla reference packs and are used only as a reference while building this.
 2. Copy `minepiece/resource_pack` into `com.mojang/development_resource_packs/Minepiece RP`.
 3. Enable both packs on a world, and turn on the **Beta APIs** experimental toggle
    (required for `@minecraft/server` scripting).
-4. Give yourself a fruit with `/give @s minepiece:fruit_warden` (swap the id for
+4. Give yourself a fruit with `/give @s minepiece:fruit_sculk` (swap the id for
    any fruit below) and eat it.
 
 ## If nothing seems to happen
@@ -51,34 +51,25 @@ Each fruit item is both of these at once, same as a vanilla mob head:
 - **Place it** (use the item while looking at a block face) as a small
   decorative head.
 
-Ability and Zoan-transform items don't have a block to fall back on, so
-they're still flat icons — currently a plain pixelated "1"/"2"/"3" (that
-ability's position in its fruit's list) or "T" for a transform
-(`tools/gen_number_icons.py`), deliberately simple rather than trying to
-guess real art for them.
-
-The three Zoan transformation forms (Warden, Ender Dragon, Ghast) are a
-separate thing from the fruit heads above — they reuse the **real vanilla
-mob models and textures** for the player's transformed body, since that
-should look like the actual animal/mob, not a stylized head.
+Ability items don't have a block to fall back on, so they're still flat
+icons — currently a plain pixelated "1"/"2"/"3" (that ability's position in
+its fruit's list) (`tools/gen_number_icons.py`), deliberately simple rather
+than trying to guess real art for them.
 
 ## Fruit list
 
-| Fruit | Type | Abilities (10s cooldown each) | Transform | Passive |
-|---|---|---|---|---|
-| Warden-Warden | Zoan | Sonic Boom, Blinding Punch | → Warden (1/3 HP) | Super Hearing (chat alert on nearby entities) |
-| Dragon-Dragon | Zoan | Dragon Breath, Dragon Roar | → Ender Dragon (flight only, no attack) | Health Boost (2x max HP) |
-| Ghast-Ghast | Zoan | Ghast Fireball, Ghast Barrage | → Ghast (2x HP) | Permanent Fire Resistance |
-| Sculk-Sculk | Logia | Sculk Spikes, Sculk Sense, Sculk Explosion | — | Sculk Catalyst on hostile kill |
-| Lava-Lava | Logia | Lava Fist, Lava Pool, Lava Meteor | — | Magma-walker (frost walker, but magma) |
-| Water-Water | Logia | Water Jet, Water Prison, Tidal Crash | — | Immune to water damage + Dolphin's Grace in water |
-| Arrow-Arrow | Logia | Arrow Shot, Arrow Barrage, Arrow Rain | — | Arrow Instinct (auto-fires an arrow when hurt) |
-| Anvil-Anvil | Paramecia | Anvil Drop, Anvil Toss, Anvil Slam | — | Heavy (infinite knockback resistance) |
-| Core-Core | Paramecia | Wind Burst, Heavy Punch, Land Crash | — | Hometown Link (permanent Bad Omen + Wind Charged) |
-| Slime-Slime | Paramecia | Slime Shot, Slime Bounce, Slime Trap | — | Slime Feet (no fall damage) |
-| Copper-Copper | Paramecia | Oxidize, Lightning Strike, Copper Overload | — | Derusting (held weapon durability always full) |
-| Beacon-Beacon | Paramecia | Flashbang, Beacon Beam, Beacon Boost | — | Light Producer (always emits light) |
-| Trident-Trident | Paramecia | Trident Throw, Lightning Strike, Whirlpool | — | Immune to water damage + bonus damage to aquatic mobs |
+| Fruit | Type | Abilities (10s cooldown each) | Passive |
+|---|---|---|---|
+| Sculk-Sculk | Logia | Sculk Spikes, Sculk Sense, Sculk Explosion | Sculk Catalyst on hostile kill |
+| Lava-Lava | Logia | Lava Fist, Lava Pool, Lava Meteor | Magma-walker (frost walker, but magma) |
+| Water-Water | Logia | Water Jet, Water Prison, Tidal Crash | Immune to water damage + Dolphin's Grace in water |
+| Arrow-Arrow | Logia | Arrow Shot, Arrow Barrage, Arrow Rain | Arrow Instinct (auto-fires an arrow when hurt) |
+| Anvil-Anvil | Paramecia | Anvil Drop, Anvil Toss, Anvil Slam | Heavy (infinite knockback resistance) |
+| Core-Core | Paramecia | Wind Burst, Heavy Punch, Land Crash | Hometown Link (permanent Bad Omen + Wind Charged) |
+| Slime-Slime | Paramecia | Slime Shot, Slime Bounce, Slime Trap | Slime Feet (no fall damage) |
+| Copper-Copper | Paramecia | Oxidize, Lightning Strike, Copper Overload | Derusting (held weapon durability always full) |
+| Beacon-Beacon | Paramecia | Flashbang, Beacon Beam, Beacon Boost | Light Producer (always emits light) |
+| Trident-Trident | Paramecia | Trident Throw, Lightning Strike, Whirlpool | Immune to water damage + bonus damage to aquatic mobs |
 
 **Logia** users only take damage from weapon-based sources (melee/projectile
 attacks); everything else (fall, fire, drowning, explosions, etc.) is
@@ -87,7 +78,7 @@ while standing in water**, unless the table above says otherwise (their
 signature Devil Fruit weakness) — Water-Water and Trident-Trident are the two
 explicit exceptions.
 
-## Architecture (for adding a 14th fruit later)
+## Architecture (for adding an 11th fruit later)
 
 Everything gameplay-related lives in `behavior_pack/scripts/`:
 
@@ -104,10 +95,12 @@ scripts/
     abilityEngine.js        listens for itemUse, resolves it to a fruit+ability, runs it
     passiveEngine.js        runs each fruit's passive on a fixed interval + exposes event hooks
     transformEngine.js      generic Zoan transform toggle (mount/dismount, invisibility, attack-lock)
+                             — currently unused (no fruit sets a `transform`), kept as
+                             ready-to-use infra if a Zoan fruit is added back later
     damageRules.js          Logia weapon-only-damage filter (world.beforeEvents.entityHurt)
     waterDamage.js          periodic Devil Fruit water-weakness tick
   fruits/
-    warden.js, dragon.js, ghast.js, sculk.js, lava.js, water.js, arrow.js,
+    sculk.js, lava.js, water.js, arrow.js,
     anvil.js, core_core.js, slime.js, copper.js, beacon.js, trident.js
 ```
 
@@ -118,7 +111,10 @@ hands to `registerFruit()`. None of the engine files know anything about any
 specific fruit — they only read the shape of `FruitDefinition`. Adding a new
 fruit means: add one `fruits/<id>.js` file, register its items in
 `behavior_pack/items/`, and import it once in `main.js`. No engine code
-changes.
+changes. (The Zoan `transform` path — mount a `minepiece:form_*` entity,
+reuse a vanilla mob's model/texture/geometry for it — is exactly how the
+three Zoan fruits this add-on shipped with earlier worked; that pattern is
+gone from `fruits/` now but the engine support for it is still there.)
 
 ## How abilities are triggered
 
@@ -132,31 +128,20 @@ bypassed by switching item stacks.
 
 ## Known limitations / assumptions
 
-- **Zoan transformation** is implemented as: hide the player (Invisibility
-  effect) and mount them, as the rider, on a purpose-built `minepiece:form_*`
-  entity that has no AI and is steered entirely by the riding player's input —
-  the same mechanism vanilla uses for riding a horse or boat. The Dragon and
-  Warden/Ghast forms reuse the real vanilla model/texture/geometry for their
-  entity so they look correct without any new art. This is a well-established
-  Bedrock add-on pattern, but it means the "form" is a separate ridden entity
-  rather than the Player entity itself literally changing type (the Script API
-  has no way to change a `Player`'s entity type).
-- Flight for the Dragon and Ghast forms uses the exact same component recipe
-  as the vanilla Happy Ghast mount (`minecraft:can_fly` + zero-gravity
-  physics + `minecraft:rideable` + `minecraft:free_camera_controlled` +
-  `minecraft:behavior.player_ride_tamed`), copied straight from
-  `resource_pack/../behavior_pack/entities/happy_ghast.json` in this same
-  repo — it's how Bedrock's own flying mount works, not a guess.
-- The three form entities reuse the real vanilla Warden/Ender Dragon/Ghast
-  **geometry, texture, and material**, but not their full animation rigs —
-  those are driven by long, model-specific Molang scripts (idle bob, wing
-  flap, vibration response, etc.) tied to bone names this add-on doesn't
-  inspect. So each form renders correctly and recognizably, just in a
-  simplified, mostly-static pose rather than fully animated. Wiring up the
-  real animation controllers is a good next step once the placeholder pass
-  is done.
+- **Zoan transformation**: the Warden-Warden, Dragon-Dragon, and Ghast-Ghast
+  fruits (the three that had a `transform`) have been removed, so nothing
+  in the current fruit list uses this path. `core/transformEngine.js` still
+  implements it generically — hide the player (Invisibility effect) and
+  mount them, as the rider, on a purpose-built `minepiece:form_*` entity
+  that has no AI and is steered entirely by the riding player's input, the
+  same mechanism vanilla uses for riding a horse or boat — so a future Zoan
+  fruit just needs its own `behavior_pack/entities/form_<id>.json` (reusing
+  a real vanilla mob's model/texture/geometry, e.g. copying the flight
+  component recipe from `behavior_pack/entities/happy_ghast.json` for a
+  flying form) and a `transform` block in its fruit module; no engine code
+  changes required.
 - Particle and sound effects use existing **vanilla** particle/sound
-  identifiers (e.g. `minecraft:sonic_explosion`, `mob.warden.sonic_boom`)
+  identifiers (e.g. `minecraft:critical_hit_emitter`, `random.explode`)
   rather than new custom particle files, in keeping with the "placeholder
   now, polish later" brief — they're already thematically matched per
   ability, so this may be all you ever need.

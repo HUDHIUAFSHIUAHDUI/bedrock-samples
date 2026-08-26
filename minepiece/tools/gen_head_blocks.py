@@ -7,7 +7,7 @@ RP = f"{BASE}/resource_pack"
 
 os.makedirs(BP_BLOCKS, exist_ok=True)
 
-FRUIT_IDS = ["warden", "dragon", "ghast", "sculk", "lava", "water", "arrow",
+FRUIT_IDS = ["sculk", "lava", "water", "arrow",
              "anvil", "core", "slime", "copper", "beacon", "trident"]
 
 
@@ -19,8 +19,9 @@ def write_json(path, data):
 
 def bounding_box(fruit_id):
     """Reads the (already block-space-rebased) head geometry and returns a center-origin
-    collision/selection box {origin: [x,y,z], size: [x,y,z]} covering it, in the -8..8/0..16
-    convention those two components use (as opposed to geometry cubes' own 0..16 corner convention)."""
+    collision/selection box {origin: [x,y,z], size: [x,y,z]} covering it. Block geometry cubes
+    and collision/selection boxes both use the same -8..8 (x/z) / 0..24 (y) block-local
+    convention, so this is a direct min/max read with no coordinate conversion needed."""
     geo = json.load(open(f"{RP}/models/blocks/{fruit_id}_{fruit_id}_fruit.geo.json"))
     cubes = geo["minecraft:geometry"][0]["bones"][0]["cubes"]
     min_x = min(c["origin"][0] for c in cubes)
@@ -40,7 +41,7 @@ def bounding_box(fruit_id):
     # affects the invisible hit/selection box, not the visible geometry.
     size_y = min(max_y - min_y, 24 - min_y)
     return {
-        "origin": [round(min_x - 8, 3), round(min_y, 3), round(min_z - 8, 3)],
+        "origin": [round(min_x, 3), round(min_y, 3), round(min_z, 3)],
         "size": [round(max_x - min_x, 3), round(size_y, 3), round(max_z - min_z, 3)],
     }
 

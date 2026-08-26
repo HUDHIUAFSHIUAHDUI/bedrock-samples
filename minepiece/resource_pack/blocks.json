@@ -1,16 +1,4 @@
 {
-  "minepiece:head_warden": {
-    "sound": "stone",
-    "textures": "head_warden"
-  },
-  "minepiece:head_dragon": {
-    "sound": "stone",
-    "textures": "head_dragon"
-  },
-  "minepiece:head_ghast": {
-    "sound": "stone",
-    "textures": "head_ghast"
-  },
   "minepiece:head_sculk": {
     "sound": "stone",
     "textures": "head_sculk"

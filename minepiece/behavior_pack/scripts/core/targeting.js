@@ -54,9 +54,9 @@ export function getFlatForward(player) {
 /**
  * Samples points every block along a straight beam from `origin` in
  * `direction` for `length` blocks, and collects every entity within `width`
- * blocks of any sampled point. Used by every "shoots a beam/stream/breath in
- * a straight line" ability (Warden Sonic Boom, Water Jet, Beacon Beam,
- * Dragon Breath) so each one doesn't reinvent line-tracing.
+ * blocks of any sampled point. Used by every "shoots a beam/stream in a
+ * straight line" ability (Water Jet, Beacon Beam) so each one doesn't
+ * reinvent line-tracing.
  * @returns {{points: import("@minecraft/server").Vector3[], entities: import("@minecraft/server").Entity[]}}
  */
 export function traceBeam(dimension, origin, direction, length, width, exclude) {

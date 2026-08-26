@@ -4,15 +4,6 @@
   "padding": 8,
   "num_mip_levels": 4,
   "texture_data": {
-    "head_warden": {
-      "textures": "textures/blocks/head_warden"
-    },
-    "head_dragon": {
-      "textures": "textures/blocks/head_dragon"
-    },
-    "head_ghast": {
-      "textures": "textures/blocks/head_ghast"
-    },
     "head_sculk": {
       "textures": "textures/blocks/head_sculk"
     },

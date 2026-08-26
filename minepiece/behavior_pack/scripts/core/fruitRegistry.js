@@ -18,7 +18,7 @@
  * @typedef {Object} Transform
  * @property {string} itemId             the activator item that toggles the transform
  * @property {string} formEntityId       the ridden mount entity representing the transformed body
- * @property {boolean} [blocksAbilitiesWhileTransformed] if true, this fruit's other abilities can't be used while transformed (Dragon: flight only)
+ * @property {boolean} [blocksAbilitiesWhileTransformed] if true, this fruit's other abilities can't be used while transformed (e.g. a flight-only form)
  *
  * @typedef {Object} Passive
  * @property {(player: import("@minecraft/server").Player) => void} [onTick] runs every PASSIVE_TICK_INTERVAL while the fruit is active
@@ -28,8 +28,8 @@
  * @property {(player: import("@minecraft/server").Player) => void} [onFirstEquip] runs once, the moment the fruit is eaten
  *
  * @typedef {Object} FruitDefinition
- * @property {string} id                 e.g. "warden"
- * @property {string} displayName        e.g. "Warden-Warden Fruit"
+ * @property {string} id                 e.g. "sculk"
+ * @property {string} displayName        e.g. "Sculk-Sculk Fruit"
  * @property {"zoan"|"logia"|"paramecia"} category
  * @property {string} itemId             the fruit item eaten to gain this power
  * @property {boolean} logiaWeaponOnlyDamage  Logia rule: only weapon-based damage lands

@@ -1,15 +1,26 @@
 """
 The CraftyCraft head models were authored as *entity attachables* — worn on
 a player's head bone, whose pivot sits ~24-28 units up (out of the player's
-~32-unit total height). Block geometry uses a totally different coordinate
-convention: 0-16 per axis, origin at the block's own bottom corner. Reusing
-the raw entity coordinates for a block would render the head floating
-roughly 1.5 blocks above where the block actually is.
+~32-unit total height), using the entity-geometry convention (x/z corner-
+anchored at 0-16, same as y).
+
+Custom BLOCK geometry uses a different convention: y is still corner-
+anchored from the floor (0 upward), but x/z are *centered* on the block
+(roughly -8 to 8), matching the range Bedrock's own collision_box/
+selection_box components document for x/z. (Confirmed against Microsoft's
+own custom-block example, which uses cube origins like [-6, 0, -3] —
+centered, not corner-anchored.) Reusing the raw entity coordinates for a
+block gets both of these wrong: the head would render floating roughly 1.5
+blocks above the block, and centered on the wrong point horizontally (a
+uniform +8/+8 offset toward one corner instead of the block's actual
+center) — that second one is what shipped initially and read as heads
+placing visibly off to one side instead of straight on the block.
 
 This translates every cube's origin/pivot and the bone's own pivot by a
-uniform offset so each head ends up centered horizontally in the block
-(x/z center at 8) and sitting just above the floor (y starts at 1) —
-a rigid-body move, so nothing about the model's shape or proportions changes.
+uniform offset so each head ends up centered horizontally on the block
+(x/z center at 0, the correct block-geometry convention) and sitting just
+above the floor (y starts at 1) — a rigid-body move, so nothing about the
+model's shape or proportions changes.
 """
 import json, glob
 
@@ -35,7 +46,7 @@ for path in sorted(glob.glob(f"{BLOCKS_DIR}/*.geo.json")):
 
     center_x = (min_x + max_x) / 2
     center_z = (min_z + max_z) / 2
-    delta = [8 - center_x, 1 - min_y, 8 - center_z]
+    delta = [0 - center_x, 1 - min_y, 0 - center_z]
 
     for cube in cubes:
         cube["origin"] = shift_point(cube["origin"], delta)

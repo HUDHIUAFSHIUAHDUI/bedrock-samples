@@ -18,9 +18,6 @@ import { registerTransformEngine } from "./core/transformEngine.js";
 import { registerProjectileEffects } from "./core/projectileEffects.js";
 import { registerFruitConsumption } from "./core/fruitConsumption.js";
 
-import "./fruits/warden.js";
-import "./fruits/dragon.js";
-import "./fruits/ghast.js";
 import "./fruits/sculk.js";
 import "./fruits/lava.js";
 import "./fruits/water.js";
