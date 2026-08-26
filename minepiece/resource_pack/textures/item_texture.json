@@ -3,7 +3,7 @@
   "texture_name": "atlas.items",
   "texture_data": {
     "fruit_warden": {
-      "textures": "textures/items/echo_shard"
+      "textures": "textures/items/fruit_warden"
     },
     "ability_warden_sonic_boom": {
       "textures": "textures/items/echo_shard"
@@ -15,7 +15,7 @@
       "textures": "textures/items/echo_shard"
     },
     "fruit_dragon": {
-      "textures": "textures/items/dragons_breath"
+      "textures": "textures/items/fruit_dragon"
     },
     "ability_dragon_breath": {
       "textures": "textures/items/dragons_breath"
@@ -27,7 +27,7 @@
       "textures": "textures/items/dragons_breath"
     },
     "fruit_ghast": {
-      "textures": "textures/items/ghast_tear"
+      "textures": "textures/items/fruit_ghast"
     },
     "ability_ghast_fireball": {
       "textures": "textures/items/ghast_tear"
@@ -39,7 +39,7 @@
       "textures": "textures/items/ghast_tear"
     },
     "fruit_sculk": {
-      "textures": "textures/blocks/sculk"
+      "textures": "textures/items/fruit_sculk"
     },
     "ability_sculk_spikes": {
       "textures": "textures/blocks/sculk"
@@ -51,7 +51,7 @@
       "textures": "textures/blocks/sculk"
     },
     "fruit_lava": {
-      "textures": "textures/items/magma_cream"
+      "textures": "textures/items/fruit_lava"
     },
     "ability_lava_fist": {
       "textures": "textures/items/magma_cream"
@@ -63,7 +63,7 @@
       "textures": "textures/items/magma_cream"
     },
     "fruit_water": {
-      "textures": "textures/items/nautilus"
+      "textures": "textures/items/fruit_water"
     },
     "ability_water_jet": {
       "textures": "textures/items/nautilus"
@@ -75,7 +75,7 @@
       "textures": "textures/items/nautilus"
     },
     "fruit_arrow": {
-      "textures": "textures/items/arrow"
+      "textures": "textures/items/fruit_arrow"
     },
     "ability_arrow_shot": {
       "textures": "textures/items/arrow"
@@ -87,7 +87,7 @@
       "textures": "textures/items/arrow"
     },
     "fruit_anvil": {
-      "textures": "textures/blocks/anvil_base"
+      "textures": "textures/items/fruit_anvil"
     },
     "ability_anvil_drop": {
       "textures": "textures/blocks/anvil_base"
@@ -99,7 +99,7 @@
       "textures": "textures/blocks/anvil_base"
     },
     "fruit_core": {
-      "textures": "textures/items/wind_charge"
+      "textures": "textures/items/fruit_core"
     },
     "ability_wind_burst": {
       "textures": "textures/items/wind_charge"
@@ -111,7 +111,7 @@
       "textures": "textures/items/wind_charge"
     },
     "fruit_slime": {
-      "textures": "textures/items/slimeball"
+      "textures": "textures/items/fruit_slime"
     },
     "ability_slime_shot": {
       "textures": "textures/items/slimeball"
@@ -123,7 +123,7 @@
       "textures": "textures/items/slimeball"
     },
     "fruit_copper": {
-      "textures": "textures/items/copper_ingot"
+      "textures": "textures/items/fruit_copper"
     },
     "ability_oxidize": {
       "textures": "textures/items/copper_ingot"
@@ -135,7 +135,7 @@
       "textures": "textures/items/copper_ingot"
     },
     "fruit_beacon": {
-      "textures": "textures/blocks/beacon"
+      "textures": "textures/items/fruit_beacon"
     },
     "ability_flashbang": {
       "textures": "textures/blocks/beacon"
@@ -147,7 +147,7 @@
       "textures": "textures/blocks/beacon"
     },
     "fruit_trident": {
-      "textures": "textures/items/trident"
+      "textures": "textures/items/fruit_trident"
     },
     "ability_trident_throw": {
       "textures": "textures/items/trident"
