@@ -1,0 +1,199 @@
+import json, os
+
+NAMESPACE = "minepiece"
+BP_ITEMS = "/home/user/bedrock-samples/minepiece/behavior_pack/items"
+RP_TEXTURES = "/home/user/bedrock-samples/minepiece/resource_pack/textures"
+RP_TEXTS = "/home/user/bedrock-samples/minepiece/resource_pack/texts"
+
+os.makedirs(BP_ITEMS, exist_ok=True)
+os.makedirs(RP_TEXTURES, exist_ok=True)
+os.makedirs(RP_TEXTS, exist_ok=True)
+
+FRUIT_IDS = [
+    "warden", "dragon", "ghast", "sculk", "lava", "water", "arrow",
+    "anvil", "core", "slime", "copper", "beacon", "trident",
+]
+
+# Every fruit/ability/transform item's icon is its own crop of the CraftyCraft 3D head model's real
+# UV texture — see derive_icons.py, which writes these PNGs into resource_pack/textures/items/.
+FRUIT_HEAD_ICON = {fruit_id: f"textures/items/fruit_{fruit_id}" for fruit_id in FRUIT_IDS}
+
+# id, displayName, category, abilities: [(abilityKey, displayName)], transform: bool
+FRUITS = [
+    ("warden", "Warden-Warden Fruit", "zoan", [
+        ("warden_sonic_boom", "Warden Sonic Boom"),
+        ("warden_blinding_punch", "Blinding Punch"),
+    ], True),
+    ("dragon", "Dragon-Dragon Fruit", "zoan", [
+        ("dragon_breath", "Dragon Breath"),
+        ("dragon_roar", "Dragon Roar"),
+    ], True),
+    ("ghast", "Ghast-Ghast Fruit", "zoan", [
+        ("ghast_fireball", "Ghast Fireball"),
+        ("ghast_barrage", "Ghast Barrage"),
+    ], True),
+    ("sculk", "Sculk-Sculk Fruit", "logia", [
+        ("sculk_spikes", "Sculk Spikes"),
+        ("sculk_sense", "Sculk Sense"),
+        ("sculk_explosion", "Sculk Explosion"),
+    ], False),
+    ("lava", "Lava-Lava Fruit", "logia", [
+        ("lava_fist", "Lava Fist"),
+        ("lava_pool", "Lava Pool"),
+        ("lava_meteor", "Lava Meteor"),
+    ], False),
+    ("water", "Water-Water Fruit", "logia", [
+        ("water_jet", "Water Jet"),
+        ("water_prison", "Water Prison"),
+        ("tidal_crash", "Tidal Crash"),
+    ], False),
+    ("arrow", "Arrow-Arrow Fruit", "logia", [
+        ("arrow_shot", "Arrow Shot"),
+        ("arrow_barrage", "Arrow Barrage"),
+        ("arrow_rain", "Arrow Rain"),
+    ], False),
+    ("anvil", "Anvil-Anvil Fruit", "paramecia", [
+        ("anvil_drop", "Anvil Drop"),
+        ("anvil_toss", "Anvil Toss"),
+        ("anvil_slam", "Anvil Slam"),
+    ], False),
+    ("core", "Core-Core Fruit", "paramecia", [
+        ("wind_burst", "Wind Burst"),
+        ("heavy_punch", "Heavy Punch"),
+        ("land_crash", "Land Crash"),
+    ], False),
+    ("slime", "Slime-Slime Fruit", "paramecia", [
+        ("slime_shot", "Slime Shot"),
+        ("slime_bounce", "Slime Bounce"),
+        ("slime_trap", "Slime Trap"),
+    ], False),
+    ("copper", "Copper-Copper Fruit", "paramecia", [
+        ("oxidize", "Oxidize"),
+        ("copper_lightning_strike", "Lightning Strike"),
+        ("copper_overload", "Copper Overload"),
+    ], False),
+    ("beacon", "Beacon-Beacon Fruit", "paramecia", [
+        ("flashbang", "Flashbang"),
+        ("beacon_beam", "Beacon Beam"),
+        ("beacon_boost", "Beacon Boost"),
+    ], False),
+    ("trident", "Trident-Trident Fruit", "paramecia", [
+        ("trident_throw", "Trident Throw"),
+        ("trident_lightning_strike", "Lightning Strike"),
+        ("whirlpool", "Whirlpool"),
+    ], False),
+]
+
+texture_data = {}
+lang_lines = []
+
+
+def write_json(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+        f.write("\n")
+
+
+def item_shell(identifier, components):
+    return {
+        "format_version": "1.21.80",
+        "minecraft:item": {
+            "description": {
+                "identifier": identifier,
+                "menu_category": {"category": "items", "group": "minepiece:minepiece"},
+            },
+            "components": components,
+        },
+    }
+
+
+for fruit_id, display_name, category, abilities, has_transform in FRUITS:
+    icon_key = f"fruit_{fruit_id}"
+    texture_data[icon_key] = {"textures": FRUIT_HEAD_ICON[fruit_id]}
+
+    fruit_identifier = f"{NAMESPACE}:fruit_{fruit_id}"
+    lang_lines.append(f"item.{fruit_identifier}.name={display_name}")
+
+    write_json(
+        os.path.join(BP_ITEMS, f"fruit_{fruit_id}.json"),
+        item_shell(
+            fruit_identifier,
+            {
+                "minecraft:display_name": {"value": f"item.{fruit_identifier}.name"},
+                "minecraft:icon": {"textures": {"default": icon_key}},
+                "minecraft:max_stack_size": 1,
+                "minecraft:food": {"nutrition": 4, "saturation_modifier": 0.3, "can_always_eat": True},
+                "minecraft:use_animation": {"value": "eat"},
+                "minecraft:use_modifiers": {"use_duration": 1.6, "movement_modifier": 0.35},
+                "minecraft:tags": {"tags": ["minecraft:is_food"]},
+                # Looking at a block face places the decorative 3D head (behavior_pack/blocks/head_<id>.json);
+                # looking at open air/water falls back to the food "use" behavior (eating it) above.
+                "minecraft:block_placer": {"block": f"{NAMESPACE}:head_{fruit_id}"},
+            },
+        ),
+    )
+
+    # Ability emblem icons are their own crop of the same fruit's 3D head texture — see derive_icons.py.
+    for ability_key, ability_name in abilities:
+        ability_identifier = f"{NAMESPACE}:ability_{ability_key}"
+        texture_data[f"ability_{ability_key}"] = {"textures": f"textures/items/ability_{ability_key}"}
+        lang_lines.append(f"item.{ability_identifier}.name={ability_name}")
+
+        write_json(
+            os.path.join(BP_ITEMS, f"ability_{ability_key}.json"),
+            item_shell(
+                ability_identifier,
+                {
+                    "minecraft:display_name": {"value": f"item.{ability_identifier}.name"},
+                    "minecraft:icon": {"textures": {"default": f"ability_{ability_key}"}},
+                    "minecraft:max_stack_size": 1,
+                    "minecraft:hand_equipped": True,
+                    "minecraft:cooldown": {"category": ability_identifier, "duration": 10, "type": "use"},
+                },
+            ),
+        )
+
+    if has_transform:
+        transform_identifier = f"{NAMESPACE}:transform_{fruit_id}"
+        transform_name = f"Transform: {display_name.split('-')[0]}"
+        texture_data[f"transform_{fruit_id}"] = {"textures": f"textures/items/transform_{fruit_id}"}
+        lang_lines.append(f"item.{transform_identifier}.name={transform_name}")
+
+        write_json(
+            os.path.join(BP_ITEMS, f"transform_{fruit_id}.json"),
+            item_shell(
+                transform_identifier,
+                {
+                    "minecraft:display_name": {"value": f"item.{transform_identifier}.name"},
+                    "minecraft:icon": {"textures": {"default": f"transform_{fruit_id}"}},
+                    "minecraft:max_stack_size": 1,
+                    "minecraft:hand_equipped": True,
+                    # Not a real 10s ability cooldown (transforms are exempt) — just a tiny debounce
+                    # so one physical click can't fire the toggle twice.
+                    "minecraft:cooldown": {"category": transform_identifier, "duration": 0.5, "type": "use"},
+                },
+            ),
+        )
+
+# --- resource_pack/textures/item_texture.json ---
+item_texture_json = {
+    "resource_pack_name": "minepiece",
+    "texture_name": "atlas.items",
+    "texture_data": texture_data,
+}
+write_json(os.path.join(RP_TEXTURES, "item_texture.json"), item_texture_json)
+
+# --- lang file (also carries the three transform-form entity names) ---
+lang_lines.append(f"entity.{NAMESPACE}:form_warden.name=Warden Form")
+lang_lines.append(f"entity.{NAMESPACE}:form_dragon.name=Ender Dragon Form")
+lang_lines.append(f"entity.{NAMESPACE}:form_ghast.name=Ghast Form")
+
+with open(os.path.join(RP_TEXTS, "en_US.lang"), "w") as f:
+    f.write("\n".join(lang_lines) + "\n")
+
+with open(os.path.join(RP_TEXTS, "languages.json"), "w") as f:
+    json.dump(["en_US"], f, indent=2)
+
+print(f"Wrote {len(FRUITS)} fruit items, {sum(len(a) for _,_,_,a,_ in FRUITS)} ability items, "
+      f"{sum(1 for *_, t in FRUITS if t)} transform items, "
+      f"{len(texture_data)} texture entries, {len(lang_lines)} lang lines.")

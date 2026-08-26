@@ -24,25 +24,29 @@ import { getFruitById } from "./fruitRegistry.js";
  */
 export function registerDamageRules() {
   world.beforeEvents.entityHurt.subscribe((event) => {
-    const player = event.hurtEntity;
-    if (player.typeId !== "minecraft:player") return;
+    try {
+      const player = event.hurtEntity;
+      if (player.typeId !== "minecraft:player") return;
 
-    const cause = event.damageSource?.cause;
-    if (cause === "override") return; // Devil Fruit water weakness always lands.
+      const cause = event.damageSource?.cause;
+      if (cause === "override") return; // Devil Fruit water weakness always lands.
 
-    const fruitId = getFruitId(player);
-    if (!fruitId) return;
+      const fruitId = getFruitId(player);
+      if (!fruitId) return;
 
-    const fruit = getFruitById(fruitId);
-    if (!fruit) return;
+      const fruit = getFruitById(fruitId);
+      if (!fruit) return;
 
-    if (fruit.cancelDamageCauses?.includes(cause)) {
-      event.cancel = true;
-      return;
-    }
+      if (fruit.cancelDamageCauses?.includes(cause)) {
+        event.cancel = true;
+        return;
+      }
 
-    if (fruit.logiaWeaponOnlyDamage && !WEAPON_DAMAGE_CAUSES.has(cause)) {
-      event.cancel = true;
+      if (fruit.logiaWeaponOnlyDamage && !WEAPON_DAMAGE_CAUSES.has(cause)) {
+        event.cancel = true;
+      }
+    } catch (error) {
+      console.error(`Minepiece: damage rules threw: ${error}`);
     }
   });
 }

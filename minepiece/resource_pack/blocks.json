@@ -1,0 +1,54 @@
+{
+  "minepiece:head_warden": {
+    "sound": "stone",
+    "textures": "head_warden"
+  },
+  "minepiece:head_dragon": {
+    "sound": "stone",
+    "textures": "head_dragon"
+  },
+  "minepiece:head_ghast": {
+    "sound": "stone",
+    "textures": "head_ghast"
+  },
+  "minepiece:head_sculk": {
+    "sound": "stone",
+    "textures": "head_sculk"
+  },
+  "minepiece:head_lava": {
+    "sound": "stone",
+    "textures": "head_lava"
+  },
+  "minepiece:head_water": {
+    "sound": "stone",
+    "textures": "head_water"
+  },
+  "minepiece:head_arrow": {
+    "sound": "stone",
+    "textures": "head_arrow"
+  },
+  "minepiece:head_anvil": {
+    "sound": "stone",
+    "textures": "head_anvil"
+  },
+  "minepiece:head_core": {
+    "sound": "stone",
+    "textures": "head_core"
+  },
+  "minepiece:head_slime": {
+    "sound": "stone",
+    "textures": "head_slime"
+  },
+  "minepiece:head_copper": {
+    "sound": "stone",
+    "textures": "head_copper"
+  },
+  "minepiece:head_beacon": {
+    "sound": "stone",
+    "textures": "head_beacon"
+  },
+  "minepiece:head_trident": {
+    "sound": "stone",
+    "textures": "head_trident"
+  }
+}

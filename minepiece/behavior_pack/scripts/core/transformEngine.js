@@ -35,10 +35,15 @@ export function registerTransformEngine() {
       return;
     }
 
-    if (isTransformed(player)) {
-      revertTransform(player);
-    } else {
-      applyTransform(player, fruit);
+    try {
+      if (isTransformed(player)) {
+        revertTransform(player);
+      } else {
+        applyTransform(player, fruit);
+      }
+    } catch (error) {
+      console.error(`Minepiece: transform "${fruit.id}" threw: ${error}`);
+      player.sendMessage(`§cTransforming failed: ${error}`);
     }
   });
 
@@ -47,12 +52,16 @@ export function registerTransformEngine() {
   // invisible and un-ridden forever.
   system.runInterval(() => {
     for (const player of world.getAllPlayers()) {
-      if (!isTransformed(player)) continue;
-      const entityId = getTransformEntityId(player);
-      if (!entityId || !world.getEntity(entityId)) {
-        setTransformed(player, false);
-        setTransformEntityId(player, undefined);
-        player.removeEffect("invisibility");
+      try {
+        if (!isTransformed(player)) continue;
+        const entityId = getTransformEntityId(player);
+        if (!entityId || !world.getEntity(entityId)) {
+          setTransformed(player, false);
+          setTransformEntityId(player, undefined);
+          player.removeEffect("invisibility");
+        }
+      } catch (error) {
+        console.error(`Minepiece: transform safety-net tick threw: ${error}`);
       }
     }
   }, PASSIVE_TICK_INTERVAL);

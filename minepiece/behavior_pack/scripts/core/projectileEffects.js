@@ -31,15 +31,23 @@ function randomNegativeEffect() {
 
 export function registerProjectileEffects() {
   world.afterEvents.projectileHitBlock.subscribe((event) => {
-    handleImpact(event, event.location);
+    try {
+      handleImpact(event, event.location);
+    } catch (error) {
+      console.error(`Minepiece: projectileHitBlock threw: ${error}`);
+    }
   });
 
   world.afterEvents.projectileHitEntity.subscribe((event) => {
-    handleImpact(event, event.location);
+    try {
+      handleImpact(event, event.location);
 
-    if (event.projectile.hasTag(PROJECTILE_FX.RANDOM_DEBUFF)) {
-      const hitEntity = event.getEntityHit().entity;
-      hitEntity?.addEffect(randomNegativeEffect(), 20 * 6, { amplifier: 1 });
+      if (event.projectile.hasTag(PROJECTILE_FX.RANDOM_DEBUFF)) {
+        const hitEntity = event.getEntityHit().entity;
+        hitEntity?.addEffect(randomNegativeEffect(), 20 * 6, { amplifier: 1 });
+      }
+    } catch (error) {
+      console.error(`Minepiece: projectileHitEntity threw: ${error}`);
     }
   });
 }

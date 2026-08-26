@@ -1,0 +1,87 @@
+import json, os, glob
+
+NAMESPACE = "minepiece"
+BASE = "/home/user/bedrock-samples/minepiece"
+BP_BLOCKS = f"{BASE}/behavior_pack/blocks"
+RP = f"{BASE}/resource_pack"
+
+os.makedirs(BP_BLOCKS, exist_ok=True)
+
+FRUIT_IDS = ["warden", "dragon", "ghast", "sculk", "lava", "water", "arrow",
+             "anvil", "core", "slime", "copper", "beacon", "trident"]
+
+
+def write_json(path, data):
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+        f.write("\n")
+
+
+def bounding_box(fruit_id):
+    """Reads the (already block-space-rebased) head geometry and returns a center-origin
+    collision/selection box {origin: [x,y,z], size: [x,y,z]} covering it, in the -8..8/0..16
+    convention those two components use (as opposed to geometry cubes' own 0..16 corner convention)."""
+    geo = json.load(open(f"{RP}/models/blocks/{fruit_id}_{fruit_id}_fruit.geo.json"))
+    cubes = geo["minecraft:geometry"][0]["bones"][0]["cubes"]
+    min_x = min(c["origin"][0] for c in cubes)
+    max_x = max(c["origin"][0] + c["size"][0] for c in cubes)
+    min_y = min(c["origin"][1] for c in cubes)
+    max_y = max(c["origin"][1] + c["size"][1] for c in cubes)
+    min_z = min(c["origin"][2] for c in cubes)
+    max_z = max(c["origin"][2] + c["size"][2] for c in cubes)
+    return {
+        "origin": [round(min_x - 8, 3), round(min_y, 3), round(min_z - 8, 3)],
+        "size": [round(max_x - min_x, 3), round(max_y - min_y, 3), round(max_z - min_z, 3)],
+    }
+
+
+terrain_texture_data = {}
+blocks_json_entries = {}
+
+for fruit_id in FRUIT_IDS:
+    identifier = f"{NAMESPACE}:head_{fruit_id}"
+    geometry_id = f"geometry.{fruit_id}_{fruit_id}_fruit"
+    texture_key = f"head_{fruit_id}"
+    box = bounding_box(fruit_id)
+
+    write_json(
+        f"{BP_BLOCKS}/head_{fruit_id}.json",
+        {
+            "format_version": "1.21.80",
+            "minecraft:block": {
+                "description": {
+                    "identifier": identifier,
+                    "menu_category": {"category": "none"},
+                },
+                "components": {
+                    "minecraft:geometry": geometry_id,
+                    "minecraft:material_instances": {
+                        "*": {"texture": texture_key, "render_method": "alpha_test"}
+                    },
+                    "minecraft:collision_box": box,
+                    "minecraft:selection_box": box,
+                    "minecraft:destructible_by_mining": {"seconds_to_destroy": 1},
+                    "minecraft:light_dampening": 0,
+                    "minecraft:map_color": "#8a8a8a",
+                },
+            },
+        },
+    )
+
+    terrain_texture_data[texture_key] = {"textures": f"textures/blocks/{texture_key}"}
+    blocks_json_entries[identifier] = {"sound": "stone", "textures": texture_key}
+
+write_json(
+    f"{RP}/textures/terrain_texture.json",
+    {
+        "resource_pack_name": "minepiece",
+        "texture_name": "atlas.terrain",
+        "padding": 8,
+        "num_mip_levels": 4,
+        "texture_data": terrain_texture_data,
+    },
+)
+
+write_json(f"{RP}/blocks.json", blocks_json_entries)
+
+print(f"Wrote {len(FRUIT_IDS)} block definitions, {len(terrain_texture_data)} terrain texture entries.")

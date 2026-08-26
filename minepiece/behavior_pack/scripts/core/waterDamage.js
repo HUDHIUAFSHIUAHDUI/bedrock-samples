@@ -17,15 +17,19 @@ import { getFruitById } from "./fruitRegistry.js";
 export function registerWaterDamage() {
   system.runInterval(() => {
     for (const player of world.getAllPlayers()) {
-      const fruitId = getFruitId(player);
-      if (!fruitId) continue;
+      try {
+        const fruitId = getFruitId(player);
+        if (!fruitId) continue;
 
-      const fruit = getFruitById(fruitId);
-      if (!fruit || fruit.waterImmune) continue;
-      if (isTransformed(player)) continue;
+        const fruit = getFruitById(fruitId);
+        if (!fruit || fruit.waterImmune) continue;
+        if (isTransformed(player)) continue;
 
-      if (player.isInWater) {
-        player.applyDamage(WATER_DAMAGE_AMOUNT, { cause: "override" });
+        if (player.isInWater) {
+          player.applyDamage(WATER_DAMAGE_AMOUNT, { cause: "override" });
+        }
+      } catch (error) {
+        console.error(`Minepiece: water damage tick threw: ${error}`);
       }
     }
   }, WATER_DAMAGE_TICK_INTERVAL);

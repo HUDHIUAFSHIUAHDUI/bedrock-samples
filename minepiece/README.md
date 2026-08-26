@@ -16,21 +16,55 @@ vanilla reference packs and are used only as a reference while building this.
 4. Give yourself a fruit with `/give @s minepiece:fruit_warden` (swap the id for
    any fruit below) and eat it.
 
-## Placeholder art
+## If nothing seems to happen
 
-Every fruit item, ability item, and transformation-activator item currently
-reuses an existing **vanilla** icon (apple, blaze powder, echo shard, etc.) as
-a stand-in so the item has a real, visible icon instead of the pink/black
-"missing texture" checker. Swap them out later by dropping new PNGs into
-`resource_pack/textures/items/` and repointing the matching entry in
-`resource_pack/textures/item_texture.json` — nothing in the scripts needs to
-change, since scripts only ever reference item **identifiers**
-(`minepiece:fruit_warden`), never texture paths.
+Every place scripts run — starting up, using an ability, eating a fruit,
+transforming — is wrapped so a failure reports itself instead of just doing
+nothing: watch chat for a red `[Minepiece] ... failed: ...` message, and
+check the content log (`console.error` output) for the same. If eating a
+fruit or using an ability produces *no* message at all, not even an error,
+the scripts aren't running — almost always because the **Beta APIs**
+experimental toggle (step 3 above) isn't on for that world. It generally has
+to be enabled when the world is created; toggling it later on an existing
+world may not take effect. If you do see a red error message, that's the
+real bug — send it over and it's fixable directly instead of guessing.
 
-The three Zoan transformation forms (Warden, Ender Dragon, Ghast) reuse the
-**real vanilla mob models and textures** for their form — that's not a
-placeholder, it's the intended look, since a devil fruit user's transformed
-body should look like the real animal/mob.
+## Fruit art
+
+Every fruit's item icon, its abilities' icons, and its Zoan transform icon
+(where it has one) are all real crops taken directly from a supplied 3D head
+model pack ("CraftyCraft") — specifically from each fruit's own head *skin
+texture*, using the same UV unfold Minecraft itself uses to turn a cube into
+a flat texture sheet. `scratchpad`-side script `derive_icons.py` reads each
+head's `.geo.json` to find its cube's real UV rectangle, so it crops the
+literal front/top/side faces of that 3D model, not a hand-picked guess. One
+fruit's whole item set (fruit + abilities + transform) is therefore always a
+set of *different views of the same head*, not unrelated art.
+
+Each fruit item is **eatable, placeable, and (once placed) a real 3D
+model**:
+- Eating it (hold to consume, same as any vanilla food) grants that Devil
+  Fruit's power — unchanged from before.
+- Looking at a block and using the item instead **places it** as a small
+  decorative head block (`behavior_pack/blocks/head_<id>.json`), rendered
+  with the actual 3D geometry + full skin texture from the same head pack
+  (`resource_pack/models/blocks/`, `resource_pack/textures/blocks/`) —
+  not a flat icon. The geometry's coordinates are re-based from "worn on a
+  player's head bone" space into "sitting on the floor of one block" space
+  (see the comment atop `rebase_head_geometry.py`) so it doesn't render
+  floating above the block.
+- There's no supported way in the current data-driven item format to make
+  the *held/dropped* item itself render as a 3D model the way vanilla's
+  hardcoded trident/shield do (no `minecraft:geometry` item component
+  exists) — only the wearable/armor attachable system gets real 3D
+  rendering, and combining that with `minecraft:food` risks breaking
+  eating outright, so it isn't used here. In hand, the fruit shows its
+  derived 2D icon; the real 3D model appears once it's placed.
+
+The three Zoan transformation forms (Warden, Ender Dragon, Ghast) are a
+separate thing from the fruit heads above — they reuse the **real vanilla
+mob models and textures** for the player's transformed body, since that
+should look like the actual animal/mob, not a stylized head.
 
 ## Fruit list
 

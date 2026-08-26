@@ -1,0 +1,47 @@
+{
+  "resource_pack_name": "minepiece",
+  "texture_name": "atlas.terrain",
+  "padding": 8,
+  "num_mip_levels": 4,
+  "texture_data": {
+    "head_warden": {
+      "textures": "textures/blocks/head_warden"
+    },
+    "head_dragon": {
+      "textures": "textures/blocks/head_dragon"
+    },
+    "head_ghast": {
+      "textures": "textures/blocks/head_ghast"
+    },
+    "head_sculk": {
+      "textures": "textures/blocks/head_sculk"
+    },
+    "head_lava": {
+      "textures": "textures/blocks/head_lava"
+    },
+    "head_water": {
+      "textures": "textures/blocks/head_water"
+    },
+    "head_arrow": {
+      "textures": "textures/blocks/head_arrow"
+    },
+    "head_anvil": {
+      "textures": "textures/blocks/head_anvil"
+    },
+    "head_core": {
+      "textures": "textures/blocks/head_core"
+    },
+    "head_slime": {
+      "textures": "textures/blocks/head_slime"
+    },
+    "head_copper": {
+      "textures": "textures/blocks/head_copper"
+    },
+    "head_beacon": {
+      "textures": "textures/blocks/head_beacon"
+    },
+    "head_trident": {
+      "textures": "textures/blocks/head_trident"
+    }
+  }
+}

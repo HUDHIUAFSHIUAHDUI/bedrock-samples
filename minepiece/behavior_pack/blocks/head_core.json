@@ -1,0 +1,49 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "minepiece:head_core",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:geometry": "geometry.core_core_fruit",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "head_core",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -2.5,
+          1,
+          -2.5
+        ],
+        "size": [
+          5.0,
+          9,
+          5.0
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -2.5,
+          1,
+          -2.5
+        ],
+        "size": [
+          5.0,
+          9,
+          5.0
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#8a8a8a"
+    }
+  }
+}

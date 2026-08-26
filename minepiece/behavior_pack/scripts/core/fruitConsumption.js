@@ -22,10 +22,14 @@ export function registerFruitConsumption() {
       return;
     }
 
-    setFruitId(player, fruit.id);
-    ensureAbilityKit(player, fruit);
-    fruit.passive?.onFirstEquip?.(player);
-
-    player.sendMessage(`§d§lYou ate the ${fruit.displayName}!§r §7You now have the power of the ${fruit.displayName.split("-")[0]}.`);
+    try {
+      setFruitId(player, fruit.id);
+      ensureAbilityKit(player, fruit);
+      fruit.passive?.onFirstEquip?.(player);
+      player.sendMessage(`§d§lYou ate the ${fruit.displayName}!§r §7You now have the power of the ${fruit.displayName.split("-")[0]}.`);
+    } catch (error) {
+      console.error(`Minepiece: eating "${fruit.id}" threw: ${error}`);
+      player.sendMessage(`§c[Minepiece] Eating the ${fruit.displayName} failed: ${error}`);
+    }
   });
 }

@@ -32,10 +32,34 @@ import "./fruits/copper.js";
 import "./fruits/beacon.js";
 import "./fruits/trident.js";
 
-registerDamageRules();
-registerWaterDamage();
-registerAbilityEngine();
-registerPassiveEngine();
-registerTransformEngine();
-registerProjectileEffects();
-registerFruitConsumption();
+import { world } from "@minecraft/server";
+
+/**
+ * Registers one engine, and if it throws, reports the error loudly instead
+ * of silently taking every other engine down with it. A thrown error inside
+ * a plain function call like these doesn't normally propagate any further
+ * than this catch, but this guarantees it: one broken engine never prevents
+ * the rest of Minepiece from working, and the failure is actually visible
+ * (in the content log AND in chat, once a player is online to see it)
+ * instead of presenting as "nothing happens" with zero explanation.
+ */
+function registerEngine(name, registerFn) {
+  try {
+    registerFn();
+  } catch (error) {
+    console.error(`Minepiece: "${name}" failed to start: ${error}`);
+    world.afterEvents.playerSpawn.subscribe((event) => {
+      if (event.initialSpawn) {
+        event.player.sendMessage(`§c[Minepiece] "${name}" failed to start: ${error}`);
+      }
+    });
+  }
+}
+
+registerEngine("damage rules", registerDamageRules);
+registerEngine("water damage", registerWaterDamage);
+registerEngine("ability engine", registerAbilityEngine);
+registerEngine("passive engine", registerPassiveEngine);
+registerEngine("transform engine", registerTransformEngine);
+registerEngine("projectile effects", registerProjectileEffects);
+registerEngine("fruit consumption", registerFruitConsumption);

@@ -34,6 +34,9 @@
         "tags": [
           "minecraft:is_food"
         ]
+      },
+      "minecraft:block_placer": {
+        "block": "minepiece:head_dragon"
       }
     }
   }

@@ -1,0 +1,49 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "minepiece:head_slime",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:geometry": "geometry.slime_slime_fruit",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "head_slime",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -4.25,
+          1,
+          -4.0
+        ],
+        "size": [
+          8.5,
+          16.5,
+          8.0
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -4.25,
+          1,
+          -4.0
+        ],
+        "size": [
+          8.5,
+          16.5,
+          8.0
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#8a8a8a"
+    }
+  }
+}

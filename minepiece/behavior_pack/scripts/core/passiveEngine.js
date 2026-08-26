@@ -24,44 +24,63 @@ export function registerPassiveEngine() {
       const fruit = getFruitById(fruitId);
       if (!fruit) continue;
 
-      ensureAbilityKit(player, fruit);
-      fruit.passive?.onTick?.(player);
+      // A throw from one player's passive must never stop every other player after them in this
+      // loop from being serviced this tick — that's how one broken passive would look like every
+      // fruit is broken.
+      try {
+        ensureAbilityKit(player, fruit);
+        fruit.passive?.onTick?.(player);
+      } catch (error) {
+        console.error(`Minepiece: passive tick for "${fruit.id}" threw: ${error}`);
+      }
     }
   }, PASSIVE_TICK_INTERVAL);
 
   world.afterEvents.entityHurt.subscribe((event) => {
-    const player = event.hurtEntity;
-    if (player.typeId !== "minecraft:player") return;
+    try {
+      const player = event.hurtEntity;
+      if (player.typeId !== "minecraft:player") return;
 
-    const fruitId = getFruitId(player);
-    if (!fruitId) return;
+      const fruitId = getFruitId(player);
+      if (!fruitId) return;
 
-    const fruit = getFruitById(fruitId);
-    fruit?.passive?.onHurtAfter?.(player, event);
+      const fruit = getFruitById(fruitId);
+      fruit?.passive?.onHurtAfter?.(player, event);
+    } catch (error) {
+      console.error(`Minepiece: onHurtAfter threw: ${error}`);
+    }
   });
 
   world.afterEvents.entityHitEntity.subscribe((event) => {
-    const attacker = event.damagingEntity;
-    if (attacker.typeId !== "minecraft:player") return;
+    try {
+      const attacker = event.damagingEntity;
+      if (attacker.typeId !== "minecraft:player") return;
 
-    const fruitId = getFruitId(attacker);
-    if (!fruitId) return;
+      const fruitId = getFruitId(attacker);
+      if (!fruitId) return;
 
-    const fruit = getFruitById(fruitId);
-    fruit?.passive?.onHitEntity?.(attacker, event.hitEntity);
+      const fruit = getFruitById(fruitId);
+      fruit?.passive?.onHitEntity?.(attacker, event.hitEntity);
+    } catch (error) {
+      console.error(`Minepiece: onHitEntity threw: ${error}`);
+    }
   });
 
   world.afterEvents.entityDie.subscribe((event) => {
-    const killer = event.damageSource?.damagingEntity;
-    if (!killer || killer.typeId !== "minecraft:player") return;
+    try {
+      const killer = event.damageSource?.damagingEntity;
+      if (!killer || killer.typeId !== "minecraft:player") return;
 
-    const fruitId = getFruitId(killer);
-    if (!fruitId) return;
+      const fruitId = getFruitId(killer);
+      if (!fruitId) return;
 
-    const fruit = getFruitById(fruitId);
-    if (!fruit?.passive?.onKillHostile) return;
+      const fruit = getFruitById(fruitId);
+      if (!fruit?.passive?.onKillHostile) return;
 
-    const isHostile = event.deadEntity.getComponent("minecraft:type_family")?.hasTypeFamily("monster") ?? false;
-    if (isHostile) fruit.passive.onKillHostile(killer, event.deadEntity);
+      const isHostile = event.deadEntity.getComponent("minecraft:type_family")?.hasTypeFamily("monster") ?? false;
+      if (isHostile) fruit.passive.onKillHostile(killer, event.deadEntity);
+    } catch (error) {
+      console.error(`Minepiece: onKillHostile threw: ${error}`);
+    }
   });
 }

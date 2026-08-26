@@ -35,13 +35,21 @@ export function registerAbilityEngine() {
       return;
     }
 
-    ability.execute({
-      player,
-      dimension: player.dimension,
-      itemStack: event.itemStack,
-      fruit,
-      ability,
-    });
+    try {
+      ability.execute({
+        player,
+        dimension: player.dimension,
+        itemStack: event.itemStack,
+        fruit,
+        ability,
+      });
+    } catch (error) {
+      // Surface the failure instead of the ability silently doing nothing — see main.js for why
+      // this matters: a throw here would otherwise look identical to "nothing happened".
+      console.error(`Minepiece: ability "${ability.id}" threw: ${error}`);
+      player.sendMessage(`§c${ability.name} failed: ${error}`);
+      return;
+    }
 
     startCooldown(player, ability.id, ability.cooldownSeconds ?? DEFAULT_COOLDOWN_SECONDS, ability.itemId);
   });

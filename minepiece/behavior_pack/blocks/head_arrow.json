@@ -1,0 +1,49 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:block": {
+    "description": {
+      "identifier": "minepiece:head_arrow",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:geometry": "geometry.arrow_arrow_fruit",
+      "minecraft:material_instances": {
+        "*": {
+          "texture": "head_arrow",
+          "render_method": "alpha_test"
+        }
+      },
+      "minecraft:collision_box": {
+        "origin": [
+          -2.5,
+          1,
+          -2.5
+        ],
+        "size": [
+          5.0,
+          28,
+          5.0
+        ]
+      },
+      "minecraft:selection_box": {
+        "origin": [
+          -2.5,
+          1,
+          -2.5
+        ],
+        "size": [
+          5.0,
+          28,
+          5.0
+        ]
+      },
+      "minecraft:destructible_by_mining": {
+        "seconds_to_destroy": 1
+      },
+      "minecraft:light_dampening": 0,
+      "minecraft:map_color": "#8a8a8a"
+    }
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "minecraft:geometry": [
+    {
+      "bones": [
+        {
+          "cubes": [
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                8,
+                1,
+                8
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                4.0,
+                1,
+                4.0
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                7,
+                1,
+                7
+              ],
+              "uv": [
+                32,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                4.5,
+                1.5,
+                4.5
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                6,
+                1,
+                6
+              ],
+              "uv": [
+                60,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                5.0,
+                2,
+                5.0
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                5,
+                3,
+                5
+              ],
+              "uv": [
+                84,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                5.5,
+                2.5,
+                5.5
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                9,
+                3,
+                7
+              ],
+              "uv": [
+                104,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                3.5,
+                6.5,
+                4.5
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                2,
+                6,
+                1
+              ],
+              "uv": [
+                136,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                6.5,
+                10.5,
+                7.5
+              ]
+            },
+            {
+              "pivot": [
+                8.0,
+                5,
+                8.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                6,
+                1,
+                1
+              ],
+              "uv": [
+                142,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                6.5,
+                13,
+                7.5
+              ]
+            }
+          ],
+          "name": "head",
+          "pivot": [
+            8.0,
+            1,
+            8.0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "description": {
+        "visible_bounds_width": 2,
+        "texture_height": 10,
+        "texture_width": 156,
+        "identifier": "geometry.anvil_anvil_fruit",
+        "visible_bounds_height": 1,
+        "visible_bounds_offset": [
+          0,
+          0.5,
+          0
+        ]
+      }
+    }
+  ],
+  "format_version": "1.12.0"
+}

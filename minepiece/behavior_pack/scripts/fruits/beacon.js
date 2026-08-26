@@ -7,7 +7,17 @@ import { spawnParticle, playSound } from "../core/vfx.js";
 
 const BEACON_BOOST_EFFECTS = ["speed", "haste", "resistance", "jump_boost", "strength"];
 const BEACON_BOOST_DURATION_TICKS = 1_000_000;
-const LIT_BLOCK = BlockPermutation.resolve("minecraft:light_block", { block_light_level: 15 });
+
+// Resolved lazily (on first use, not at module load) and cached — calling BlockPermutation.resolve()
+// at module scope has been known to throw before the world is fully ready, which would take the
+// entire script bundle down with it since this file is imported before any engine gets registered.
+let cachedLitBlockPermutation;
+function getLitBlockPermutation() {
+  if (!cachedLitBlockPermutation) {
+    cachedLitBlockPermutation = BlockPermutation.resolve("minecraft:light_block", { block_light_level: 15 });
+  }
+  return cachedLitBlockPermutation;
+}
 
 registerFruit({
   id: "beacon",
@@ -95,7 +105,7 @@ registerFruit({
       }
 
       const block = dimension.getBlock(currentBlock);
-      if (block?.isAir) block.setPermutation(LIT_BLOCK);
+      if (block?.isAir) block.setPermutation(getLitBlockPermutation());
       setLastFootBlock(player, currentKey);
     },
   },
