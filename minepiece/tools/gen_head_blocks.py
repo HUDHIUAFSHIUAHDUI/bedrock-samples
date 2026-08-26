@@ -29,9 +29,19 @@ def bounding_box(fruit_id):
     max_y = max(c["origin"][1] + c["size"][1] for c in cubes)
     min_z = min(c["origin"][2] for c in cubes)
     max_z = max(c["origin"][2] + c["size"][2] for c in cubes)
+
+    # Bedrock's collision/selection box components are constrained by the engine to
+    # origin+size within Vec3(-8,0,-8)..Vec3(8,24,8). A couple of these heads (arrow,
+    # beacon) have tall decorative pieces reaching well past y=24 in block-geometry
+    # coordinates; left uncapped the box is out of bounds and the engine silently
+    # falls back to a mismatched default hitbox, which is exactly what produces a
+    # "the head doesn't place right" feel (visible model in one spot, collision/
+    # selection outline in another). Clamp the top so the box stays valid — this only
+    # affects the invisible hit/selection box, not the visible geometry.
+    size_y = min(max_y - min_y, 24 - min_y)
     return {
         "origin": [round(min_x - 8, 3), round(min_y, 3), round(min_z - 8, 3)],
-        "size": [round(max_x - min_x, 3), round(max_y - min_y, 3), round(max_z - min_z, 3)],
+        "size": [round(max_x - min_x, 3), round(size_y, 3), round(max_z - min_z, 3)],
     }
 
 

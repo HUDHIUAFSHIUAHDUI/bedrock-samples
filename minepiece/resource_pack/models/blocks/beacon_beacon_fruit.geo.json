@@ -127,14 +127,14 @@
         }
       ],
       "description": {
-        "visible_bounds_width": 2,
+        "visible_bounds_width": 0.93,
         "texture_height": 16,
         "texture_width": 118,
         "identifier": "geometry.beacon_beacon_fruit",
-        "visible_bounds_height": 1,
+        "visible_bounds_height": 1.8,
         "visible_bounds_offset": [
           0,
-          0.5,
+          0.812,
           0
         ]
       }
