@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:transform_ghast",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:transform_ghast.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "transform_ghast"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:cooldown": {
+        "category": "minepiece:transform_ghast",
+        "duration": 0.5,
+        "type": "use"
+      }
+    }
+  }
+}

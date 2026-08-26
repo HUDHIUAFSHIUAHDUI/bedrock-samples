@@ -1,0 +1,162 @@
+{
+  "resource_pack_name": "minepiece",
+  "texture_name": "atlas.items",
+  "texture_data": {
+    "fruit_warden": {
+      "textures": "textures/items/echo_shard"
+    },
+    "ability_warden_sonic_boom": {
+      "textures": "textures/items/echo_shard"
+    },
+    "ability_warden_blinding_punch": {
+      "textures": "textures/items/echo_shard"
+    },
+    "transform_warden": {
+      "textures": "textures/items/echo_shard"
+    },
+    "fruit_dragon": {
+      "textures": "textures/items/dragons_breath"
+    },
+    "ability_dragon_breath": {
+      "textures": "textures/items/dragons_breath"
+    },
+    "ability_dragon_roar": {
+      "textures": "textures/items/dragons_breath"
+    },
+    "transform_dragon": {
+      "textures": "textures/items/dragons_breath"
+    },
+    "fruit_ghast": {
+      "textures": "textures/items/ghast_tear"
+    },
+    "ability_ghast_fireball": {
+      "textures": "textures/items/ghast_tear"
+    },
+    "ability_ghast_barrage": {
+      "textures": "textures/items/ghast_tear"
+    },
+    "transform_ghast": {
+      "textures": "textures/items/ghast_tear"
+    },
+    "fruit_sculk": {
+      "textures": "textures/blocks/sculk"
+    },
+    "ability_sculk_spikes": {
+      "textures": "textures/blocks/sculk"
+    },
+    "ability_sculk_sense": {
+      "textures": "textures/blocks/sculk"
+    },
+    "ability_sculk_explosion": {
+      "textures": "textures/blocks/sculk"
+    },
+    "fruit_lava": {
+      "textures": "textures/items/magma_cream"
+    },
+    "ability_lava_fist": {
+      "textures": "textures/items/magma_cream"
+    },
+    "ability_lava_pool": {
+      "textures": "textures/items/magma_cream"
+    },
+    "ability_lava_meteor": {
+      "textures": "textures/items/magma_cream"
+    },
+    "fruit_water": {
+      "textures": "textures/items/nautilus"
+    },
+    "ability_water_jet": {
+      "textures": "textures/items/nautilus"
+    },
+    "ability_water_prison": {
+      "textures": "textures/items/nautilus"
+    },
+    "ability_tidal_crash": {
+      "textures": "textures/items/nautilus"
+    },
+    "fruit_arrow": {
+      "textures": "textures/items/arrow"
+    },
+    "ability_arrow_shot": {
+      "textures": "textures/items/arrow"
+    },
+    "ability_arrow_barrage": {
+      "textures": "textures/items/arrow"
+    },
+    "ability_arrow_rain": {
+      "textures": "textures/items/arrow"
+    },
+    "fruit_anvil": {
+      "textures": "textures/blocks/anvil_base"
+    },
+    "ability_anvil_drop": {
+      "textures": "textures/blocks/anvil_base"
+    },
+    "ability_anvil_toss": {
+      "textures": "textures/blocks/anvil_base"
+    },
+    "ability_anvil_slam": {
+      "textures": "textures/blocks/anvil_base"
+    },
+    "fruit_core": {
+      "textures": "textures/items/wind_charge"
+    },
+    "ability_wind_burst": {
+      "textures": "textures/items/wind_charge"
+    },
+    "ability_heavy_punch": {
+      "textures": "textures/items/wind_charge"
+    },
+    "ability_land_crash": {
+      "textures": "textures/items/wind_charge"
+    },
+    "fruit_slime": {
+      "textures": "textures/items/slimeball"
+    },
+    "ability_slime_shot": {
+      "textures": "textures/items/slimeball"
+    },
+    "ability_slime_bounce": {
+      "textures": "textures/items/slimeball"
+    },
+    "ability_slime_trap": {
+      "textures": "textures/items/slimeball"
+    },
+    "fruit_copper": {
+      "textures": "textures/items/copper_ingot"
+    },
+    "ability_oxidize": {
+      "textures": "textures/items/copper_ingot"
+    },
+    "ability_copper_lightning_strike": {
+      "textures": "textures/items/copper_ingot"
+    },
+    "ability_copper_overload": {
+      "textures": "textures/items/copper_ingot"
+    },
+    "fruit_beacon": {
+      "textures": "textures/blocks/beacon"
+    },
+    "ability_flashbang": {
+      "textures": "textures/blocks/beacon"
+    },
+    "ability_beacon_beam": {
+      "textures": "textures/blocks/beacon"
+    },
+    "ability_beacon_boost": {
+      "textures": "textures/blocks/beacon"
+    },
+    "fruit_trident": {
+      "textures": "textures/items/trident"
+    },
+    "ability_trident_throw": {
+      "textures": "textures/items/trident"
+    },
+    "ability_trident_lightning_strike": {
+      "textures": "textures/items/trident"
+    },
+    "ability_whirlpool": {
+      "textures": "textures/items/trident"
+    }
+  }
+}

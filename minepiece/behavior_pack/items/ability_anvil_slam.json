@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:ability_anvil_slam",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:ability_anvil_slam.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "ability_anvil_slam"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:cooldown": {
+        "category": "minepiece:ability_anvil_slam",
+        "duration": 10,
+        "type": "use"
+      }
+    }
+  }
+}

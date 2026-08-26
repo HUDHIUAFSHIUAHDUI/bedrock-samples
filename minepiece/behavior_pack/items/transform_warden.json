@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:transform_warden",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:transform_warden.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "transform_warden"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:cooldown": {
+        "category": "minepiece:transform_warden",
+        "duration": 0.5,
+        "type": "use"
+      }
+    }
+  }
+}

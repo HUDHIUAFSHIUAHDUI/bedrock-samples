@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.60",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:ability_wind_burst",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:ability_wind_burst.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "ability_wind_burst"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:cooldown": {
+        "category": "minepiece:ability_wind_burst",
+        "duration": 10,
+        "type": "use"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minepiece:form_warden",
+      "materials": {
+        "default": "warden"
+      },
+      "textures": {
+        "default": "textures/entity/warden/warden"
+      },
+      "geometry": {
+        "default": "geometry.warden"
+      },
+      "render_controllers": ["controller.render.warden"]
+    }
+  }
+}

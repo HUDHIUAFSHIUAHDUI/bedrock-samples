@@ -1,0 +1,18 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minepiece:form_dragon",
+      "materials": {
+        "default": "ender_dragon"
+      },
+      "textures": {
+        "default": "textures/entity/dragon/dragon"
+      },
+      "geometry": {
+        "default": "geometry.dragon"
+      },
+      "render_controllers": ["controller.render.ender_dragon_default"]
+    }
+  }
+}
