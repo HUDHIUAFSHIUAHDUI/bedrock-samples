@@ -8,28 +8,35 @@ y-range elsewhere in the model. Confirmed against real screenshots showing
 goat's horns, potion's spout segments, and shulker's antenna all rendering
 as visibly separate floating pieces.
 
-Two earlier versions of this fix got the texture side wrong:
+Three earlier versions of this fix had real problems:
   1. Growing one of the two disconnected cubes' own size, without touching
      its "uv" — Minecraft's box-UV allocates a cube a texture footprint
      sized to its *own* dimensions (width = 2*size.z + 2*size.x, height =
      size.y + size.z, from that cube's own "uv" origin); growing the cube
-     without growing its footprint makes it read pixels a neighboring cube
-     already owns.
+     without growing its footprint made it read pixels a neighboring cube
+     already owned.
   2. Adding a new bridge cube but reusing an existing cube's "uv" outright —
      safe only if the bridge is no bigger *on every axis* than the cube it
-     borrows from, which isn't true in general (the bridge is often longer
-     along the gap axis than either connected piece's own thickness there).
+     borrows from, which isn't true in general.
+  3. Computing every cube's position from its raw origin+size, ignoring
+     "rotation" entirely — wrong for any cube that has one (goat's horn
+     cubes are rotated 90° around Y). A rotated cube's *true* rendered
+     position is nowhere near its raw origin/size box; treating it as if it
+     weren't rotated aimed the goat fix's bridge at completely the wrong
+     spot, so it never actually touched the real (rotated) horn.
 
-The actually-safe fix: give every bridge cube genuinely new, dedicated
-pixels. This appends a fresh solid-color rectangle to the bottom of the
-fruit's own texture (growing canvas height, and width too if a bridge's
-footprint needs it), sized exactly to that bridge's box-UV footprint, filled
-with the average color sampled from the *donor* cube's own existing region
-(so the bridge visually matches the piece it's extending) — then points the
-bridge's "uv" at that brand-new rectangle. Zero risk of reading into a
-neighbor's territory, because the rectangle was never anyone else's.
+The actually-safe fix does two things differently. First, every bounding-box
+computation rotates the cube's 8 corners around its own pivot before taking
+min/max — the *true* rendered AABB, not the pre-rotation box. Second, every
+bridge cube gets genuinely new, dedicated pixels: a solid-color rectangle
+appended to the bottom of the fruit's own texture (growing canvas height,
+and width too if a bridge's footprint needs it), sized exactly to that
+bridge's box-UV footprint, filled with the average color sampled from the
+*donor* cube's own existing region — then the bridge's "uv" points at that
+brand-new rectangle. Zero risk of reading into a neighbor's territory,
+because the rectangle was never anyone else's.
 """
-import json, glob
+import json, glob, math
 from PIL import Image
 
 BLOCKS_DIR = "/home/user/bedrock-samples/minepiece/resource_pack/models/blocks"
@@ -38,9 +45,40 @@ EPSILON = 0.001
 AXES = (0, 1, 2)
 
 
+def _rotate_point(p, pivot, deg, axis):
+    x, y, z = p[0] - pivot[0], p[1] - pivot[1], p[2] - pivot[2]
+    r = math.radians(deg)
+    c, s = math.cos(r), math.sin(r)
+    if axis == 0:
+        y, z = y * c - z * s, y * s + z * c
+    elif axis == 1:
+        x, z = x * c + z * s, -x * s + z * c
+    elif axis == 2:
+        x, y = x * c - y * s, x * s + y * c
+    return (x + pivot[0], y + pivot[1], z + pivot[2])
+
+
 def ranges(cube):
+    """The cube's *true* rendered bounding box: rotate all 8 corners around its own pivot
+    (if it has a non-zero "rotation"), then take min/max per axis. For an unrotated cube
+    this is identical to the old origin/size box."""
     o, s = cube["origin"], cube["size"]
-    return [(o[i], o[i] + s[i]) for i in AXES]
+    rotation = cube.get("rotation", [0, 0, 0])
+    if rotation == [0, 0, 0]:
+        return [(o[i], o[i] + s[i]) for i in AXES]
+
+    pivot = cube.get("pivot", [0, 0, 0])
+    corners = []
+    for dx in (0, s[0]):
+        for dy in (0, s[1]):
+            for dz in (0, s[2]):
+                p = (o[0] + dx, o[1] + dy, o[2] + dz)
+                for axis in AXES:
+                    deg = rotation[axis]
+                    if deg:
+                        p = _rotate_point(p, pivot, deg, axis)
+                corners.append(p)
+    return [(min(c[axis] for c in corners), max(c[axis] for c in corners)) for axis in AXES]
 
 
 def gap(a, b):
@@ -152,18 +190,8 @@ def average_color(img, u, v, w, h):
     return tuple(round(c / count) for c in total)
 
 
-# water_water_fruit is deliberately excluded: unlike goat/potion/shulker/snow, its disconnected
-# piece has real red flags suggesting source-model cruft rather than an intended connection (two
-# literally duplicate cubes elsewhere in the same file, a main body that isn't even centered on
-# its own bounding box, and the stray piece sitting a full 3+ units past the body's edge instead
-# of a small step away) — bridging it isn't confirmed to be the right call the way the other three
-# are (all shown broken in actual screenshots), so it's left exactly as last reported working.
-EXCLUDED = {"water_water_fruit.geo.json"}
-
 report = []
 for path in sorted(glob.glob(f"{BLOCKS_DIR}/*.geo.json")):
-    if path.split("/")[-1] in EXCLUDED:
-        continue
     doc = json.load(open(path))
     geo = doc["minecraft:geometry"][0]
     desc = geo["description"]
@@ -209,10 +237,13 @@ for path in sorted(glob.glob(f"{BLOCKS_DIR}/*.geo.json")):
                 px[x, y] = fill_color
         img = canvas
 
+        # The bridge's origin/size are computed directly in true world-space (ranges() already
+        # accounts for the donor/target cubes' own rotation) — so the bridge itself must stay
+        # unrotated, or it would get rotated a second time away from where it needs to sit.
         cubes.append(
             {
                 "pivot": donor.get("pivot", [0, 0, 0]),
-                "rotation": donor.get("rotation", [0, 0, 0]),
+                "rotation": [0, 0, 0],
                 "size": size,
                 "uv": [0, new_v],
                 "inflate": donor.get("inflate", 0),
