@@ -32,10 +32,7 @@ function createTemporaryLavaPool(dimension, center, radius, durationTicks) {
 registerFruit({
   id: "lava",
   displayName: "Lava-Lava Fruit",
-  category: "logia",
   itemId: `${NAMESPACE}:fruit_lava`,
-  logiaWeaponOnlyDamage: true,
-  waterImmune: false,
 
   abilities: [
     {

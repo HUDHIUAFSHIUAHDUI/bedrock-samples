@@ -27,6 +27,26 @@ export function getHostileTargetsInRadius(dimension, location, radius, caster) {
   );
 }
 
+/** The closest non-player mob to `location` within `radius`, or undefined. Used by "tracks the nearest enemy" abilities. */
+export function getNearestNonPlayerEntity(dimension, location, radius, exclude) {
+  const candidates = getEntitiesInRadius(dimension, location, radius, exclude).filter(
+    (entity) => entity.typeId !== "minecraft:player" && entity.typeId !== "minecraft:item" && entity.typeId !== "minecraft:xp_orb"
+  );
+  let nearest;
+  let nearestDistSq = Infinity;
+  for (const entity of candidates) {
+    const dx = entity.location.x - location.x;
+    const dy = entity.location.y - location.y;
+    const dz = entity.location.z - location.z;
+    const distSq = dx * dx + dy * dy + dz * dz;
+    if (distSq < nearestDistSq) {
+      nearestDistSq = distSq;
+      nearest = entity;
+    }
+  }
+  return nearest;
+}
+
 /** The first entity directly in front of `player`'s crosshair within `maxDistance`, if any. */
 export function getLookedAtEntity(player, maxDistance = 20) {
   const hits = player.getEntitiesFromViewDirection({ maxDistance });

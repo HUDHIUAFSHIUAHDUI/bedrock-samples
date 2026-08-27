@@ -22,10 +22,7 @@ function getLitBlockPermutation() {
 registerFruit({
   id: "beacon",
   displayName: "Beacon-Beacon Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_beacon`,
-  logiaWeaponOnlyDamage: false,
-  waterImmune: false,
 
   abilities: [
     {

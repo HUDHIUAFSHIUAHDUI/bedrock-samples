@@ -26,10 +26,7 @@ function dropAnvilAbove(dimension, groundLocation, heightAboveGround, caster) {
 registerFruit({
   id: "anvil",
   displayName: "Anvil-Anvil Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_anvil`,
-  logiaWeaponOnlyDamage: false,
-  waterImmune: false,
 
   abilities: [
     {

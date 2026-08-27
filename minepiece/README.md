@@ -16,18 +16,24 @@ vanilla reference packs and are used only as a reference while building this.
 4. Give yourself a fruit with `/give @s minepiece:fruit_sculk` (swap the id for
    any fruit below) and eat it.
 
+If you're updating an install that's already running (not a fresh copy), fully
+quit Minecraft and relaunch before testing — Bedrock caches resource pack
+content (textures, geometry) per-world, and copying new files into
+`com.mojang` while the app is still open, or without a full restart, can keep
+serving the old cached version even though the files on disk are current.
+
 ## If nothing seems to happen
 
-Every place scripts run — starting up, using an ability, eating a fruit,
-transforming — is wrapped so a failure reports itself instead of just doing
-nothing: watch chat for a red `[Minepiece] ... failed: ...` message, and
-check the content log (`console.error` output) for the same. If eating a
-fruit or using an ability produces *no* message at all, not even an error,
-the scripts aren't running — almost always because the **Beta APIs**
-experimental toggle (step 3 above) isn't on for that world. It generally has
-to be enabled when the world is created; toggling it later on an existing
-world may not take effect. If you do see a red error message, that's the
-real bug — send it over and it's fixable directly instead of guessing.
+Every place scripts run — starting up, using an ability, eating a fruit — is
+wrapped so a failure reports itself instead of just doing nothing: watch chat
+for a red `[Minepiece] ... failed: ...` message, and check the content log
+(`console.error` output) for the same. If eating a fruit or using an ability
+produces *no* message at all, not even an error, the scripts aren't running —
+almost always because the **Beta APIs** experimental toggle (step 3 above)
+isn't on for that world. It generally has to be enabled when the world is
+created; toggling it later on an existing world may not take effect. If you
+do see a red error message, that's the real bug — send it over and it's
+fixable directly instead of guessing.
 
 ## Fruit art
 
@@ -40,10 +46,26 @@ item's appearance everywhere. The block it places
 (`behavior_pack/blocks/head_<id>.json`) uses the real 3D geometry + full
 skin texture pulled straight from the supplied "CraftyCraft" head pack
 (`resource_pack/models/blocks/`, `resource_pack/textures/blocks/`) — not a
-flat icon standing in for it. That geometry's coordinates needed re-basing
-from "worn on a player's head bone" space into "sitting on the floor of one
-block" space first (see the comment atop `tools/rebase_head_geometry.py`),
-since the source pack built these heads to be worn, not placed.
+flat icon standing in for it. That geometry needed two fixes before it was
+usable as a *block* rather than a *worn accessory* — see `tools/rebase_head_geometry.py`
+and `tools/fix_block_geometry_coordinate_space.py` for the full story:
+1. **Vertical position**: the source pack built these heads to be worn on a
+   player's head bone (pivot ~24-28 units up out of ~32), not to sit on a
+   block — reused as-is they'd render floating well above wherever they were
+   placed. Re-based so each head sits just above the floor of its own block.
+2. **Horizontal centering**: custom block geometry in Bedrock is horizontally
+   *centered* on the block (x/z run roughly -8 to 8), not corner-anchored
+   like entity geometry (0-16) — confirmed against Microsoft's own
+   custom-block example, which uses cube origins like `[-6, 0, -3]`. The
+   first pass got this wrong (centered at x=8/z=8, the entity convention),
+   which put every head exactly half a block off to one side instead of
+   centered — re-centered at x=0/z=0 to match.
+
+A few of the heads also had actual holes in them — the source models are
+built from stacked cube "bands," and in several fruits two adjacent bands
+didn't quite touch, leaving a real gap you could see/fall through in the
+middle of the head. `tools/close_geometry_gaps.py` detects every such gap and
+stretches the band below it up to meet the one above, closing it.
 
 Each fruit item is both of these at once, same as a vanilla mob head:
 - **Eat it** (hold to consume, same as any vanilla food) to gain that Devil
@@ -58,27 +80,29 @@ than trying to guess real art for them.
 
 ## Fruit list
 
-| Fruit | Type | Abilities (10s cooldown each) | Passive |
-|---|---|---|---|
-| Sculk-Sculk | Logia | Sculk Spikes, Sculk Sense, Sculk Explosion | Sculk Catalyst on hostile kill |
-| Lava-Lava | Logia | Lava Fist, Lava Pool, Lava Meteor | Magma-walker (frost walker, but magma) |
-| Water-Water | Logia | Water Jet, Water Prison, Tidal Crash | Immune to water damage + Dolphin's Grace in water |
-| Arrow-Arrow | Logia | Arrow Shot, Arrow Barrage, Arrow Rain | Arrow Instinct (auto-fires an arrow when hurt) |
-| Anvil-Anvil | Paramecia | Anvil Drop, Anvil Toss, Anvil Slam | Heavy (infinite knockback resistance) |
-| Core-Core | Paramecia | Wind Burst, Heavy Punch, Land Crash | Hometown Link (permanent Bad Omen + Wind Charged) |
-| Slime-Slime | Paramecia | Slime Shot, Slime Bounce, Slime Trap | Slime Feet (no fall damage) |
-| Copper-Copper | Paramecia | Oxidize, Lightning Strike, Copper Overload | Derusting (held weapon durability always full) |
-| Beacon-Beacon | Paramecia | Flashbang, Beacon Beam, Beacon Boost | Light Producer (always emits light) |
-| Trident-Trident | Paramecia | Trident Throw, Lightning Strike, Whirlpool | Immune to water damage + bonus damage to aquatic mobs |
+Every fruit works the same way — there's no Logia/Paramecia/Zoan split.
+Every fruit user can be hurt by anything (no damage-type immunity), and every
+fruit user takes periodic damage while standing in water (the signature
+Devil Fruit weakness), no exceptions.
 
-**Logia** users only take damage from weapon-based sources (melee/projectile
-attacks); everything else (fall, fire, drowning, explosions, etc.) is
-cancelled while their fruit is active. **All fruit users take periodic damage
-while standing in water**, unless the table above says otherwise (their
-signature Devil Fruit weakness) — Water-Water and Trident-Trident are the two
-explicit exceptions.
+| Fruit | Abilities (10s cooldown each) | Passive |
+|---|---|---|
+| Sculk-Sculk | Sculk Spikes, Sculk Sense, Sculk Explosion | Sculk Catalyst on hostile kill |
+| Lava-Lava | Lava Fist, Lava Pool, Lava Meteor | Magma-walker (frost walker, but magma) |
+| Water-Water | Water Jet, Water Prison, Tidal Crash | Dolphin's Grace while in water |
+| Arrow-Arrow | Arrow Shot, Arrow Barrage, Arrow Rain | Arrow Instinct (auto-fires an arrow when hurt) |
+| Anvil-Anvil | Anvil Drop, Anvil Toss, Anvil Slam | Heavy (infinite knockback resistance) |
+| Core-Core | Wind Burst, Heavy Punch, Land Crash | Hometown Link (permanent Bad Omen + Wind Charged) |
+| Slime-Slime | Slime Shot, Slime Bounce, Slime Trap | Slime Feet (no fall damage) |
+| Copper-Copper | Oxidize, Lightning Strike, Copper Overload | Derusting (held weapon durability always full) |
+| Beacon-Beacon | Flashbang, Beacon Beam, Beacon Boost | Light Producer (always emits light) |
+| Trident-Trident | Trident Throw, Lightning Strike, Whirlpool | Bonus damage to aquatic mobs |
+| Snow-Snowball | Snowball Shot, Snowstorm, Blizzard | One with the Snow (immune to freezing/powder snow damage) |
+| Potion-Potion | Health Potion, Extra Jump Potion, Bloodlust Potion | Natural Cleaning (never get a negative potion effect) |
+| Goat Horn-Goat Horn | Horn Blast, Horn Punch, War Horn | Goat Legs (constant Speed I) |
+| Shulker-Shulker | Shulker Shot, Ender Pearl, Levitate | Shulker Sense (a hit taken at full health teleports you 10 blocks away) |
 
-## Architecture (for adding an 11th fruit later)
+## Architecture (for adding a 15th fruit later)
 
 Everything gameplay-related lives in `behavior_pack/scripts/`:
 
@@ -87,61 +111,49 @@ scripts/
   main.js                 entry point — imports core systems + every fruit module
   core/
     constants.js           shared ids, namespaces, tick rates
-    playerState.js          dynamic-property helpers (which fruit, transformed?, toggle states)
+    playerState.js          dynamic-property helpers (which fruit, toggle states)
     cooldowns.js            generic 10s-cooldown system (dynamic property + vanilla item cooldown UI)
     targeting.js            reusable raycast / area-of-effect / forward-direction helpers
     vfx.js                  small wrappers around spawnParticle / playSound
     fruitRegistry.js        the data-driven table every fruit module registers itself into
     abilityEngine.js        listens for itemUse, resolves it to a fruit+ability, runs it
     passiveEngine.js        runs each fruit's passive on a fixed interval + exposes event hooks
-    transformEngine.js      generic Zoan transform toggle (mount/dismount, invisibility, attack-lock)
-                             — currently unused (no fruit sets a `transform`), kept as
-                             ready-to-use infra if a Zoan fruit is added back later
-    damageRules.js          Logia weapon-only-damage filter (world.beforeEvents.entityHurt)
-    waterDamage.js          periodic Devil Fruit water-weakness tick
+    damageRules.js          the one place a fruit can flatly cancel a specific damage cause
+                             for itself (e.g. Slime's no-fall-damage, Snow's no-freezing-damage)
+    waterDamage.js          periodic Devil Fruit water-weakness tick (applies to every fruit)
   fruits/
-    sculk.js, lava.js, water.js, arrow.js,
-    anvil.js, core_core.js, slime.js, copper.js, beacon.js, trident.js
+    sculk.js, lava.js, water.js, arrow.js, anvil.js, core_core.js, slime.js,
+    copper.js, beacon.js, trident.js, snow.js, potion.js, goat.js, shulker.js
 ```
 
-A fruit module is a single plain object describing itself (id, category,
-item ids, ability list with `execute(player, ability)` functions, an optional
-`passive` object, and an optional `transform` object for Zoan fruits) that it
-hands to `registerFruit()`. None of the engine files know anything about any
-specific fruit — they only read the shape of `FruitDefinition`. Adding a new
-fruit means: add one `fruits/<id>.js` file, register its items in
-`behavior_pack/items/`, and import it once in `main.js`. No engine code
-changes. (The Zoan `transform` path — mount a `minepiece:form_*` entity,
-reuse a vanilla mob's model/texture/geometry for it — is exactly how the
-three Zoan fruits this add-on shipped with earlier worked; that pattern is
-gone from `fruits/` now but the engine support for it is still there.)
+A fruit module is a single plain object describing itself (id, item id,
+ability list with `execute(player, ability)` functions, and an optional
+`passive` object) that it hands to `registerFruit()`. None of the engine
+files know anything about any specific fruit — they only read the shape of
+`FruitDefinition`. Adding a new fruit means: add one `fruits/<id>.js` file,
+register its items in `behavior_pack/items/`, and import it once in
+`main.js`. No engine code changes.
 
 ## How abilities are triggered
 
-Each ability (and each Zoan transform) is its own inventory item ("emblem")
-that is granted automatically once a player eats that fruit, and is silently
-re-granted if it's ever missing from their inventory (so it can't be
-permanently lost by dropping it). Using the item (right-click / trigger)
-fires the matching ability. Cooldowns show as the normal Bedrock item-cooldown
-swirl animation, backed by an authoritative server-side timer so it can't be
-bypassed by switching item stacks.
+Each ability is its own inventory item ("emblem") that is granted
+automatically once a player eats that fruit, and is silently re-granted if
+it's ever missing from their inventory (so it can't be permanently lost by
+dropping it). Using the item (right-click / trigger) fires the matching
+ability. Cooldowns show as the normal Bedrock item-cooldown swirl animation,
+backed by an authoritative server-side timer so it can't be bypassed by
+switching item stacks.
 
 ## Known limitations / assumptions
 
-- **Zoan transformation**: the Warden-Warden, Dragon-Dragon, and Ghast-Ghast
-  fruits (the three that had a `transform`) have been removed, so nothing
-  in the current fruit list uses this path. `core/transformEngine.js` still
-  implements it generically — hide the player (Invisibility effect) and
-  mount them, as the rider, on a purpose-built `minepiece:form_*` entity
-  that has no AI and is steered entirely by the riding player's input, the
-  same mechanism vanilla uses for riding a horse or boat — so a future Zoan
-  fruit just needs its own `behavior_pack/entities/form_<id>.json` (reusing
-  a real vanilla mob's model/texture/geometry, e.g. copying the flight
-  component recipe from `behavior_pack/entities/happy_ghast.json` for a
-  flying form) and a `transform` block in its fruit module; no engine code
-  changes required.
 - Particle and sound effects use existing **vanilla** particle/sound
   identifiers (e.g. `minecraft:critical_hit_emitter`, `random.explode`)
   rather than new custom particle files, in keeping with the "placeholder
   now, polish later" brief — they're already thematically matched per
   ability, so this may be all you ever need.
+- **Shulker Shot**'s tracking is a hand-rolled approximation: the Script API
+  doesn't expose vanilla's real homing-missile AI for a manually spawned
+  projectile, so `fruits/shulker.js` instead re-aims the bullet at the
+  nearest non-player entity every few ticks for a few seconds after it's
+  fired. It reads as "tracks the nearest enemy" in practice, but it's a
+  polling re-aim, not true homing steering.

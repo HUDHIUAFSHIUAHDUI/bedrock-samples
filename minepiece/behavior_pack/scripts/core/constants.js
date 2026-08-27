@@ -7,7 +7,7 @@
 /** Every item/entity identifier in this add-on is under this namespace. */
 export const NAMESPACE = "minepiece";
 
-/** Default ability cooldown, in seconds, per the design brief (10s, except Zoan transforms). */
+/** Default ability cooldown, in seconds, per the design brief (10s). */
 export const DEFAULT_COOLDOWN_SECONDS = 10;
 
 /** How often (in ticks) the passive-ability loop runs for each online player. 20 ticks = 1 second. */
@@ -26,10 +26,6 @@ export const RADIUS_SCAN_TICK_INTERVAL = 20;
 export const PROPERTY = {
   /** The fruit id (e.g. "sculk") the player has eaten, or undefined if none. */
   FRUIT_ID: `${NAMESPACE}:fruit_id`,
-  /** "1" while the player is currently transformed (Zoan fruits only). */
-  TRANSFORMED: `${NAMESPACE}:transformed`,
-  /** Id of the currently-ridden transformation-form entity, so it can be found again/cleaned up. */
-  TRANSFORM_ENTITY_ID: `${NAMESPACE}:transform_entity_id`,
   /** "1" while an infinite-duration toggle ability (e.g. Beacon Boost) is active. */
   BEACON_BOOST_ACTIVE: `${NAMESPACE}:beacon_boost_active`,
   /** Tick timestamp (system.currentTick) a per-ability cooldown ends at. Suffixed with the ability id. */
@@ -37,6 +33,3 @@ export const PROPERTY = {
   /** Tracks the last block position a foot-effect (magma walker / light producer) was placed at. */
   LAST_FOOT_BLOCK: `${NAMESPACE}:last_foot_block`,
 };
-
-/** Entity damage causes the game itself already treats as "a weapon hit". */
-export const WEAPON_DAMAGE_CAUSES = new Set(["entityAttack", "projectile"]);

@@ -1,0 +1,144 @@
+{
+  "minecraft:geometry": [
+    {
+      "bones": [
+        {
+          "cubes": [
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                8,
+                9,
+                8
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -4.0,
+                1,
+                -4.0
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                32,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -0.5,
+                10,
+                -0.5
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1,
+                4,
+                1
+              ],
+              "uv": [
+                36,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                1.5,
+                12,
+                -0.5
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                5,
+                1,
+                1
+              ],
+              "uv": [
+                40,
+                0
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -1.5,
+                16,
+                -0.5
+              ]
+            }
+          ],
+          "name": "head",
+          "pivot": [
+            0.0,
+            1,
+            0.0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "description": {
+        "visible_bounds_width": 0.8,
+        "texture_height": 16,
+        "texture_width": 52,
+        "identifier": "geometry.snow_snow_fruit",
+        "visible_bounds_height": 1.3,
+        "visible_bounds_offset": [
+          0,
+          0.562,
+          0
+        ]
+      }
+    }
+  ],
+  "format_version": "1.12.0"
+}

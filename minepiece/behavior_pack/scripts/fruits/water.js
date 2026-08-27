@@ -9,11 +9,7 @@ const PRISON_REVERT_TICKS = 20 * 4;
 registerFruit({
   id: "water",
   displayName: "Water-Water Fruit",
-  category: "logia",
   itemId: `${NAMESPACE}:fruit_water`,
-  logiaWeaponOnlyDamage: true,
-  // Devil Fruit water damage is overridden entirely for this fruit — see passive below.
-  waterImmune: true,
 
   abilities: [
     {

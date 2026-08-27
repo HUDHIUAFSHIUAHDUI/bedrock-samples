@@ -9,10 +9,7 @@ const SLIME_TRAP_REVERT_TICKS = 20 * 5;
 registerFruit({
   id: "slime",
   displayName: "Slime-Slime Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_slime`,
-  logiaWeaponOnlyDamage: false,
-  waterImmune: false,
   // "Slime feet": no fall damage, ever.
   cancelDamageCauses: ["fall"],
 

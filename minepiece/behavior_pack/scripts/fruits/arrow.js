@@ -9,10 +9,7 @@ const ARROW_SPEED = 3;
 registerFruit({
   id: "arrow",
   displayName: "Arrow-Arrow Fruit",
-  category: "logia",
   itemId: `${NAMESPACE}:fruit_arrow`,
-  logiaWeaponOnlyDamage: true,
-  waterImmune: false,
 
   abilities: [
     {

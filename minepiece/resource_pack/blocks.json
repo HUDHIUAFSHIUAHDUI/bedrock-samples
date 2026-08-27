@@ -38,5 +38,21 @@
   "minepiece:head_trident": {
     "sound": "stone",
     "textures": "head_trident"
+  },
+  "minepiece:head_snow": {
+    "sound": "stone",
+    "textures": "head_snow"
+  },
+  "minepiece:head_potion": {
+    "sound": "stone",
+    "textures": "head_potion"
+  },
+  "minepiece:head_goat": {
+    "sound": "stone",
+    "textures": "head_goat"
+  },
+  "minepiece:head_shulker": {
+    "sound": "stone",
+    "textures": "head_shulker"
   }
 }

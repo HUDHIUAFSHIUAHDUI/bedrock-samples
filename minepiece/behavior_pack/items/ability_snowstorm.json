@@ -1,0 +1,28 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:ability_snowstorm",
+      "menu_category": {
+        "category": "items",
+        "group": "minepiece:minepiece"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:ability_snowstorm.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "number_2"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:cooldown": {
+        "category": "minepiece:ability_snowstorm",
+        "duration": 10,
+        "type": "use"
+      }
+    }
+  }
+}

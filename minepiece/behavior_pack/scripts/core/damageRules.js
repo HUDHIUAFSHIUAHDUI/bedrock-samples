@@ -1,26 +1,18 @@
 import { world } from "@minecraft/server";
-import { WEAPON_DAMAGE_CAUSES } from "./constants.js";
 import { getFruitId } from "./playerState.js";
 import { getFruitById } from "./fruitRegistry.js";
 
 /**
- * Enforces the Logia rule: a Logia user only takes damage from weapon-based
- * sources (melee hits, projectiles). Everything else — fall damage, fire,
- * drowning, explosions, the void, starvation, etc. — passes right through
- * them, same as a Devil Fruit user's body turning to smoke/sand/flame in the
- * source material.
+ * Every Devil Fruit user can be hurt by anything, same as anyone else — this
+ * only handles the one generic exception a fruit can opt into: flatly
+ * cancelling a specific damage cause for its user, via the optional
+ * `cancelDamageCauses` list on a FruitDefinition (e.g. Slime-Slime's Slime
+ * Feet passive sets `cancelDamageCauses: ["fall"]` instead of needing its
+ * own event subscription).
  *
  * The Devil Fruit water-weakness tick (waterDamage.js) deliberately applies
- * its damage with cause "override" — sea water negates Devil Fruit powers
- * entirely, Logia intangibility included, so that specific cause always
- * lands no matter what. Every other non-weapon cause is what gets cancelled
- * for a Logia user.
- *
- * This is also the one place any fruit can flatly cancel a specific damage
- * cause for its user, via the optional `cancelDamageCauses` list on a
- * FruitDefinition — e.g. Slime-Slime's Slime Feet passive (no fall damage)
- * sets `cancelDamageCauses: ["fall"]` instead of needing its own event
- * subscription.
+ * its damage with cause "override" so it's never accidentally caught by a
+ * fruit's own cancel list.
  */
 export function registerDamageRules() {
   world.beforeEvents.entityHurt.subscribe((event) => {
@@ -38,11 +30,6 @@ export function registerDamageRules() {
       if (!fruit) return;
 
       if (fruit.cancelDamageCauses?.includes(cause)) {
-        event.cancel = true;
-        return;
-      }
-
-      if (fruit.logiaWeaponOnlyDamage && !WEAPON_DAMAGE_CAUSES.has(cause)) {
         event.cancel = true;
       }
     } catch (error) {

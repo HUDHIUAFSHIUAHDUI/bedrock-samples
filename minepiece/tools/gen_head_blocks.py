@@ -8,7 +8,8 @@ RP = f"{BASE}/resource_pack"
 os.makedirs(BP_BLOCKS, exist_ok=True)
 
 FRUIT_IDS = ["sculk", "lava", "water", "arrow",
-             "anvil", "core", "slime", "copper", "beacon", "trident"]
+             "anvil", "core", "slime", "copper", "beacon", "trident",
+             "snow", "potion", "goat", "shulker"]
 
 
 def write_json(path, data):

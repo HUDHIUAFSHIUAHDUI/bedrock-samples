@@ -1,6 +1,6 @@
 import { world } from "@minecraft/server";
 import { DEFAULT_COOLDOWN_SECONDS } from "./constants.js";
-import { getFruitId, isTransformed } from "./playerState.js";
+import { getFruitId } from "./playerState.js";
 import { getAbilityByItemId } from "./fruitRegistry.js";
 import { getRemainingSeconds, isOnCooldown, startCooldown } from "./cooldowns.js";
 
@@ -22,11 +22,6 @@ export function registerAbilityEngine() {
 
     if (getFruitId(player) !== fruit.id) {
       player.sendMessage(`§cYou don't have the power of the ${fruit.displayName}.`);
-      return;
-    }
-
-    if (fruit.transform?.blocksAbilitiesWhileTransformed && isTransformed(player)) {
-      player.sendMessage(`§cYou can only fly while transformed.`);
       return;
     }
 

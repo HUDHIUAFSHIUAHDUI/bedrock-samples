@@ -14,10 +14,7 @@ function floorBlockLocation(location) {
 registerFruit({
   id: "sculk",
   displayName: "Sculk-Sculk Fruit",
-  category: "logia",
   itemId: `${NAMESPACE}:fruit_sculk`,
-  logiaWeaponOnlyDamage: true,
-  waterImmune: false,
 
   abilities: [
     {

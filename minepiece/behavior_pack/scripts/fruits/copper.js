@@ -7,10 +7,7 @@ import { spawnParticleBurst, playSound } from "../core/vfx.js";
 registerFruit({
   id: "copper",
   displayName: "Copper-Copper Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_copper`,
-  logiaWeaponOnlyDamage: false,
-  waterImmune: false,
 
   abilities: [
     {

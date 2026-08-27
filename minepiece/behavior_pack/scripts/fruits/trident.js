@@ -7,11 +7,7 @@ import { spawnParticle, spawnParticleBurst, playSound } from "../core/vfx.js";
 registerFruit({
   id: "trident",
   displayName: "Trident-Trident Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_trident`,
-  logiaWeaponOnlyDamage: false,
-  // "Underwater attacker": not damaged by water, unlike every other fruit.
-  waterImmune: true,
 
   abilities: [
     {

@@ -12,10 +12,7 @@ const LAND_CRASH_TIMEOUT_TICKS = 100;
 registerFruit({
   id: "core",
   displayName: "Core-Core Fruit",
-  category: "paramecia",
   itemId: `${NAMESPACE}:fruit_core`,
-  logiaWeaponOnlyDamage: false,
-  waterImmune: false,
 
   abilities: [
     {

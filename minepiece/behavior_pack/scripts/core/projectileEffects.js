@@ -15,7 +15,8 @@ export const PROJECTILE_FX = {
   RANDOM_DEBUFF: "minepiece:fx_random_debuff",
 };
 
-const NEGATIVE_EFFECTS = [
+/** Shared "these are the bad ones" list — reused by Arrow-Arrow's random debuff and Potion-Potion's negative-effect cleanse. */
+export const NEGATIVE_EFFECTS = [
   "poison",
   "slowness",
   "weakness",
@@ -23,6 +24,8 @@ const NEGATIVE_EFFECTS = [
   "blindness",
   "mining_fatigue",
   "wither",
+  "hunger",
+  "instant_damage",
 ];
 
 function randomNegativeEffect() {

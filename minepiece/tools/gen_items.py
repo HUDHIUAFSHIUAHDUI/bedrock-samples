@@ -12,69 +12,89 @@ os.makedirs(RP_TEXTS, exist_ok=True)
 FRUIT_IDS = [
     "sculk", "lava", "water", "arrow",
     "anvil", "core", "slime", "copper", "beacon", "trident",
+    "snow", "potion", "goat", "shulker",
 ]
 
-# Ability/transform items use simple, honest placeholders: a pixelated "1"/"2"/"3" (by that
-# ability's position in its fruit's list) or "T" for a transform — see gen_number_icons.py.
+# Ability items use simple, honest placeholders: a pixelated "1"/"2"/"3" (by that ability's
+# position in its fruit's list) — see gen_number_icons.py.
 NUMBER_ICON = {
     1: "textures/items/number_1",
     2: "textures/items/number_2",
     3: "textures/items/number_3",
-    "transform": "textures/items/number_transform",
 }
 
-# id, displayName, category, abilities: [(abilityKey, displayName)], transform: bool
+# id, displayName, abilities: [(abilityKey, displayName)]
 FRUITS = [
-    ("sculk", "Sculk-Sculk Fruit", "logia", [
+    ("sculk", "Sculk-Sculk Fruit", [
         ("sculk_spikes", "Sculk Spikes"),
         ("sculk_sense", "Sculk Sense"),
         ("sculk_explosion", "Sculk Explosion"),
-    ], False),
-    ("lava", "Lava-Lava Fruit", "logia", [
+    ]),
+    ("lava", "Lava-Lava Fruit", [
         ("lava_fist", "Lava Fist"),
         ("lava_pool", "Lava Pool"),
         ("lava_meteor", "Lava Meteor"),
-    ], False),
-    ("water", "Water-Water Fruit", "logia", [
+    ]),
+    ("water", "Water-Water Fruit", [
         ("water_jet", "Water Jet"),
         ("water_prison", "Water Prison"),
         ("tidal_crash", "Tidal Crash"),
-    ], False),
-    ("arrow", "Arrow-Arrow Fruit", "logia", [
+    ]),
+    ("arrow", "Arrow-Arrow Fruit", [
         ("arrow_shot", "Arrow Shot"),
         ("arrow_barrage", "Arrow Barrage"),
         ("arrow_rain", "Arrow Rain"),
-    ], False),
-    ("anvil", "Anvil-Anvil Fruit", "paramecia", [
+    ]),
+    ("anvil", "Anvil-Anvil Fruit", [
         ("anvil_drop", "Anvil Drop"),
         ("anvil_toss", "Anvil Toss"),
         ("anvil_slam", "Anvil Slam"),
-    ], False),
-    ("core", "Core-Core Fruit", "paramecia", [
+    ]),
+    ("core", "Core-Core Fruit", [
         ("wind_burst", "Wind Burst"),
         ("heavy_punch", "Heavy Punch"),
         ("land_crash", "Land Crash"),
-    ], False),
-    ("slime", "Slime-Slime Fruit", "paramecia", [
+    ]),
+    ("slime", "Slime-Slime Fruit", [
         ("slime_shot", "Slime Shot"),
         ("slime_bounce", "Slime Bounce"),
         ("slime_trap", "Slime Trap"),
-    ], False),
-    ("copper", "Copper-Copper Fruit", "paramecia", [
+    ]),
+    ("copper", "Copper-Copper Fruit", [
         ("oxidize", "Oxidize"),
         ("copper_lightning_strike", "Lightning Strike"),
         ("copper_overload", "Copper Overload"),
-    ], False),
-    ("beacon", "Beacon-Beacon Fruit", "paramecia", [
+    ]),
+    ("beacon", "Beacon-Beacon Fruit", [
         ("flashbang", "Flashbang"),
         ("beacon_beam", "Beacon Beam"),
         ("beacon_boost", "Beacon Boost"),
-    ], False),
-    ("trident", "Trident-Trident Fruit", "paramecia", [
+    ]),
+    ("trident", "Trident-Trident Fruit", [
         ("trident_throw", "Trident Throw"),
         ("trident_lightning_strike", "Lightning Strike"),
         ("whirlpool", "Whirlpool"),
-    ], False),
+    ]),
+    ("snow", "Snow-Snowball Fruit", [
+        ("snowball_shot", "Snowball Shot"),
+        ("snowstorm", "Snowstorm"),
+        ("blizzard", "Blizzard"),
+    ]),
+    ("potion", "Potion-Potion Fruit", [
+        ("health_potion", "Health Potion"),
+        ("extra_jump_potion", "Extra Jump Potion"),
+        ("bloodlust_potion", "Bloodlust Potion"),
+    ]),
+    ("goat", "Goat Horn-Goat Horn Fruit", [
+        ("horn_blast", "Horn Blast"),
+        ("horn_punch", "Horn Punch"),
+        ("war_horn", "War Horn"),
+    ]),
+    ("shulker", "Shulker-Shulker Fruit", [
+        ("shulker_shot", "Shulker Shot"),
+        ("ender_pearl_toss", "Ender Pearl"),
+        ("levitate", "Levitate"),
+    ]),
 ]
 
 texture_data = {}
@@ -103,7 +123,7 @@ def item_shell(identifier, components):
 for number, path in NUMBER_ICON.items():
     texture_data[f"number_{number}"] = {"textures": path}
 
-for fruit_id, display_name, category, abilities, has_transform in FRUITS:
+for fruit_id, display_name, abilities in FRUITS:
     fruit_identifier = f"{NAMESPACE}:fruit_{fruit_id}"
     lang_lines.append(f"item.{fruit_identifier}.name={display_name}")
 
@@ -147,26 +167,6 @@ for fruit_id, display_name, category, abilities, has_transform in FRUITS:
             ),
         )
 
-    if has_transform:
-        transform_identifier = f"{NAMESPACE}:transform_{fruit_id}"
-        transform_name = f"Transform: {display_name.split('-')[0]}"
-        lang_lines.append(f"item.{transform_identifier}.name={transform_name}")
-
-        write_json(
-            os.path.join(BP_ITEMS, f"transform_{fruit_id}.json"),
-            item_shell(
-                transform_identifier,
-                {
-                    "minecraft:display_name": {"value": f"item.{transform_identifier}.name"},
-                    "minecraft:icon": {"textures": {"default": "number_transform"}},
-                    "minecraft:max_stack_size": 1,
-                    # Not a real 10s ability cooldown (transforms are exempt) — just a tiny debounce
-                    # so one physical click can't fire the toggle twice.
-                    "minecraft:cooldown": {"category": transform_identifier, "duration": 0.5, "type": "use"},
-                },
-            ),
-        )
-
 # --- resource_pack/textures/item_texture.json ---
 item_texture_json = {
     "resource_pack_name": "minepiece",
@@ -182,6 +182,5 @@ with open(os.path.join(RP_TEXTS, "en_US.lang"), "w") as f:
 with open(os.path.join(RP_TEXTS, "languages.json"), "w") as f:
     json.dump(["en_US"], f, indent=2)
 
-print(f"Wrote {len(FRUITS)} fruit items, {sum(len(a) for _,_,_,a,_ in FRUITS)} ability items, "
-      f"{sum(1 for *_, t in FRUITS if t)} transform items, "
+print(f"Wrote {len(FRUITS)} fruit items, {sum(len(a) for _, _, a in FRUITS)} ability items, "
       f"{len(texture_data)} texture entries, {len(lang_lines)} lang lines.")

@@ -33,6 +33,18 @@
     },
     "head_trident": {
       "textures": "textures/blocks/head_trident"
+    },
+    "head_snow": {
+      "textures": "textures/blocks/head_snow"
+    },
+    "head_potion": {
+      "textures": "textures/blocks/head_potion"
+    },
+    "head_goat": {
+      "textures": "textures/blocks/head_goat"
+    },
+    "head_shulker": {
+      "textures": "textures/blocks/head_shulker"
     }
   }
 }

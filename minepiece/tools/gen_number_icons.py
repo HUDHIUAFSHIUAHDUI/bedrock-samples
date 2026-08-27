@@ -1,8 +1,7 @@
 """
 Simple, honest placeholders for ability items: a bold pixelated digit (1/2/3
-for that fruit's first/second/third ability, "T" for a Zoan transform) on a
-flat background — nothing fancy, easy to eyeball which ability an item is
-without needing real art yet.
+for that fruit's first/second/third ability) on a flat background — nothing
+fancy, easy to eyeball which ability an item is without needing real art yet.
 """
 from PIL import Image
 
@@ -34,13 +33,6 @@ GLYPHS = {
         "111",
         "001",
         "111",
-    ],
-    "T": [
-        "111",
-        "010",
-        "010",
-        "010",
-        "010",
     ],
 }
 
@@ -79,5 +71,4 @@ def draw_icon(glyph_key, out_name):
 draw_icon("1", "number_1")
 draw_icon("2", "number_2")
 draw_icon("3", "number_3")
-draw_icon("T", "number_transform")
-print("Wrote number_1.png, number_2.png, number_3.png, number_transform.png")
+print("Wrote number_1.png, number_2.png, number_3.png")

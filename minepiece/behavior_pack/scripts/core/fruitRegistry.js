@@ -15,11 +15,6 @@
  * @property {FruitDefinition} fruit
  * @property {Ability} ability
  *
- * @typedef {Object} Transform
- * @property {string} itemId             the activator item that toggles the transform
- * @property {string} formEntityId       the ridden mount entity representing the transformed body
- * @property {boolean} [blocksAbilitiesWhileTransformed] if true, this fruit's other abilities can't be used while transformed (e.g. a flight-only form)
- *
  * @typedef {Object} Passive
  * @property {(player: import("@minecraft/server").Player) => void} [onTick] runs every PASSIVE_TICK_INTERVAL while the fruit is active
  * @property {(player: import("@minecraft/server").Player, event: import("@minecraft/server").EntityHurtAfterEvent) => void} [onHurtAfter]
@@ -30,13 +25,9 @@
  * @typedef {Object} FruitDefinition
  * @property {string} id                 e.g. "sculk"
  * @property {string} displayName        e.g. "Sculk-Sculk Fruit"
- * @property {"zoan"|"logia"|"paramecia"} category
  * @property {string} itemId             the fruit item eaten to gain this power
- * @property {boolean} logiaWeaponOnlyDamage  Logia rule: only weapon-based damage lands
- * @property {boolean} waterImmune       overrides the default "all fruit users take water damage" rule
  * @property {string[]} [cancelDamageCauses] EntityDamageCause values to flatly cancel for this fruit's user (e.g. ["fall"])
  * @property {Ability[]} abilities
- * @property {Transform} [transform]     Zoan fruits only
  * @property {Passive} [passive]
  */
 
@@ -46,8 +37,6 @@ const fruitsById = new Map();
 const fruitsByItemId = new Map();
 /** @type {Map<string, {fruit: FruitDefinition, ability: Ability}>} keyed by ability item id */
 const abilitiesByItemId = new Map();
-/** @type {Map<string, FruitDefinition>} keyed by transform-activator item id */
-const transformsByItemId = new Map();
 
 /** @param {FruitDefinition} fruit */
 export function registerFruit(fruit) {
@@ -63,10 +52,6 @@ export function registerFruit(fruit) {
     }
     abilitiesByItemId.set(ability.itemId, { fruit, ability });
   }
-
-  if (fruit.transform) {
-    transformsByItemId.set(fruit.transform.itemId, fruit);
-  }
 }
 
 export function getFruitById(id) {
@@ -79,10 +64,6 @@ export function getFruitByFruitItemId(itemId) {
 
 export function getAbilityByItemId(itemId) {
   return abilitiesByItemId.get(itemId);
-}
-
-export function getFruitByTransformItemId(itemId) {
-  return transformsByItemId.get(itemId);
 }
 
 export function getAllFruits() {
