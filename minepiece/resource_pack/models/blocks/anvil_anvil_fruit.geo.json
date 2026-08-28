@@ -206,17 +206,17 @@
               ],
               "size": [
                 5.0,
-                1.0,
+                1.6,
                 5.0
               ],
               "uv": [
                 1,
-                11
+                23
               ],
               "inflate": 0.6,
               "origin": [
                 -2.5,
-                5.5,
+                5.2,
                 -2.5
               ]
             },
@@ -233,17 +233,17 @@
               ],
               "size": [
                 2.0,
-                1.0,
+                1.6,
                 1.0
               ],
               "uv": [
                 1,
-                19
+                32
               ],
               "inflate": 0.6,
               "origin": [
                 -1.5,
-                9.5,
+                9.2,
                 -0.5
               ]
             }
@@ -263,7 +263,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.86,
-        "texture_height": 22,
+        "texture_height": 36,
         "texture_width": 156,
         "identifier": "geometry.anvil_anvil_fruit",
         "visible_bounds_height": 1.27,
