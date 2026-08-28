@@ -72,17 +72,17 @@
               "size": [
                 8,
                 1,
-                2
+                5
               ],
               "uv": [
-                28,
-                0
+                1,
+                27
               ],
               "inflate": 0.6,
               "origin": [
                 -4.0,
                 11,
-                -1.0
+                -2.5
               ]
             },
             {
@@ -155,7 +155,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.8,
-        "texture_height": 26,
+        "texture_height": 34,
         "texture_width": 58,
         "identifier": "geometry.water_water_fruit",
         "visible_bounds_height": 0.99,
