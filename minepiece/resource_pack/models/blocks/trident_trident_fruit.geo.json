@@ -183,8 +183,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                16
+                1,
+                17
               ],
               "inflate": 0.6,
               "origin": [
@@ -210,8 +210,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                18
+                1,
+                21
               ],
               "inflate": 0.6,
               "origin": [
@@ -237,8 +237,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                20
+                1,
+                25
               ],
               "inflate": 0.6,
               "origin": [
@@ -264,8 +264,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                22
+                1,
+                29
               ],
               "inflate": 0.6,
               "origin": [
@@ -291,8 +291,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                24
+                1,
+                33
               ],
               "inflate": 0.6,
               "origin": [
@@ -317,7 +317,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.8,
-        "texture_height": 26,
+        "texture_height": 36,
         "texture_width": 58,
         "identifier": "geometry.trident_trident_fruit",
         "visible_bounds_height": 1.3,

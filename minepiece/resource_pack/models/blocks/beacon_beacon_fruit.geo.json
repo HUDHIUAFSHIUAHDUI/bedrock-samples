@@ -129,8 +129,8 @@
                 5.0
               ],
               "uv": [
-                0,
-                16
+                1,
+                17
               ],
               "inflate": 0.6,
               "origin": [
@@ -156,8 +156,8 @@
                 5.0
               ],
               "uv": [
-                0,
-                22
+                1,
+                25
               ],
               "inflate": 0.6,
               "origin": [
@@ -182,7 +182,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.93,
-        "texture_height": 28,
+        "texture_height": 32,
         "texture_width": 118,
         "identifier": "geometry.beacon_beacon_fruit",
         "visible_bounds_height": 1.8,

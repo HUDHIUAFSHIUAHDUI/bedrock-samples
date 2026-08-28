@@ -129,8 +129,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                20
+                1,
+                21
               ],
               "inflate": 0.6,
               "origin": [
@@ -156,8 +156,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                22
+                1,
+                25
               ],
               "inflate": 0.6,
               "origin": [
@@ -183,8 +183,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                24
+                1,
+                29
               ],
               "inflate": 0.6,
               "origin": [
@@ -209,7 +209,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.61,
-        "texture_height": 26,
+        "texture_height": 32,
         "texture_width": 38,
         "identifier": "geometry.arrow_arrow_fruit",
         "visible_bounds_height": 2.05,

@@ -226,14 +226,22 @@ for path in sorted(glob.glob(f"{BLOCKS_DIR}/*.geo.json")):
         dw, dh = box_uv_footprint(donor["size"])
         fill_color = average_color(img, du, dv, dw, dh)
 
-        # Append a brand-new, nobody-else's-territory rectangle at the bottom of the canvas.
-        new_v = img.height
-        new_width = max(img.width, footprint_w)
-        canvas = Image.new("RGBA", (new_width, img.height + footprint_h), (0, 0, 0, 0))
+        # Append a brand-new, nobody-else's-territory rectangle at the bottom of the canvas —
+        # with a 1px same-color margin on every side. Block textures can get sampled with
+        # filtering that isn't a hard per-texel cutoff (mip/aniso at a shallow viewing angle),
+        # so a UV rect placed with zero gap against the next one (stacking several bridges'
+        # rows back to back) can bleed a sliver of the *next* rect's row, or of transparent
+        # canvas padding, into this cube's face — exactly the kind of hairline notch/seam this
+        # was reported to still show. Padding every side with the same fill color means any
+        # such bleed just samples more of itself.
+        PAD = 1
+        new_v = img.height + PAD
+        new_width = max(img.width, footprint_w + 2 * PAD)
+        canvas = Image.new("RGBA", (new_width, img.height + footprint_h + 2 * PAD), (0, 0, 0, 0))
         canvas.paste(img, (0, 0))
         px = canvas.load()
-        for y in range(new_v, new_v + footprint_h):
-            for x in range(0, footprint_w):
+        for y in range(new_v - PAD, new_v + footprint_h + PAD):
+            for x in range(0, footprint_w + 2 * PAD):
                 px[x, y] = fill_color
         img = canvas
 
@@ -245,7 +253,7 @@ for path in sorted(glob.glob(f"{BLOCKS_DIR}/*.geo.json")):
                 "pivot": donor.get("pivot", [0, 0, 0]),
                 "rotation": [0, 0, 0],
                 "size": size,
-                "uv": [0, new_v],
+                "uv": [PAD, new_v],
                 "inflate": donor.get("inflate", 0),
                 "origin": origin,
             }

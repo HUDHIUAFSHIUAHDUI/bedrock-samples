@@ -129,8 +129,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                16
+                1,
+                17
               ],
               "inflate": 0.6,
               "origin": [
@@ -156,8 +156,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                19
+                1,
+                22
               ],
               "inflate": 0.6,
               "origin": [
@@ -183,8 +183,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                21
+                1,
+                26
               ],
               "inflate": 0.6,
               "origin": [
@@ -209,7 +209,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.8,
-        "texture_height": 23,
+        "texture_height": 29,
         "texture_width": 52,
         "identifier": "geometry.snow_snow_fruit",
         "visible_bounds_height": 1.3,

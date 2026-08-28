@@ -102,8 +102,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                16
+                1,
+                17
               ],
               "inflate": 0.6,
               "origin": [
@@ -129,8 +129,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                18
+                1,
+                21
               ],
               "inflate": 0.6,
               "origin": [
@@ -155,7 +155,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.83,
-        "texture_height": 20,
+        "texture_height": 24,
         "texture_width": 50,
         "identifier": "geometry.lava_lava_fruit",
         "visible_bounds_height": 1.11,

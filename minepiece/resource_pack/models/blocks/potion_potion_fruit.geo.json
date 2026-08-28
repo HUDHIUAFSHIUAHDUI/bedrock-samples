@@ -183,8 +183,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                11
+                1,
+                12
               ],
               "inflate": 0.6,
               "origin": [
@@ -210,8 +210,8 @@
                 1.0
               ],
               "uv": [
-                0,
-                13
+                1,
+                16
               ],
               "inflate": 0.6,
               "origin": [
@@ -237,8 +237,8 @@
                 2.0
               ],
               "uv": [
-                0,
-                16
+                1,
+                21
               ],
               "inflate": 0.6,
               "origin": [
@@ -264,8 +264,8 @@
                 2.0
               ],
               "uv": [
-                0,
-                19
+                1,
+                26
               ],
               "inflate": 0.6,
               "origin": [
@@ -290,7 +290,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.83,
-        "texture_height": 22,
+        "texture_height": 30,
         "texture_width": 64,
         "identifier": "geometry.potion_potion_fruit",
         "visible_bounds_height": 1.3,
