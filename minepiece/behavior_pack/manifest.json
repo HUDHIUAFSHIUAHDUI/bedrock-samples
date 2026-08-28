@@ -4,21 +4,21 @@
     "name": "Minepiece",
     "description": "Minepiece - One Piece inspired Devil Fruit ability system (Behavior Pack)",
     "uuid": "b5408bd5-dae1-405d-9202-6ba7820db597",
-    "version": [1, 0, 11],
+    "version": [1, 0, 12],
     "min_engine_version": [1, 21, 80]
   },
   "modules": [
     {
       "type": "data",
       "uuid": "3f681afa-0d38-4d58-b8b2-b4597b504e27",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     },
     {
       "type": "script",
       "language": "javascript",
       "uuid": "1ea901e8-02d5-4766-b5dd-7bc383016db0",
       "entry": "scripts/main.js",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     }
   ],
   "dependencies": [
@@ -28,7 +28,7 @@
     },
     {
       "uuid": "bcd2cb0f-c4cb-46b8-947c-d9d6b8d09626",
-      "version": [1, 0, 11]
+      "version": [1, 0, 12]
     }
   ]
 }
