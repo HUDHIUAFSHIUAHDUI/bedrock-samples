@@ -44,7 +44,7 @@
               ],
               "size": [
                 8,
-                9,
+                8,
                 8
               ],
               "uv": [
@@ -71,7 +71,7 @@
               ],
               "size": [
                 5,
-                11,
+                10,
                 5
               ],
               "uv": [
@@ -111,6 +111,60 @@
                 22,
                 -2.5
               ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                5.0,
+                1,
+                5.0
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -2.5,
+                21,
+                -2.5
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                5.0,
+                1,
+                5.0
+              ],
+              "uv": [
+                0,
+                22
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -2.5,
+                10,
+                -2.5
+              ]
             }
           ],
           "name": "head",
@@ -128,7 +182,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.93,
-        "texture_height": 16,
+        "texture_height": 28,
         "texture_width": 118,
         "identifier": "geometry.beacon_beacon_fruit",
         "visible_bounds_height": 1.8,

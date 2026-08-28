@@ -17,7 +17,7 @@
               ],
               "size": [
                 8,
-                4,
+                3,
                 8
               ],
               "uv": [
@@ -44,7 +44,7 @@
               ],
               "size": [
                 2,
-                4,
+                3,
                 2
               ],
               "uv": [
@@ -219,6 +219,60 @@
                 12,
                 -0.5
               ]
+            },
+            {
+              "pivot": [
+                -0.25,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                2.0,
+                1,
+                2.0
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -1.25,
+                8,
+                -1.0
+              ]
+            },
+            {
+              "pivot": [
+                -0.25,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                2.0,
+                1,
+                2.0
+              ],
+              "uv": [
+                0,
+                19
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -1.25,
+                4,
+                -1.0
+              ]
             }
           ],
           "name": "head",
@@ -236,7 +290,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.83,
-        "texture_height": 16,
+        "texture_height": 22,
         "texture_width": 64,
         "identifier": "geometry.potion_potion_fruit",
         "visible_bounds_height": 1.3,

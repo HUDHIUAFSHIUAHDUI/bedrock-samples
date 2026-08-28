@@ -17,7 +17,7 @@
               ],
               "size": [
                 8,
-                9,
+                8,
                 8
               ],
               "uv": [
@@ -111,6 +111,33 @@
                 16.5,
                 -0.5
               ]
+            },
+            {
+              "pivot": [
+                -0.25,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1.0,
+                1,
+                1.0
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -0.75,
+                9,
+                -0.5
+              ]
             }
           ],
           "name": "head",
@@ -128,7 +155,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.83,
-        "texture_height": 16,
+        "texture_height": 18,
         "texture_width": 64,
         "identifier": "geometry.slime_slime_fruit",
         "visible_bounds_height": 1.33,

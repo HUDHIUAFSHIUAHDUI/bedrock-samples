@@ -17,7 +17,7 @@
               ],
               "size": [
                 8,
-                9,
+                8,
                 8
               ],
               "uv": [
@@ -71,7 +71,7 @@
               ],
               "size": [
                 1,
-                4,
+                3,
                 1
               ],
               "uv": [
@@ -138,6 +138,60 @@
                 12,
                 -0.5
               ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1.0,
+                1,
+                1.0
+              ],
+              "uv": [
+                0,
+                19
+              ],
+              "inflate": 0.6,
+              "origin": [
+                1.5,
+                15,
+                -0.5
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1.0,
+                1,
+                1.0
+              ],
+              "uv": [
+                0,
+                21
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -0.5,
+                9,
+                -0.5
+              ]
             }
           ],
           "name": "head",
@@ -155,7 +209,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.8,
-        "texture_height": 19,
+        "texture_height": 23,
         "texture_width": 52,
         "identifier": "geometry.snow_snow_fruit",
         "visible_bounds_height": 1.3,

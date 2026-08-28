@@ -17,7 +17,7 @@
               ],
               "size": [
                 5,
-                4,
+                3,
                 5
               ],
               "uv": [
@@ -44,7 +44,7 @@
               ],
               "size": [
                 1,
-                6,
+                5,
                 1
               ],
               "uv": [
@@ -71,7 +71,7 @@
               ],
               "size": [
                 1,
-                6,
+                5,
                 1
               ],
               "uv": [
@@ -111,6 +111,60 @@
                 11,
                 -1.0
               ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1.0,
+                1,
+                1.0
+              ],
+              "uv": [
+                0,
+                25
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -0.5,
+                4,
+                -0.5
+              ]
+            },
+            {
+              "pivot": [
+                0.0,
+                5,
+                0.0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ],
+              "size": [
+                1.0,
+                1,
+                1.0
+              ],
+              "uv": [
+                0,
+                27
+              ],
+              "inflate": 0.6,
+              "origin": [
+                -0.5,
+                10,
+                -0.5
+              ]
             }
           ],
           "name": "head",
@@ -128,7 +182,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.8,
-        "texture_height": 8,
+        "texture_height": 29,
         "texture_width": 58,
         "identifier": "geometry.water_water_fruit",
         "visible_bounds_height": 0.99,
