@@ -84,8 +84,17 @@ def inpaint(img, is_bad):
 # (its dominant color really is unfinished placeholder magenta) — either way, patch-diffusion from
 # neighbors can't invent a whole new majority color and produces a worse result than leaving it
 # untouched, so both are left out of scope here (small-patch fixes only, as asked).
-FRUIT_IDS = ["arrow", "core", "slime", "copper", "beacon", "trident", "anvil", "water",
-             "snow", "potion", "goat", "shulker", "bat", "pillager"]
+#
+# DO NOT add an already-shipped fruit back to this list. SRC points at the raw, never-gap-closed
+# scratchpad extraction — every id below was already run through this once, then through
+# close_lateral_gaps.py, then hand-fixed further. Re-running an id here overwrites its current,
+# finished resource_pack texture with that stale raw source, discarding all of that work (this
+# happened for real: adding "bat"/"pillager" here alongside the 12 already-done ids silently
+# clobbered all 12 finished textures back to raw-source size on the next run). Only ever list
+# ids that have *never* been through this pipeline before.
+FRUIT_IDS = []
+_ALREADY_DONE = ["arrow", "core", "slime", "copper", "beacon", "trident", "anvil", "water",
+                  "snow", "potion", "goat", "shulker", "bat", "pillager"]
 
 for fruit_id in ("lava", "sculk"):
     print(f"{fruit_id}: excluded (see comment above)")
