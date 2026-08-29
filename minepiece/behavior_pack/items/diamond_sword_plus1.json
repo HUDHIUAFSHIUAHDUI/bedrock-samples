@@ -1,0 +1,37 @@
+{
+  "format_version": "1.21.80",
+  "minecraft:item": {
+    "description": {
+      "identifier": "minepiece:diamond_sword_plus1",
+      "menu_category": {
+        "category": "none"
+      }
+    },
+    "components": {
+      "minecraft:display_name": {
+        "value": "item.minepiece:diamond_sword_plus1.name"
+      },
+      "minecraft:icon": {
+        "textures": {
+          "default": "vanilla_diamond_sword"
+        }
+      },
+      "minecraft:max_stack_size": 1,
+      "minecraft:hand_equipped": true,
+      "minecraft:allow_off_hand": false,
+      "minecraft:damage": 7,
+      "minecraft:durability": {
+        "max_durability": 1561
+      },
+      "minecraft:enchantable": {
+        "slot": "sword",
+        "value": 15
+      },
+      "minecraft:tags": {
+        "tags": [
+          "minecraft:is_sword"
+        ]
+      }
+    }
+  }
+}

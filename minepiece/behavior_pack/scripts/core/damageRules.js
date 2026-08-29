@@ -4,15 +4,20 @@ import { getFruitById } from "./fruitRegistry.js";
 
 /**
  * Every Devil Fruit user can be hurt by anything, same as anyone else — this
- * only handles the one generic exception a fruit can opt into: flatly
- * cancelling a specific damage cause for its user, via the optional
- * `cancelDamageCauses` list on a FruitDefinition (e.g. Slime-Slime's Slime
- * Feet passive sets `cancelDamageCauses: ["fall"]` instead of needing its
- * own event subscription).
+ * handles two generic exceptions a fruit can opt into, neither of which
+ * needs its own event subscription:
+ *   - `cancelDamageCauses`: flatly cancels a specific damage cause (e.g.
+ *     Slime-Slime's Slime Feet passive sets `cancelDamageCauses: ["fall"]`).
+ *   - `cancelDamageFromTypeIds`: flatly cancels damage from specific
+ *     attacker entity types (e.g. Pillager-Pillager's "Part of the Family"
+ *     passive lists the illager family so they stop hurting the player —
+ *     the actual mechanism behind "aren't hostile towards you anymore",
+ *     since the Script API has no supported way to rewrite a vanilla mob's
+ *     targeting AI at runtime).
  *
  * The Devil Fruit water-weakness tick (waterDamage.js) deliberately applies
- * its damage with cause "override" so it's never accidentally caught by a
- * fruit's own cancel list.
+ * its damage with cause "override" so it's never accidentally caught by
+ * either cancel list.
  */
 export function registerDamageRules() {
   world.beforeEvents.entityHurt.subscribe((event) => {
@@ -30,6 +35,12 @@ export function registerDamageRules() {
       if (!fruit) return;
 
       if (fruit.cancelDamageCauses?.includes(cause)) {
+        event.cancel = true;
+        return;
+      }
+
+      const attackerTypeId = event.damageSource?.damagingEntity?.typeId;
+      if (attackerTypeId && fruit.cancelDamageFromTypeIds?.includes(attackerTypeId)) {
         event.cancel = true;
       }
     } catch (error) {

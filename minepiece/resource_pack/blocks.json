@@ -54,5 +54,13 @@
   "minepiece:head_shulker": {
     "sound": "stone",
     "textures": "head_shulker"
+  },
+  "minepiece:head_bat": {
+    "sound": "stone",
+    "textures": "head_bat"
+  },
+  "minepiece:head_pillager": {
+    "sound": "stone",
+    "textures": "head_pillager"
   }
 }

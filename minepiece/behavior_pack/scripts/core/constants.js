@@ -28,6 +28,8 @@ export const PROPERTY = {
   FRUIT_ID: `${NAMESPACE}:fruit_id`,
   /** "1" while an infinite-duration toggle ability (e.g. Beacon Boost) is active. */
   BEACON_BOOST_ACTIVE: `${NAMESPACE}:beacon_boost_active`,
+  /** "1" while Bat-Bat's Night Vision toggle — the mod's one no-cooldown ability — is active. */
+  NIGHT_VISION_ACTIVE: `${NAMESPACE}:night_vision_active`,
   /** Tick timestamp (system.currentTick) a per-ability cooldown ends at. Suffixed with the ability id. */
   COOLDOWN_PREFIX: `${NAMESPACE}:cd_`,
   /** Tracks the last block position a foot-effect (magma walker / light producer) was placed at. */

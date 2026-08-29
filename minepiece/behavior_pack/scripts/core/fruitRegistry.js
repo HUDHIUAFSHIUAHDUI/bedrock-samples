@@ -27,6 +27,7 @@
  * @property {string} displayName        e.g. "Sculk-Sculk Fruit"
  * @property {string} itemId             the fruit item eaten to gain this power
  * @property {string[]} [cancelDamageCauses] EntityDamageCause values to flatly cancel for this fruit's user (e.g. ["fall"])
+ * @property {string[]} [cancelDamageFromTypeIds] attacker entity typeIds whose damage is flatly cancelled for this fruit's user (e.g. ["minecraft:pillager"])
  * @property {Ability[]} abilities
  * @property {Passive} [passive]
  */

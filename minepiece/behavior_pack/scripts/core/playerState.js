@@ -20,6 +20,7 @@ export function setFruitId(player, fruitId) {
 export function clearFruit(player) {
   player.setDynamicProperty(PROPERTY.FRUIT_ID, undefined);
   player.setDynamicProperty(PROPERTY.BEACON_BOOST_ACTIVE, undefined);
+  player.setDynamicProperty(PROPERTY.NIGHT_VISION_ACTIVE, undefined);
 }
 
 export function isBeaconBoostActive(player) {
@@ -28,6 +29,14 @@ export function isBeaconBoostActive(player) {
 
 export function setBeaconBoostActive(player, active) {
   player.setDynamicProperty(PROPERTY.BEACON_BOOST_ACTIVE, active);
+}
+
+export function isNightVisionActive(player) {
+  return player.getDynamicProperty(PROPERTY.NIGHT_VISION_ACTIVE) === true;
+}
+
+export function setNightVisionActive(player, active) {
+  player.setDynamicProperty(PROPERTY.NIGHT_VISION_ACTIVE, active);
 }
 
 /** Packs a block position into a compact string so we can detect "did the player move to a new block". */

@@ -1,3 +1,5 @@
+# Rewrites resource_pack/texts/en_US.lang from scratch — run this BEFORE tools/gen_sword_boosts.py,
+# which appends its own lines to that same file rather than owning the whole thing.
 import json, os
 
 NAMESPACE = "minepiece"
@@ -12,7 +14,7 @@ os.makedirs(RP_TEXTS, exist_ok=True)
 FRUIT_IDS = [
     "sculk", "lava", "water", "arrow",
     "anvil", "core", "slime", "copper", "beacon", "trident",
-    "snow", "potion", "goat", "shulker",
+    "snow", "potion", "goat", "shulker", "bat", "pillager",
 ]
 
 # Ability items use simple, honest placeholders: a pixelated "1"/"2"/"3" (by that ability's
@@ -95,10 +97,73 @@ FRUITS = [
         ("ender_pearl_toss", "Ender Pearl"),
         ("levitate", "Levitate"),
     ]),
+    ("bat", "Bat-Bat Fruit", [
+        ("bat_storm", "Bat Storm"),
+        ("vampire_bite", "Vampire Bite"),
+        ("night_vision", "Night Vision"),
+    ]),
+    ("pillager", "Pillager-Pillager Fruit", [
+        ("evoker_spell", "Evoker Spell"),
+        ("pillager_rob", "Pillager Rob"),
+        ("ravager_ride", "Ravager Ride"),
+    ]),
+]
+
+# ability_key -> item cooldown duration override, in seconds. Anything not listed here defaults
+# to 10. Night Vision is explicitly the mod's one no-cooldown ability.
+ABILITY_COOLDOWN_OVERRIDES = {
+    "night_vision": 0,
+}
+
+# Hand-written items (weapons, enchant books, offhand/helmet sword variants) keep their own JSON
+# files — their components don't fit the generic fruit/ability shells above — but still need a
+# texture_data entry and a lang line, and this script is the single place both get regenerated
+# from, so every hand-written item registers itself here instead of editing item_texture.json or
+# en_US.lang directly.
+# (texture_key, texture_path, display_name)
+EXTRA_ITEMS = [
+    ("legendary_sword", "textures/items/legendary_sword", "Legendary Sword"),
+    ("legendary_saber", "textures/items/legendary_saber", "Legendary Saber"),
+]
+
+# Reused vanilla textures (copied into this pack rather than referenced by vanilla's own texture_data
+# key, which isn't guaranteed to exist under a matching name) that back items generated elsewhere
+# (tools/gen_sword_boosts.py, the enchant books above) instead of a fruit/ability/weapon here — texture
+# only, no matching item of this exact id exists, so no lang line.
+EXTRA_TEXTURES_ONLY = [
+    ("book_enchanted", "textures/items/vanilla_book_enchanted"),
+    ("vanilla_wood_sword", "textures/items/vanilla_wood_sword"),
+    ("vanilla_copper_sword", "textures/items/vanilla_copper_sword"),
+    ("vanilla_stone_sword", "textures/items/vanilla_stone_sword"),
+    ("vanilla_gold_sword", "textures/items/vanilla_gold_sword"),
+    ("vanilla_iron_sword", "textures/items/vanilla_iron_sword"),
+    ("vanilla_diamond_sword", "textures/items/vanilla_diamond_sword"),
+    ("vanilla_netherite_sword", "textures/items/vanilla_netherite_sword"),
+]
+
+# Hand-written items whose icon reuses a texture that's already registered elsewhere (vanilla's
+# own "book_enchanted", or one of the EXTRA_ITEMS/fruit icons above) — these only need a lang
+# line, not a new texture_data entry.
+# (item_id_suffix, display_name)
+EXTRA_LANG_ONLY_ITEMS = [
+    ("book_critical_knockback", "Critical Knockback Book"),
+    ("book_big_game_hunter_1", "Big Game Hunter I Book"),
+    ("book_big_game_hunter_2", "Big Game Hunter II Book"),
+    ("book_vampire_blood", "Vampire Blood Book"),
+    ("book_strongest_swordsman", "Strongest Swordsman Book"),
 ]
 
 texture_data = {}
 lang_lines = []
+
+for texture_key, texture_path, _display_name in EXTRA_ITEMS:
+    texture_data[texture_key] = {"textures": texture_path}
+for texture_key, _texture_path, display_name in EXTRA_ITEMS:
+    lang_lines.append(f"item.{NAMESPACE}:{texture_key}.name={display_name}")
+for texture_key, texture_path in EXTRA_TEXTURES_ONLY:
+    texture_data[texture_key] = {"textures": texture_path}
+for item_id_suffix, display_name in EXTRA_LANG_ONLY_ITEMS:
+    lang_lines.append(f"item.{NAMESPACE}:{item_id_suffix}.name={display_name}")
 
 
 def write_json(path, data):
@@ -152,6 +217,11 @@ for fruit_id, display_name, abilities in FRUITS:
         ability_identifier = f"{NAMESPACE}:ability_{ability_key}"
         lang_lines.append(f"item.{ability_identifier}.name={ability_name}")
 
+        # Night Vision (Bat-Bat) is the one ability in the whole mod with no cooldown — a bare
+        # infinite toggle, so its item's own cooldown swirl must match (0 duration = no visible
+        # cooldown), matching the ability's own cooldownSeconds: 0 in behavior_pack/scripts/fruits/bat.js.
+        cooldown_duration = ABILITY_COOLDOWN_OVERRIDES.get(ability_key, 10)
+
         write_json(
             os.path.join(BP_ITEMS, f"ability_{ability_key}.json"),
             item_shell(
@@ -162,7 +232,7 @@ for fruit_id, display_name, abilities in FRUITS:
                     "minecraft:max_stack_size": 1,
                     # No hand_equipped: abilities are techniques, not weapons/tools — held with the
                     # plain small item pose instead of the big two-handed tool-hold animation.
-                    "minecraft:cooldown": {"category": ability_identifier, "duration": 10, "type": "use"},
+                    "minecraft:cooldown": {"category": ability_identifier, "duration": cooldown_duration, "type": "use"},
                 },
             ),
         )

@@ -2,6 +2,36 @@
   "resource_pack_name": "minepiece",
   "texture_name": "atlas.items",
   "texture_data": {
+    "legendary_sword": {
+      "textures": "textures/items/legendary_sword"
+    },
+    "legendary_saber": {
+      "textures": "textures/items/legendary_saber"
+    },
+    "book_enchanted": {
+      "textures": "textures/items/vanilla_book_enchanted"
+    },
+    "vanilla_wood_sword": {
+      "textures": "textures/items/vanilla_wood_sword"
+    },
+    "vanilla_copper_sword": {
+      "textures": "textures/items/vanilla_copper_sword"
+    },
+    "vanilla_stone_sword": {
+      "textures": "textures/items/vanilla_stone_sword"
+    },
+    "vanilla_gold_sword": {
+      "textures": "textures/items/vanilla_gold_sword"
+    },
+    "vanilla_iron_sword": {
+      "textures": "textures/items/vanilla_iron_sword"
+    },
+    "vanilla_diamond_sword": {
+      "textures": "textures/items/vanilla_diamond_sword"
+    },
+    "vanilla_netherite_sword": {
+      "textures": "textures/items/vanilla_netherite_sword"
+    },
     "number_1": {
       "textures": "textures/items/number_1"
     },

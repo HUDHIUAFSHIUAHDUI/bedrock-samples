@@ -16,6 +16,9 @@ import { registerAbilityEngine } from "./core/abilityEngine.js";
 import { registerPassiveEngine } from "./core/passiveEngine.js";
 import { registerProjectileEffects } from "./core/projectileEffects.js";
 import { registerFruitConsumption } from "./core/fruitConsumption.js";
+import { registerLegendaryWeapons } from "./core/legendaryWeapons.js";
+import { registerCustomEnchants } from "./core/customEnchants.js";
+import { registerSwordBoost } from "./core/swordBoost.js";
 
 import "./fruits/sculk.js";
 import "./fruits/lava.js";
@@ -31,6 +34,8 @@ import "./fruits/snow.js";
 import "./fruits/potion.js";
 import "./fruits/goat.js";
 import "./fruits/shulker.js";
+import "./fruits/bat.js";
+import "./fruits/pillager.js";
 
 import { world } from "@minecraft/server";
 
@@ -62,3 +67,6 @@ registerEngine("ability engine", registerAbilityEngine);
 registerEngine("passive engine", registerPassiveEngine);
 registerEngine("projectile effects", registerProjectileEffects);
 registerEngine("fruit consumption", registerFruitConsumption);
+registerEngine("legendary weapons", registerLegendaryWeapons);
+registerEngine("custom enchants", registerCustomEnchants);
+registerEngine("sword boost", registerSwordBoost);

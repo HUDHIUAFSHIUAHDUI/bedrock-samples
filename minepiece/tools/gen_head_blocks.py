@@ -9,7 +9,7 @@ os.makedirs(BP_BLOCKS, exist_ok=True)
 
 FRUIT_IDS = ["sculk", "lava", "water", "arrow",
              "anvil", "core", "slime", "copper", "beacon", "trident",
-             "snow", "potion", "goat", "shulker"]
+             "snow", "potion", "goat", "shulker", "bat", "pillager"]
 
 
 def write_json(path, data):

@@ -45,6 +45,12 @@
     },
     "head_shulker": {
       "textures": "textures/blocks/head_shulker"
+    },
+    "head_bat": {
+      "textures": "textures/blocks/head_bat"
+    },
+    "head_pillager": {
+      "textures": "textures/blocks/head_pillager"
     }
   }
 }

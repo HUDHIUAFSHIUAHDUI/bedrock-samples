@@ -85,7 +85,7 @@ def inpaint(img, is_bad):
 # neighbors can't invent a whole new majority color and produces a worse result than leaving it
 # untouched, so both are left out of scope here (small-patch fixes only, as asked).
 FRUIT_IDS = ["arrow", "core", "slime", "copper", "beacon", "trident", "anvil", "water",
-             "snow", "potion", "goat", "shulker"]
+             "snow", "potion", "goat", "shulker", "bat", "pillager"]
 
 for fruit_id in ("lava", "sculk"):
     print(f"{fruit_id}: excluded (see comment above)")

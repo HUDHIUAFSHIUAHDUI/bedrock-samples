@@ -101,6 +101,37 @@ Devil Fruit weakness), no exceptions.
 | Potion-Potion | Health Potion, Extra Jump Potion, Bloodlust Potion | Natural Cleaning (never get a negative potion effect) |
 | Goat Horn-Goat Horn | Horn Blast, Horn Punch, War Horn | Goat Legs (constant Speed I) |
 | Shulker-Shulker | Shulker Shot, Ender Pearl, Levitate | Shulker Sense (a hit taken at full health teleports you 10 blocks away) |
+| Bat-Bat | Bat Storm, Vampire Bite, Night Vision (only ability with no cooldown) | Nocturnal (Weakness I by day, Strength III by night) |
+| Pillager-Pillager | Evoker Spell, Pillager Rob (guaranteed emerald from villagers), Ravager Ride | Part of the Family (pillagers/vexes/ravagers/evokers/vindicators are no longer hostile to you) |
+
+## Legendary weapons
+
+`minepiece:legendary_sword` and `minepiece:legendary_saber` (11 attack damage,
+netherite-equivalent durability, `sharpness`/`unbreaking`/`mending`
+enchantable) each surround the blade in a custom lightning particle
+(`resource_pack/particles/legendary_saber_lightning.json`) on every hit
+(`behavior_pack/scripts/core/legendaryWeapons.js`).
+
+Since there's no real anvil-hook in the Script API, their five custom
+enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,
+Strongest Swordsman) are applied and combined by using a book in one hand
+against the matching weapon (or a second matching book) in the other —
+see `behavior_pack/scripts/core/customEnchants.js`. State is tracked via
+item dynamic properties and shown in the item's lore.
+
+## Sword offhand boost + sword-as-helmet
+
+Any vanilla sword sitting in the offhand boosts the mainhand sword's attack
+damage (wood/copper/stone/gold/iron +1, diamond +2, netherite +3), swapping
+the mainhand to a `{material}_plusN` display variant so the boosted number
+actually shows up in the tooltip. Sneak+use a sword to wear it as a helmet
+instead (no protection, no durability loss, purely a Zoro-style sword-in-
+the-mouth visual via `resource_pack/attachables/mouth_sword_*.json`) for the
+same bonus. The two sources don't stack — whichever is higher wins. Legendary
+Sword/Saber can't grant or receive a boost and are excluded from the offhand
+slot, but can still be worn as a helmet for the visual alone. See
+`behavior_pack/scripts/core/swordBoost.js` and `tools/gen_sword_boosts.py` /
+`tools/gen_worn_swords.py` / `tools/gen_mouth_sword.py`.
 
 ## Architecture (for adding a 15th fruit later)
 
