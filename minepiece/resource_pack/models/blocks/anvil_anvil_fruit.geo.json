@@ -205,19 +205,19 @@
                 0
               ],
               "size": [
-                7,
-                1.6,
-                6
+                9,
+                1.4,
+                7
               ],
               "uv": [
                 1,
-                88
+                123
               ],
               "inflate": 0.6,
               "origin": [
-                -3.5,
-                5.2,
-                -3.0
+                -4.5,
+                5.3,
+                -3.5
               ]
             },
             {
@@ -232,73 +232,19 @@
                 0
               ],
               "size": [
-                5,
-                1.6,
-                5
+                9,
+                1.4,
+                7
               ],
               "uv": [
                 1,
-                98
+                133
               ],
               "inflate": 0.6,
               "origin": [
-                -2.5,
-                9.2,
-                -2.5
-              ]
-            },
-            {
-              "pivot": [
-                0.0,
-                5,
-                0.0
-              ],
-              "rotation": [
-                0,
-                0,
-                0
-              ],
-              "size": [
-                3,
-                1,
-                3
-              ],
-              "uv": [
-                1,
-                107
-              ],
-              "inflate": 0.6,
-              "origin": [
-                -1.5,
-                9.8,
-                -1.5
-              ]
-            },
-            {
-              "pivot": [
-                0.0,
-                5,
-                0.0
-              ],
-              "rotation": [
-                0,
-                0,
-                0
-              ],
-              "size": [
-                7,
-                1.6,
-                6
-              ],
-              "uv": [
-                1,
-                113
-              ],
-              "inflate": 0.6,
-              "origin": [
-                -3.5,
-                9.0,
-                -3.0
+                -4.5,
+                9.3,
+                -3.5
               ]
             }
           ],
@@ -317,7 +263,7 @@
       ],
       "description": {
         "visible_bounds_width": 0.86,
-        "texture_height": 122,
+        "texture_height": 142,
         "texture_width": 156,
         "identifier": "geometry.anvil_anvil_fruit",
         "visible_bounds_height": 1.27,
