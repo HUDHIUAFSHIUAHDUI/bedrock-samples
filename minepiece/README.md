@@ -104,6 +104,18 @@ Devil Fruit weakness), no exceptions.
 | Bat-Bat | Bat Storm, Vampire Bite, Night Vision (only ability with no cooldown) | Nocturnal (Weakness I by day, Strength III by night) |
 | Pillager-Pillager | Evoker Spell, Pillager Rob (guaranteed emerald from villagers), Ravager Ride | Part of the Family (pillagers/vexes/ravagers/evokers/vindicators are no longer hostile to you) |
 
+## Devil Fruit Removal Apple
+
+`minepiece:power_removal_apple` — crafted with a lava bucket directly above a
+water bucket in the center of a crafting table (both buckets come back
+empty). Its icon is the real vanilla apple with the real vanilla barrier
+"no entry" icon overlaid on top. It's food only — there's no
+`minecraft:block_placer` component, so unlike every fruit item it can never
+be placed as a block, only eaten. Eating it (`behavior_pack/scripts/core/powerRemoval.js`)
+clears whichever Devil Fruit the player currently has and sweeps that
+fruit's now-dead ability items out of their inventory, freeing them up to
+eat a different fruit afterward.
+
 ## Legendary weapons
 
 `minepiece:legendary_sword` and `minepiece:legendary_saber` (11 attack damage,

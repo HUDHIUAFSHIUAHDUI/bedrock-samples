@@ -40,6 +40,9 @@
     },
     "number_3": {
       "textures": "textures/items/number_3"
+    },
+    "power_removal_apple": {
+      "textures": "textures/items/power_removal_apple"
     }
   }
 }
