@@ -124,6 +124,19 @@ enchantable) each surround the blade in a custom lightning particle
 (`resource_pack/particles/legendary_saber_lightning.json`) on every hit
 (`behavior_pack/scripts/core/legendaryWeapons.js`).
 
+Both render as real 3D models in hand/on the ground, not flat icons —
+`resource_pack/attachables/legendary_sword.entity.json` /
+`legendary_saber.entity.json`, each a simple pommel/handle/guard/blade
+geometry (`tools/gen_legendary_weapon_models.py`) using the same technique
+vanilla's own trident uses: a single bone bound with
+`q.item_slot_to_bone_name(c.item_slot)`, and an attachable identifier that
+matches the item's own identifier exactly, which is all Bedrock needs to
+auto-attach it — no item-side component required. Their flat inventory
+icons (`resource_pack/textures/items/legendary_sword.png` /
+`legendary_saber.png`) are recovered from the original CraftyCraft source
+art (`tools/fix_legendary_weapon_icons.py`) after its alpha channel turned
+out to be entirely zero in the shipped asset.
+
 Since there's no real anvil-hook in the Script API, their five custom
 enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,
 Strongest Swordsman) are applied and combined by using a book in one hand
