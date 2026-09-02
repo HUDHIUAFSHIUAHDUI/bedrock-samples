@@ -1,57 +1,111 @@
 """
-Legendary Sword/Saber were shipping as flat 2D icons only. The CraftyCraft source pack actually
-included real 3D held-item assets (client/models/entity/sword.geo.json, saber.geo.json + render
-controllers + animations) for these two, built on the old pre-1.10 "full player rig with a tool
-bone" technique — but that rig's cube coordinates are meaningless without also reproducing its
-exact multi-bone parent chain (root -> waist -> body -> rightarm -> tool, with the tool bone's
-own -45/180/0 rotation baked in on top), and there was never a matching UV texture for it (its
-own texture_width/height, 58x19, doesn't match any texture file anywhere in the source addon).
-Reverse-engineering that chain is fragile and unverifiable without a live client to check against.
+Uses the ACTUAL 3D sword/saber shapes from the CraftyCraft source pack
+(client/models/entity/sword.geo.json, saber.geo.json) instead of an invented replacement blade.
 
-Vanilla's own trident (resource_pack/attachables/trident.entity.json + models/entity/trident.geo.json)
-proves the current, correct, much simpler way to do this: a single bone with
-`"binding": "q.item_slot_to_bone_name(c.item_slot)"` — the modern replacement for that whole old
-rig, since the engine now positions/orients the bone into whichever slot (mainhand/offhand) holds
-the item automatically — plus an attachable file whose own identifier is set to literally the
-same id as the item, which is all Bedrock needs to auto-bind an attachable to an item (confirmed:
-trident's own behavior-pack item file doesn't reference the attachable at all — no vanilla item
-json exists for it — the identifier match is the entire link).
+Those files rig the blade as a "tool" bone hung off a full old-style player skeleton (root ->
+waist -> body -> rightarm -> tool), but every ancestor bone (root/waist/body/rightarm) has
+rotation [0, 0, 0] — a zero-rotation bone contributes nothing to its children's final transform,
+pivot or not — so the *only* bone that actually matters is "tool" itself: its own pivot, rotation,
+and cubes are the entire visual result. That means the real shape can be lifted verbatim (same
+pivot, same rotation, same cube list, completely unmodified) into a single bone and given the
+modern binding vanilla's own trident uses (resource_pack/attachables/trident.entity.json):
+`"binding": "q.item_slot_to_bone_name(c.item_slot)"`, which auto-positions it into whichever hand
+slot holds the item — no old-style multi-bone rig needed to reproduce the same result.
 
-This builds a simple 4-5 cube blade (handle, guard, blade, pommel, +accent gem for the sword)
-using that same modern single-bone pattern, textured with flat colors sampled from the real
-recovered artwork (tools/fix_legendary_weapon_icons.py) so both weapons keep their established
-color identity: sword = gold hilt / silver blade / blue gem, saber = gold guard / red-wrapped
-grip / near-black blade.
+Neither weapon ever shipped a texture matching its own declared UV layout (58x19 for the sword,
+30x14 for the saber) anywhere in the source addon, so there's nothing to sample real per-pixel
+art from for this geometry (unlike the flat icon, which DID have real recoverable color data —
+see fix_legendary_weapon_icons.py). Each cube gets a flat color instead, chosen by its own
+origin_y (the low handle cubes are grip-colored, the mid cubes that form the crossguard are gold,
+the tall upper cubes are the blade) — same "flatten to a designed/sampled color" approach already
+used throughout this pack (mouth-sword plane textures, the bat fix, this same weapon's icon).
 """
 import json
+import math
 from PIL import Image
 
 BASE = "/home/user/bedrock-samples/minepiece"
 RP = f"{BASE}/resource_pack"
+SCRATCH_ADDON = "/tmp/claude-0/-home-user-MinecraftForge/b54b4eaf-6474-53d3-acf4-fecab4d8460d/scratchpad/addon0004/extracted"
 
 GOLD = (184, 140, 47, 255)
-SILVER = (178, 188, 189, 255)
+SILVER_BLADE = (178, 188, 189, 255)
 BLUE_GEM = (49, 39, 174, 255)
 DARK_GRIP = (40, 40, 40, 255)
 RED_GRIP = (183, 51, 36, 255)
-NEAR_BLACK_BLADE = (40, 40, 40, 255)
+BLACK_BLADE = (40, 40, 40, 255)
 
-# Each cube: (name, origin, size, color)
-WEAPONS = {
-    "legendary_sword": [
-        ("pommel", (-0.75, 16, -0.75), (1.5, 1, 1.5), GOLD),
-        ("handle", (-0.5, 17, -0.5), (1, 6, 1), DARK_GRIP),
-        ("guard", (-2, 23, -0.5), (4, 1, 1), GOLD),
-        ("gem", (-0.5, 23.3, -0.62), (1, 0.4, 0.12), BLUE_GEM),
-        ("blade", (-0.5, 24, -0.5), (1, 11, 1), SILVER),
-    ],
-    "legendary_saber": [
-        ("pommel", (-0.75, 16, -0.75), (1.5, 1, 1.5), GOLD),
-        ("handle", (-0.5, 17, -0.5), (1, 6, 1), RED_GRIP),
-        ("guard", (-2, 23, -0.5), (4, 1, 1), GOLD),
-        ("blade", (-0.5, 24, -0.5), (1, 11, 1), NEAR_BLACK_BLADE),
-    ],
+# Per weapon: source geo filename, the "tool" bone's cube-color classifier, grip color.
+WEAPON_CONFIGS = {
+    "legendary_sword": {
+        "source": "sword.geo.json",
+        "blade_color": SILVER_BLADE,
+        "grip_color": DARK_GRIP,
+        "handle_top_y": 20,   # cubes below this are the handle/grip
+        "guard_top_y": 23,    # cubes from handle_top_y..guard_top_y are the crossguard
+        "accent_color": BLUE_GEM,  # small (<=1x1x1) cubes inside the blade range get this
+    },
+    "legendary_saber": {
+        "source": "saber.geo.json",
+        "blade_color": BLACK_BLADE,
+        "grip_color": RED_GRIP,
+        "handle_top_y": 11,
+        "guard_top_y": 15,
+        "accent_color": GOLD,
+    },
 }
+
+
+def load_tool_bone(source_filename):
+    doc = json.load(open(f"{SCRATCH_ADDON}/client/models/entity/{source_filename}"))
+    geo = doc["minecraft:geometry"][0]
+    tool = next(b for b in geo["bones"] if b["name"] == "tool")
+    return tool
+
+
+def rotate_point(p, pivot, rotation):
+    rx, ry, rz = [math.radians(-a) for a in rotation]
+    px, py, pz = pivot
+    x, y, z = p[0] - px, p[1] - py, p[2] - pz
+    x, y = x * math.cos(rz) - y * math.sin(rz), x * math.sin(rz) + y * math.cos(rz)
+    y, z = y * math.cos(rx) - z * math.sin(rx), y * math.sin(rx) + z * math.cos(rx)
+    x, z = x * math.cos(ry) + z * math.sin(ry), -x * math.sin(ry) + z * math.cos(ry)
+    return (x + px, y + py, z + pz)
+
+
+def compute_visible_bounds(tool):
+    """Same technique as close_lateral_gaps.py's ranges(): rotate every cube's 8 corners around
+    its own pivot, then the whole result around the bone's pivot, before taking min/max — the
+    *true* rendered bounding box, not the pre-rotation one. Needed because this blade is rotated
+    -45/180/0 as a whole (per the tool bone itself) on top of individual cube rotations, so the
+    raw origin/size box understates the real on-screen extent by a wide margin. Bedrock's default
+    attachable visible_bounds is tuned for small vanilla items; leaving it unset for a blade this
+    large risks the exact "disappears at some camera angles" bug fix_visible_bounds.py exists for.
+    """
+    bone_pivot, bone_rotation = tool["pivot"], tool["rotation"]
+    pts = []
+    for cube in tool["cubes"]:
+        o, s = cube["origin"], cube["size"]
+        cube_pivot = cube.get("pivot", bone_pivot)
+        cube_rotation = cube.get("rotation", [0, 0, 0])
+        for dx in (0, s[0]):
+            for dy in (0, s[1]):
+                for dz in (0, s[2]):
+                    p = (o[0] + dx, o[1] + dy, o[2] + dz)
+                    if cube_rotation != [0, 0, 0]:
+                        p = rotate_point(p, cube_pivot, cube_rotation)
+                    if bone_rotation != [0, 0, 0]:
+                        p = rotate_point(p, bone_pivot, bone_rotation)
+                    pts.append(p)
+    xs, ys, zs = [p[0] for p in pts], [p[1] for p in pts], [p[2] for p in pts]
+    width_px = max(max(xs) - min(xs), max(zs) - min(zs))
+    height_px = max(ys) - min(ys)
+    center_y_px = (min(ys) + max(ys)) / 2
+    return {
+        "visible_bounds_width": round(width_px / 16 + 0.3, 2),
+        "visible_bounds_height": round(height_px / 16 + 0.3, 2),
+        "visible_bounds_offset": [0, round(center_y_px / 16, 3), 0],
+    }
 
 
 def box_uv_footprint(size):
@@ -59,27 +113,54 @@ def box_uv_footprint(size):
     return round(2 * (sz + sx)), round(sy + sz)
 
 
-def build_geometry_and_texture(weapon_id, cubes):
-    # Lay out each cube's box-UV footprint left-to-right in one row, filled with its flat color.
-    footprints = [box_uv_footprint(size) for _name, _origin, size, _color in cubes]
-    tex_width = sum(w for w, _h in footprints)
-    tex_height = max(h for _w, h in footprints)
+def classify_color(cube, config):
+    origin_y = cube["origin"][1]
+    size = cube["size"]
+    is_small = size[0] <= 1 and size[1] <= 1 and size[2] <= 1
+    rotated = cube.get("rotation", [0, 0, 0]) != [0, 0, 0]
+
+    if rotated:
+        return GOLD  # the crossguard's rotated horizontal bar, when present
+    if origin_y < config["handle_top_y"]:
+        return config["grip_color"]
+    if origin_y < config["guard_top_y"]:
+        return GOLD
+    if is_small:
+        return config["accent_color"]
+    return config["blade_color"]
+
+
+def build(weapon_id, config):
+    tool = load_tool_bone(config["source"])
+    cubes = tool["cubes"]
+
+    footprints = [box_uv_footprint(c["size"]) for c in cubes]
+    tex_width = max(c["uv"][0] + w for c, (w, _h) in zip(cubes, footprints))
+    tex_height = max(c["uv"][1] + h for c, (_w, h) in zip(cubes, footprints))
 
     canvas = Image.new("RGBA", (tex_width, tex_height), (0, 0, 0, 0))
     px = canvas.load()
 
     geo_cubes = []
-    cursor_x = 0
-    for (name, origin, size, color), (fw, fh) in zip(cubes, footprints):
+    for cube, (fw, fh) in zip(cubes, footprints):
+        color = classify_color(cube, config)
+        u, v = cube["uv"]
         for y in range(fh):
             for x in range(fw):
-                px[cursor_x + x, y] = color
-        geo_cubes.append({
-            "origin": list(origin),
-            "size": list(size),
-            "uv": [cursor_x, 0],
-        })
-        cursor_x += fw
+                if 0 <= u + x < tex_width and 0 <= v + y < tex_height:
+                    px[u + x, v + y] = color
+        geo_cube = {
+            "origin": cube["origin"],
+            "size": cube["size"],
+            "uv": cube["uv"],
+        }
+        if cube.get("pivot"):
+            geo_cube["pivot"] = cube["pivot"]
+        if cube.get("rotation") and cube["rotation"] != [0, 0, 0]:
+            geo_cube["rotation"] = cube["rotation"]
+        if cube.get("inflate"):
+            geo_cube["inflate"] = cube["inflate"]
+        geo_cubes.append(geo_cube)
 
     texture_path = f"{RP}/textures/entity/{weapon_id}.png"
     canvas.save(texture_path)
@@ -92,12 +173,14 @@ def build_geometry_and_texture(weapon_id, cubes):
                     "identifier": f"geometry.{weapon_id}",
                     "texture_width": tex_width,
                     "texture_height": tex_height,
+                    **compute_visible_bounds(tool),
                 },
                 "bones": [
                     {
                         "name": "root",
                         "binding": "q.item_slot_to_bone_name(c.item_slot)",
-                        "pivot": [0.0, 24.0, 0.0],
+                        "pivot": tool["pivot"],
+                        "rotation": tool["rotation"],
                         "cubes": geo_cubes,
                     }
                 ],
@@ -132,8 +215,8 @@ def build_geometry_and_texture(weapon_id, cubes):
         json.dump(attachable, f, indent=2)
         f.write("\n")
 
-    print(f"{weapon_id}: {len(cubes)} cubes, texture {tex_width}x{tex_height} -> {texture_path}, {geo_path}, {attachable_path}")
+    print(f"{weapon_id}: {len(cubes)} real cubes from {config['source']}, texture {tex_width}x{tex_height}")
 
 
-for weapon_id, cubes in WEAPONS.items():
-    build_geometry_and_texture(weapon_id, cubes)
+for weapon_id, config in WEAPON_CONFIGS.items():
+    build(weapon_id, config)
