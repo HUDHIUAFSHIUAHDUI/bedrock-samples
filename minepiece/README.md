@@ -120,16 +120,24 @@ eat a different fruit afterward.
 
 `minepiece:legendary_sword` and `minepiece:legendary_saber` (11 attack damage,
 netherite-equivalent durability, `sharpness`/`unbreaking`/`mending`
-enchantable) each surround the blade in a custom lightning particle
-(`resource_pack/particles/legendary_saber_lightning.json`) on every hit
-(`behavior_pack/scripts/core/legendaryWeapons.js`).
+enchantable). Only the **saber** surrounds the blade in a custom lightning
+particle (`resource_pack/particles/legendary_saber_lightning.json`) on every
+hit (`behavior_pack/scripts/core/legendaryWeapons.js`) — that's a saber-only
+effect per spec, the sword's own thing is its two custom enchant books.
 
 Their icons (`resource_pack/textures/items/legendary_sword.png` /
 `legendary_saber.png`) are recovered from the original CraftyCraft source
 art (`tools/fix_legendary_weapon_icons.py`) after its alpha channel turned
-out to be entirely zero in the shipped asset. No custom attachable/geometry
-on top of that — same as every other tool in this pack, the engine's own
-flat-icon-to-3D rendering handles how they look in hand and on the ground.
+out to be entirely zero in the shipped asset. Custom (behavior-pack-defined)
+items don't get an automatic flat-icon-to-3D render in hand the way vanilla's
+own hardcoded items do, so each also gets a real 3D held model
+(`resource_pack/attachables/legendary_sword.entity.json` /
+`legendary_saber.entity.json`, built by `tools/gen_legendary_weapon_attachables.py`)
+using the same thin box-UV plane trick as the mouth-sword attachables
+(`tools/gen_mouth_sword.py`), textured with that same real icon art and
+bound to whichever hand slot holds the item via
+`q.item_slot_to_bone_name(c.item_slot)` — the same modern binding vanilla's
+own trident uses.
 
 Since there's no real anvil-hook in the Script API, their five custom
 enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,
