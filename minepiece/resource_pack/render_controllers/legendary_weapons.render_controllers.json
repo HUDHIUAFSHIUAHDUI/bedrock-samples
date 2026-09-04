@@ -1,0 +1,27 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.legendary_sword": {
+      "geometry": "geometry.legendary_sword",
+      "materials": [
+        {
+          "*": "material.default"
+        }
+      ],
+      "textures": [
+        "texture.legendary_sword"
+      ]
+    },
+    "controller.render.legendary_saber": {
+      "geometry": "geometry.legendary_saber",
+      "materials": [
+        {
+          "*": "material.default"
+        }
+      ],
+      "textures": [
+        "texture.legendary_saber"
+      ]
+    }
+  }
+}

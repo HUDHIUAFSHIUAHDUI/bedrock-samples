@@ -128,16 +128,34 @@ effect per spec, the sword's own thing is its two custom enchant books.
 Their icons (`resource_pack/textures/items/legendary_sword.png` /
 `legendary_saber.png`) are recovered from the original CraftyCraft source
 art (`tools/fix_legendary_weapon_icons.py`) after its alpha channel turned
-out to be entirely zero in the shipped asset. Custom (behavior-pack-defined)
-items don't get an automatic flat-icon-to-3D render in hand the way vanilla's
-own hardcoded items do, so each also gets a real 3D held model
-(`resource_pack/attachables/legendary_sword.entity.json` /
-`legendary_saber.entity.json`, built by `tools/gen_legendary_weapon_attachables.py`)
-using the same thin box-UV plane trick as the mouth-sword attachables
-(`tools/gen_mouth_sword.py`), textured with that same real icon art and
-bound to whichever hand slot holds the item via
-`q.item_slot_to_bone_name(c.item_slot)` — the same modern binding vanilla's
-own trident uses.
+out to be entirely zero in the shipped asset.
+
+Their real 3D held model turned out to already exist in the source addon,
+just not as a per-item attachable (there isn't one — checked exhaustively)
+but as an override of `minecraft:player`'s own client entity file
+(`client/entity/player.entity.json` in the original addon), adding a second
+always-present geometry shown conditionally via
+`query.get_equipped_item_name('main_hand') == 'sword'`. That's a real,
+currently-supported technique — the same query still drives vanilla's own
+`resource_pack/attachables/shield.entity.json` and
+`resource_pack/render_controllers/player.render_controllers.json` today.
+`resource_pack/entity/player.entity.json` here is current vanilla's own file
+with only new keys added (diffed to confirm nothing else changed) for two
+new conditional geometries, textures, animations, and render controllers,
+driven by `variable.legendary_sword` / `variable.legendary_saber` set in
+`pre_animation`. The geometry itself
+(`resource_pack/models/entity/legendary_sword_tool.geo.json` /
+`legendary_saber_tool.geo.json`, built by
+`tools/gen_legendary_weapon_playermodel.py`) is the exact, unmodified "tool"
+bone cube list from the source addon's `sword.geo.json`/`saber.geo.json`
+(pivot, rotation, all 12/7 cubes) — the only two things actually fixed
+were its render controller (the source had it referencing capitalized
+`Geometry.sword`/`Material.default`/`Texture.sword`, which isn't valid
+Molang — property access is case-sensitive) and its texture, which the
+source pointed at a completely different, wrong-sized 16x5 fragment
+instead of anything matching its own declared 58x19 UV layout — regenerated
+at the correct size, colored by cube role (handle/guard/blade) from the
+recovered icon art.
 
 Since there's no real anvil-hook in the Script API, their five custom
 enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,
