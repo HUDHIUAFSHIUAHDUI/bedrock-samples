@@ -1,0 +1,293 @@
+{
+  "minecraft:geometry" : [
+    {
+      "bones" : [
+        {
+          "cubes" : [
+
+          ],
+          "name" : "root",
+          "pivot" : [
+            0,
+            0,
+            0
+          ],
+          "rotation" : [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "cubes" : [
+
+          ],
+          "rotation" : [
+            0,
+            0,
+            0
+          ],
+          "name" : "waist",
+          "pivot" : [
+            0,
+            12,
+            0
+          ],
+          "parent" : "root"
+        },
+        {
+          "cubes" : [
+
+          ],
+          "rotation" : [
+            0,
+            0,
+            0
+          ],
+          "name" : "body",
+          "pivot" : [
+            0,
+            24,
+            0
+          ],
+          "parent" : "waist"
+        },
+        {
+          "cubes" : [
+
+          ],
+          "rotation" : [
+            0,
+            0,
+            0
+          ],
+          "name" : "rightarm",
+          "pivot" : [
+            -5,
+            22,
+            0
+          ],
+          "parent" : "body"
+        },
+        {
+          "cubes" : [
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                6,
+                1
+              ],
+              "uv" : [
+                0,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                10,
+                0
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                12,
+                2
+              ],
+              "uv" : [
+                4,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                15.5,
+                0
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                8,
+                1
+              ],
+              "uv" : [
+                10,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                18,
+                2
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                1,
+                1
+              ],
+              "uv" : [
+                14,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                27.5,
+                0
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                3,
+                1
+              ],
+              "uv" : [
+                18,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                11,
+                1.5
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                1,
+                1
+              ],
+              "uv" : [
+                22,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                10.5,
+                0.5
+              ]
+            },
+            {
+              "pivot" : [
+                -4.5,
+                16,
+                0.5
+              ],
+              "rotation" : [
+                0,
+                0,
+                0
+              ],
+              "size" : [
+                1,
+                1,
+                1
+              ],
+              "uv" : [
+                26,
+                0
+              ],
+              "inflate" : 0,
+              "origin" : [
+                -5,
+                13.5,
+                0.5
+              ]
+            }
+          ],
+          "rotation" : [
+            -45,
+            180,
+            0
+          ],
+          "name" : "tool",
+          "pivot" : [
+            -5,
+            11,
+            0
+          ],
+          "parent" : "rightarm"
+        }
+      ],
+      "description" : {
+        "visible_bounds_width" : 3,
+        "texture_height" : 14,
+        "texture_width" : 30,
+        "identifier" : "geometry.saber",
+        "visible_bounds_height" : 2.5,
+        "visible_bounds_offset" : [
+          0,
+          0.75,
+          0
+        ]
+      }
+    }
+  ],
+  "format_version" : "1.12.0"
+}

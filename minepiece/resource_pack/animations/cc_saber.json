@@ -1,0 +1,41 @@
+{
+  "animations" : {
+    "animation.saber.first_person.hold" : {
+      "bones" : {
+        "tool" : {
+          "position" : [
+            0,
+            7,
+            0
+          ],
+          "rotation" : [
+            5,
+            60,
+            -82.5
+          ]
+        }
+      },
+      "loop" : true
+    },
+    "animation.saber.hold" : {
+      "bones" : {
+        "inner_rotor" : {
+          "rotation" : [
+            0,
+            0,
+            "query.anim_time * 950"
+          ]
+        },
+        "rotator" : {
+          "rotation" : [
+            0,
+            0,
+            "query.anim_time * 850"
+          ]
+        }
+      },
+      "loop" : true
+    }
+  },
+  "format_version" : "1.8.0"
+}

@@ -20,6 +20,7 @@ import { registerLegendaryWeapons } from "./core/legendaryWeapons.js";
 import { registerCustomEnchants } from "./core/customEnchants.js";
 import { registerSwordBoost } from "./core/swordBoost.js";
 import { registerPowerRemoval } from "./core/powerRemoval.js";
+import { registerLegendaryStackGuard } from "./core/legendaryStackGuard.js";
 
 import "./fruits/sculk.js";
 import "./fruits/lava.js";
@@ -72,3 +73,4 @@ registerEngine("legendary weapons", registerLegendaryWeapons);
 registerEngine("custom enchants", registerCustomEnchants);
 registerEngine("sword boost", registerSwordBoost);
 registerEngine("power removal", registerPowerRemoval);
+registerEngine("legendary stack guard", registerLegendaryStackGuard);

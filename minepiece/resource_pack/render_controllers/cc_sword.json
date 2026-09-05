@@ -1,0 +1,16 @@
+{
+  "render_controllers" : {
+    "controller.render.sword" : {
+      "geometry" : "Geometry.sword",
+      "materials" : [
+        {
+          "*" : "Material.default"
+        }
+      ],
+      "textures" : [
+        "Texture.sword"
+      ]
+    }
+  },
+  "format_version" : "1.8.0"
+}

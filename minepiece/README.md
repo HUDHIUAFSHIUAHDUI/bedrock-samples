@@ -131,31 +131,31 @@ art (`tools/fix_legendary_weapon_icons.py`) after its alpha channel turned
 out to be entirely zero in the shipped asset.
 
 Their real 3D held model turned out to already exist in the source addon,
-just not as a per-item attachable (there isn't one — checked exhaustively)
-but as an override of `minecraft:player`'s own client entity file
+just not as a per-item attachable (there isn't one) but as an override of
+`minecraft:player`'s own client entity file
 (`client/entity/player.entity.json` in the original addon), adding a second
 always-present geometry shown conditionally via
 `query.get_equipped_item_name('main_hand') == 'sword'`. That's a real,
 currently-supported technique — the same query still drives vanilla's own
 `resource_pack/attachables/shield.entity.json` and
 `resource_pack/render_controllers/player.render_controllers.json` today.
-`resource_pack/entity/player.entity.json` here is current vanilla's own file
-with only new keys added (diffed to confirm nothing else changed) for two
-new conditional geometries, textures, animations, and render controllers,
-driven by `variable.legendary_sword` / `variable.legendary_saber` set in
-`pre_animation`. The geometry itself
-(`resource_pack/models/entity/legendary_sword_tool.geo.json` /
-`legendary_saber_tool.geo.json`, built by
-`tools/gen_legendary_weapon_playermodel.py`) is the exact, unmodified "tool"
-bone cube list from the source addon's `sword.geo.json`/`saber.geo.json`
-(pivot, rotation, all 12/7 cubes) — the only two things actually fixed
-were its render controller (the source had it referencing capitalized
-`Geometry.sword`/`Material.default`/`Texture.sword`, which isn't valid
-Molang — property access is case-sensitive) and its texture, which the
-source pointed at a completely different, wrong-sized 16x5 fragment
-instead of anything matching its own declared 58x19 UV layout — regenerated
-at the correct size, colored by cube role (handle/guard/blade) from the
-recovered icon art.
+
+`resource_pack/models/entity/sword.geo.json` / `saber.geo.json`,
+`resource_pack/render_controllers/cc_sword.json` / `cc_saber.json`,
+`resource_pack/animations/cc_sword.json` / `cc_saber.json`, and
+`resource_pack/textures/craftycraft/items/cc_sword.png` / `cc_saber.png`
+are byte-for-byte copies straight from the source addon — nothing in any of
+those six files is generated or modified. `resource_pack/entity/player.entity.json`
+is current vanilla's own file (not the outdated copy bundled in the source
+addon) with only new keys added — diffed line-by-line to confirm every
+existing vanilla field is untouched — wiring in those exact files via two
+new conditional geometries/textures/animations/render controllers, the same
+way the original addon did it. The one thing that couldn't be copied as-is:
+the trigger condition. The source checked for its own item's short name
+("sword"/"saber"); ours checks for `minepiece:legendary_sword`'s and
+`minepiece:legendary_saber`'s short names instead
+(`tools/gen_legendary_weapon_playermodel.py`), since it has to name our
+actual item to fire at all.
 
 Since there's no real anvil-hook in the Script API, their five custom
 enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,
@@ -163,6 +163,13 @@ Strongest Swordsman) are applied and combined by using a book in one hand
 against the matching weapon (or a second matching book) in the other —
 see `behavior_pack/scripts/core/customEnchants.js`. State is tracked via
 item dynamic properties and shown in the item's lore.
+
+Both items declare `minecraft:max_stack_size: 1` like any other sword, but
+`behavior_pack/scripts/core/legendaryStackGuard.js` also actively enforces
+it — a tick loop that splits any legendary sword/saber stack found above 1,
+in inventory or equipped, back down to singles — since reports of them
+stacking to 64 kept coming back with no reproducible cause found in the
+item files themselves.
 
 ## Sword offhand boost + sword-as-helmet
 

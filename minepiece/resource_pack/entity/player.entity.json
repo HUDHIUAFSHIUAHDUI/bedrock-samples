@@ -12,14 +12,14 @@
       "textures": {
         "default": "textures/entity/steve",
         "cape": "textures/entity/cape_invisible",
-        "legendary_sword": "textures/entity/legendary_sword_tool",
-        "legendary_saber": "textures/entity/legendary_saber_tool"
+        "sword": "textures/craftycraft/items/cc_sword",
+        "saber": "textures/craftycraft/items/cc_saber"
       },
       "geometry": {
         "default": "geometry.humanoid.custom",
         "cape": "geometry.cape",
-        "legendary_sword": "geometry.legendary_sword_tool",
-        "legendary_saber": "geometry.legendary_saber_tool"
+        "sword": "geometry.sword",
+        "saber": "geometry.saber"
       },
       "scripts": {
         "scale": "0.9375",
@@ -41,16 +41,22 @@
           "variable.map_angle = math.clamp(1 - variable.player_x_rotation / 45.1, 0.0, 1.0);",
           "variable.item_use_normalized = query.main_hand_item_use_duration / query.main_hand_item_max_duration;",
           "variable.riding_y_offset = query.is_riding_any_entity_of_type('minecraft:minecart', 'minecraft:boat', 'minecraft:chest_boat', 'minecraft:strider') ? -3.0 : 0.0;",
-          "variable.legendary_sword = query.get_equipped_item_name('main_hand') == 'legendary_sword';",
-          "variable.legendary_saber = query.get_equipped_item_name('main_hand') == 'legendary_saber';"
+          "variable.sword = query.get_equipped_item_name('main_hand') == 'legendary_sword';",
+          "variable.saber = query.get_equipped_item_name('main_hand') == 'legendary_saber';"
         ],
         "animate": [
           "root",
           {
-            "legendary_sword_first_person": "variable.legendary_sword && variable.is_first_person"
+            "saber_first_person": "variable.saber && variable.is_first_person"
           },
           {
-            "legendary_saber_first_person": "variable.legendary_saber && variable.is_first_person"
+            "saber": "variable.saber"
+          },
+          {
+            "sword_first_person": "variable.sword && variable.is_first_person"
+          },
+          {
+            "sword": "variable.sword"
           }
         ],
         "variables": {
@@ -136,8 +142,10 @@
         "third_person_melee_spear_hold": "animation.humanoid.melee_spear_hold",
         "third_person_melee_spear_attack": "animation.player.melee_spear_attack",
         "third_person_melee_spear_controller": "controller.animation.player.melee_spear",
-        "legendary_sword_first_person": "animation.legendary_sword.first_person.hold",
-        "legendary_saber_first_person": "animation.legendary_saber.first_person.hold"
+        "sword": "animation.sword.hold",
+        "sword_first_person": "animation.sword.first_person.hold",
+        "saber": "animation.saber.hold",
+        "saber_first_person": "animation.saber.first_person.hold"
       },
       "render_controllers": [
         {
@@ -156,10 +164,10 @@
           "controller.render.player.map": "variable.map_face_icon"
         },
         {
-          "controller.render.legendary_sword": "variable.legendary_sword"
+          "controller.render.sword": "variable.sword"
         },
         {
-          "controller.render.legendary_saber": "variable.legendary_saber"
+          "controller.render.saber": "variable.saber"
         }
       ],
       "enable_attachables": true
