@@ -144,18 +144,39 @@ currently-supported technique — the same query still drives vanilla's own
 `resource_pack/render_controllers/cc_sword.json` / `cc_saber.json`,
 `resource_pack/animations/cc_sword.json` / `cc_saber.json`, and
 `resource_pack/textures/craftycraft/items/cc_sword.png` / `cc_saber.png`
-are byte-for-byte copies straight from the source addon — nothing in any of
-those six files is generated or modified. `resource_pack/entity/player.entity.json`
-is current vanilla's own file (not the outdated copy bundled in the source
-addon) with only new keys added — diffed line-by-line to confirm every
-existing vanilla field is untouched — wiring in those exact files via two
-new conditional geometries/textures/animations/render controllers, the same
-way the original addon did it. The one thing that couldn't be copied as-is:
-the trigger condition. The source checked for its own item's short name
-("sword"/"saber"); ours checks for `minepiece:legendary_sword`'s and
-`minepiece:legendary_saber`'s short names instead
-(`tools/gen_legendary_weapon_playermodel.py`), since it has to name our
-actual item to fire at all.
+are byte-for-byte copies straight from the source addon. The geometry stays
+that way — same cubes, same pivot, same rotation, so where and how the
+blade sits in hand is exactly the source's own design — but the source's
+own render controller pointed the geometry at cc_sword.png/cc_saber.png, a
+16x5 / 16x7 fragment nowhere near its real 58x19 / 30x14 UV size, stretched
+flat across the whole model in-game; `tools/gen_legendary_weapon_texture.py`
+paints a properly-sized texture instead, an explicit color per cube
+(identified by each cube's own real position — handle, guard, blade, tip)
+using each weapon's established palette (gold hilt / silver blade / blue
+gem for the sword, gold guard / red-wrapped grip / near-black blade for the
+saber), so the guard reads as a distinct piece on both weapons.
+
+The source addon also never had a swing animation — its own
+`animation.sword.hold` only spins two bones ("inner_rotor"/"rotator") that
+don't exist anywhere in this geometry, so the blade always rendered frozen
+mid-attack. `resource_pack/animations/legendary_weapons_attack.animation.json`
+adds one, driven by the same `variable.attack_time` vanilla's own attack
+swing already uses so the timing matches, applied to this geometry's own
+unique "tool" bone rather than "rightarm" — "rightarm" is also a real bone
+name on the player's own body, and an animation targeting it applies to
+every currently-visible geometry sharing that name, so it would have
+doubled up on vanilla's own arm-swing rotation for every player, every
+attack, holding anything.
+
+`resource_pack/entity/player.entity.json` is current vanilla's own file
+(not the outdated copy bundled in the source addon) with only new keys
+added — diffed line-by-line to confirm every existing vanilla field is
+untouched — wiring all of this in the same way the original addon did.
+The one thing that couldn't be copied as-is: the trigger condition. The
+source checked for its own item's short name ("sword"/"saber"); ours
+checks for `minepiece:legendary_sword`'s and `minepiece:legendary_saber`'s
+short names instead (`tools/gen_legendary_weapon_playermodel.py`), since
+it has to name our actual item to fire at all.
 
 Since there's no real anvil-hook in the Script API, their five custom
 enchant books (Critical Knockback, Big Game Hunter I/II, Vampire Blood,

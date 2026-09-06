@@ -12,8 +12,8 @@
       "textures": {
         "default": "textures/entity/steve",
         "cape": "textures/entity/cape_invisible",
-        "sword": "textures/craftycraft/items/cc_sword",
-        "saber": "textures/craftycraft/items/cc_saber"
+        "sword": "textures/entity/legendary_sword_design",
+        "saber": "textures/entity/legendary_saber_design"
       },
       "geometry": {
         "default": "geometry.humanoid.custom",
@@ -57,6 +57,9 @@
           },
           {
             "sword": "variable.sword"
+          },
+          {
+            "legendary_weapons_attack": "variable.sword || variable.saber"
           }
         ],
         "variables": {
@@ -145,7 +148,8 @@
         "sword": "animation.sword.hold",
         "sword_first_person": "animation.sword.first_person.hold",
         "saber": "animation.saber.hold",
-        "saber_first_person": "animation.saber.first_person.hold"
+        "saber_first_person": "animation.saber.first_person.hold",
+        "legendary_weapons_attack": "animation.legendary_weapons.attack"
       },
       "render_controllers": [
         {
