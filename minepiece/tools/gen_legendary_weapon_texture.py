@@ -8,11 +8,11 @@ the saber in particular read as a nearly featureless black slab with no visible 
 Geometry itself (resource_pack/models/entity/sword.geo.json / saber.geo.json) and the pivot/
 rotation that determine where the weapon sits in hand are NOT touched by this — same exact cube
 list as the source addon, verbatim, unchanged. Only the texture painted onto that same UV layout
-changes, using real colors matched to the recovered icon art's established identity for each
-weapon (gold hilt / silver blade / blue gem for the sword; gold guard / red-wrapped grip / near-
-black blade for the saber) instead of one flat color per whole cube, and with an explicit color
-per cube (identified by inspecting each cube's actual origin/size/role) rather than a Y-threshold
-guess, so the guard reads as a distinct, visible piece on both weapons — not just the sword.
+changes, with an explicit color per cube (identified by inspecting each cube's actual origin/
+size/role) rather than a Y-threshold guess, so the guard reads as a distinct, visible piece on
+both weapons — not just the sword. Palette corrected against a reference the user provided
+directly: both weapons have a black blade, not silver — the sword's own identity is its gold
+guard and blue gem accents, the saber's is its gold guard and prominent red-wrapped grip.
 """
 import json
 from PIL import Image
@@ -21,8 +21,6 @@ BASE = "/home/user/bedrock-samples/minepiece"
 RP = f"{BASE}/resource_pack"
 
 GOLD = (184, 140, 47, 255)
-SILVER_BLADE = (200, 208, 210, 255)
-SILVER_BLADE_DARK = (150, 160, 163, 255)
 BLUE_GEM = (49, 39, 174, 255)
 DARK_GRIP = (35, 30, 28, 255)
 RED_GRIP = (150, 35, 28, 255)
@@ -39,9 +37,9 @@ SWORD_CUBE_COLORS = [
     GOLD,             # 2: guard piece, y20 (mirror)
     BLUE_GEM,         # 3: blade accent/gem, y27
     BLUE_GEM,         # 4: blade accent/gem, y27 (mirror)
-    SILVER_BLADE,     # 5: main blade, y21-37
-    SILVER_BLADE,     # 6: blade tip, y38-40
-    SILVER_BLADE_DARK,# 7: blade, y37-38
+    BLACK_BLADE,      # 5: main blade, y21-37 — black per reference, not silver
+    BLACK_BLADE,      # 6: blade tip, y38-40
+    BLACK_BLADE_DARK, # 7: blade, y37-38
     BLUE_GEM,         # 8: tip accent, y40-42
     GOLD,             # 9: guard prong, y19-22 (+z)
     GOLD,             # 10: guard prong, y19-22 (-z)

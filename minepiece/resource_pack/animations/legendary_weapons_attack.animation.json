@@ -6,9 +6,9 @@
       "bones": {
         "tool": {
           "rotation": [
-            0.0,
-            0.0,
-            "math.sin((1 - math.pow((1 - variable.attack_time), 4)) * 180) * 35.0"
+            "math.sin((1 - math.pow((1 - variable.attack_time), 4)) * 180) * -75.0",
+            "math.sin((1 - math.pow((1 - variable.attack_time), 4)) * 180) * 25.0",
+            0.0
           ]
         }
       }

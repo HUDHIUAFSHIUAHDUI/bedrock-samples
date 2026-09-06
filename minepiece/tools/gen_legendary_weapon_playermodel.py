@@ -61,7 +61,17 @@ WEAPONS = {
 # applied to "tool" — this geometry's own unique bone — as an additive offset on its existing
 # pose, not vanilla's exact formula/bone (see the module docstring for why "rightarm" is unsafe
 # to touch here).
-SWING_ROTATION_Z = "math.sin((1 - math.pow((1 - variable.attack_time), 4)) * 180) * 35.0"
+#
+# The blade's own length runs along local Y (e.g. the sword's main blade cube is size [1, 16, 3] —
+# thin in X, long in Y). The first version of this rotated Z, which is the axis running *through*
+# that thin X/some-Z cross-section — i.e. it span the blade around its own long axis, a drill/
+# twirl motion, not a swing. A swing has to rotate the blade's length *through* space, which means
+# rotating around X (sweeping the Y-length arc forward/back) — paired with a smaller Y-axis twist
+# so the slash reads as diagonal rather than a flat forward-back chop, and a bigger amplitude so
+# it's actually visible against the tool bone's own static -45/180/0 base pose.
+SWING_CURVE = "math.sin((1 - math.pow((1 - variable.attack_time), 4)) * 180)"
+SWING_ROTATION_X = f"{SWING_CURVE} * -75.0"
+SWING_ROTATION_Y = f"{SWING_CURVE} * 25.0"
 
 
 def write_attack_animation():
@@ -70,7 +80,7 @@ def write_attack_animation():
         "animations": {
             "animation.legendary_weapons.attack": {
                 "loop": True,
-                "bones": {"tool": {"rotation": [0.0, 0.0, SWING_ROTATION_Z]}},
+                "bones": {"tool": {"rotation": [SWING_ROTATION_X, SWING_ROTATION_Y, 0.0]}},
             }
         },
     }

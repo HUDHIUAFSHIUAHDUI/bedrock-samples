@@ -22,6 +22,18 @@ content (textures, geometry) per-world, and copying new files into
 `com.mojang` while the app is still open, or without a full restart, can keep
 serving the old cached version even though the files on disk are current.
 
+**This version changed both packs' UUIDs** (previously stuck reports of a
+blank inventory icon and an untranslated item name for the two legendary
+weapons specifically, with nothing wrong found in the files themselves,
+pointed at the world's own cached copy of those two — the icon atlas and
+language table are cached more aggressively, and separately from, the
+per-frame model/animation files, which is why the 3D model kept updating
+correctly across earlier fixes while the icon/name stayed frozen). Bedrock
+tracks "which pack a world has enabled" by UUID, so this update needs to be
+re-enabled on any existing world rather than just picked up automatically:
+open the world's settings, turn off the old "Minepiece" entries if they're
+still listed, and turn the new ones on. A brand new world will just work.
+
 ## If nothing seems to happen
 
 Every place scripts run — starting up, using an ability, eating a fruit — is
@@ -151,22 +163,27 @@ own render controller pointed the geometry at cc_sword.png/cc_saber.png, a
 16x5 / 16x7 fragment nowhere near its real 58x19 / 30x14 UV size, stretched
 flat across the whole model in-game; `tools/gen_legendary_weapon_texture.py`
 paints a properly-sized texture instead, an explicit color per cube
-(identified by each cube's own real position — handle, guard, blade, tip)
-using each weapon's established palette (gold hilt / silver blade / blue
-gem for the sword, gold guard / red-wrapped grip / near-black blade for the
-saber), so the guard reads as a distinct piece on both weapons.
+(identified by each cube's own real position — handle, guard, blade, tip).
+Both blades are black — not silver, corrected against a reference the user
+provided directly — with the sword's own identity being its gold guard and
+blue gem accents and the saber's being its gold guard and prominent
+red-wrapped grip, so the guard reads as a distinct piece on both weapons.
 
 The source addon also never had a swing animation — its own
 `animation.sword.hold` only spins two bones ("inner_rotor"/"rotator") that
 don't exist anywhere in this geometry, so the blade always rendered frozen
 mid-attack. `resource_pack/animations/legendary_weapons_attack.animation.json`
 adds one, driven by the same `variable.attack_time` vanilla's own attack
-swing already uses so the timing matches, applied to this geometry's own
-unique "tool" bone rather than "rightarm" — "rightarm" is also a real bone
-name on the player's own body, and an animation targeting it applies to
-every currently-visible geometry sharing that name, so it would have
-doubled up on vanilla's own arm-swing rotation for every player, every
-attack, holding anything.
+swing already uses so the timing matches. It rotates the geometry's own
+unique "tool" bone around X (the axis that sweeps the blade's length — the
+main blade cube is thin in X, long in Y — through an actual arc), not Z: an
+early version rotated Z, which passes *through* that same long axis, so it
+just spun/drilled the blade around its own length instead of swinging it.
+It's also applied to "tool" specifically rather than "rightarm" — "rightarm"
+is also a real bone name on the player's own body, and an animation
+targeting it applies to every currently-visible geometry sharing that name,
+so it would have doubled up on vanilla's own arm-swing rotation for every
+player, every attack, holding anything.
 
 `resource_pack/entity/player.entity.json` is current vanilla's own file
 (not the outdated copy bundled in the source addon) with only new keys
