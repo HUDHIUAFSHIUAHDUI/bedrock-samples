@@ -33,10 +33,10 @@ BLACK_BLADE_DARK = (15, 15, 16, 255)
 # tone, without needing per-pixel art that doesn't exist for this geometry.
 SWORD_CUBE_COLORS = [
     DARK_GRIP,        # 0: handle shaft, y10-20
-    GOLD,             # 1: guard piece, y20
-    GOLD,             # 2: guard piece, y20 (mirror)
-    BLUE_GEM,         # 3: blade accent/gem, y27
-    BLUE_GEM,         # 4: blade accent/gem, y27 (mirror)
+    BLUE_GEM,         # 1: guard piece, y20 — blue belongs right at the guard/grip junction
+    BLUE_GEM,         # 2: guard piece, y20 (mirror)
+    BLACK_BLADE,      # 3: blade, y27 — was a stray mid-blade "gem" that doesn't match the
+    BLACK_BLADE,      # 4: blade, y27 (mirror) — reference; blends into the blade instead
     BLACK_BLADE,      # 5: main blade, y21-37 — black per reference, not silver
     BLACK_BLADE,      # 6: blade tip, y38-40
     BLACK_BLADE_DARK, # 7: blade, y37-38
