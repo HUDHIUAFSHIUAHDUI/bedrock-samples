@@ -20,32 +20,43 @@ from PIL import Image
 BASE = "/home/user/bedrock-samples/minepiece"
 RP = f"{BASE}/resource_pack"
 
-GOLD = (184, 140, 47, 255)
+GOLD = (228, 188, 98, 255)
 BLUE_GEM = (49, 39, 174, 255)
-DARK_GRIP = (35, 30, 28, 255)
+WHITE_GRIP = (230, 227, 217, 255)
 RED_GRIP = (150, 35, 28, 255)
-BLACK_BLADE = (10, 10, 12, 255)
+BLACK_BLADE = (16, 15, 24, 255)
 BLACK_BLADE_DARK = (15, 15, 16, 255)
-# Sampled directly from the user's own reference drawing (the sword's main blade body is a true
-# near-black, not the lighter (30,30,32) gray previously used here — and it's not one flat tone
-# end to end: the reference shows a distinct lighter steel section right before the tip).
-STEEL_TIP = (174, 184, 185, 255)
+
+# All four constants above (and the sword-only WHITE_GRIP) were re-sampled directly from a pixel
+# analysis of the real toy sword photo the user built this design from (not the hand-drawn app
+# mockup used in the previous pass, which turned out to be a rougher approximation of it):
+#   - blade: a consistent gunmetal blue-black (~45,44,50 in the bright product photo) — never a
+#     neutral gray/black. The previous fix over-corrected to a near-neutral (10,10,12), which is
+#     why it still read as "wrong" in-game; this restores the blue bias, just darker.
+#   - guard gold: a brighter, more saturated gold (~215-248,173-215,86-118) than the old
+#     (184,140,47), which reads closer to bronze/olive by comparison.
+#   - grip: solid white cloth wrap, not a dark leather tone — confirmed by sampling clean off-white
+#     (250-255 range) across the whole wrapped section of the reference photo.
+#   - blue gem: (49,39,174) was already an exact match to the sampled gem color, unchanged.
+# The reference photo also shows the blade as one continuous material end to end, with no separate
+# lighter section near the tip — that came from the earlier app-drawn reference's own rendering
+# (likely a glossy highlight baked into its 3D preview) and isn't present in the real photo, so it
+# has been removed rather than kept as a second blade tone.
 
 # Explicit per-cube-index colors, identified by each cube's own origin/size in the real geometry
 # (see the module docstring in the earlier player-model tool for the full per-cube breakdown).
 # A (primary, edge) pair gives the cube's box-UV faces a *little* shading instead of one flat
 # tone, without needing per-pixel art that doesn't exist for this geometry.
 SWORD_CUBE_COLORS = [
-    DARK_GRIP,        # 0: handle shaft, y10-20
+    WHITE_GRIP,       # 0: handle shaft, y10-20 — white cloth wrap, not a dark grip
     GOLD,             # 1: guard piece, y20
     GOLD,             # 2: guard piece, y20 (mirror)
     BLUE_GEM,         # 3: blade accent/gem, y27 — confirmed correct position, don't move
     BLUE_GEM,         # 4: blade accent/gem, y27 (mirror)
-    BLACK_BLADE,      # 5: main blade, y21-37 — true near-black per reference, not gray
-    STEEL_TIP,        # 6: blade tip, y38-40 — reference shows this as a distinct lighter
-                       #    steel-gray section right before the point, not a continuation of
-                       #    the black blade
-    STEEL_TIP,        # 7: blade, y37-38 — same lighter section, one row below cube 6
+    BLACK_BLADE,      # 5: main blade, y21-37 — gunmetal blue-black per the real reference photo
+    BLACK_BLADE,      # 6: blade tip, y38-40 — same material as the rest of the blade; the
+                       #    reference shows no separate lighter tip section
+    BLACK_BLADE,      # 7: blade, y37-38
     BLUE_GEM,         # 8: tip accent, y40-42
     GOLD,             # 9: guard prong, y19-22 (+z)
     GOLD,             # 10: guard prong, y19-22 (-z)
