@@ -24,8 +24,12 @@ GOLD = (184, 140, 47, 255)
 BLUE_GEM = (49, 39, 174, 255)
 DARK_GRIP = (35, 30, 28, 255)
 RED_GRIP = (150, 35, 28, 255)
-BLACK_BLADE = (30, 30, 32, 255)
+BLACK_BLADE = (10, 10, 12, 255)
 BLACK_BLADE_DARK = (15, 15, 16, 255)
+# Sampled directly from the user's own reference drawing (the sword's main blade body is a true
+# near-black, not the lighter (30,30,32) gray previously used here — and it's not one flat tone
+# end to end: the reference shows a distinct lighter steel section right before the tip).
+STEEL_TIP = (174, 184, 185, 255)
 
 # Explicit per-cube-index colors, identified by each cube's own origin/size in the real geometry
 # (see the module docstring in the earlier player-model tool for the full per-cube breakdown).
@@ -33,13 +37,15 @@ BLACK_BLADE_DARK = (15, 15, 16, 255)
 # tone, without needing per-pixel art that doesn't exist for this geometry.
 SWORD_CUBE_COLORS = [
     DARK_GRIP,        # 0: handle shaft, y10-20
-    BLUE_GEM,         # 1: guard piece, y20 — blue belongs right at the guard/grip junction
-    BLUE_GEM,         # 2: guard piece, y20 (mirror)
-    BLACK_BLADE,      # 3: blade, y27 — was a stray mid-blade "gem" that doesn't match the
-    BLACK_BLADE,      # 4: blade, y27 (mirror) — reference; blends into the blade instead
-    BLACK_BLADE,      # 5: main blade, y21-37 — black per reference, not silver
-    BLACK_BLADE,      # 6: blade tip, y38-40
-    BLACK_BLADE_DARK, # 7: blade, y37-38
+    GOLD,             # 1: guard piece, y20
+    GOLD,             # 2: guard piece, y20 (mirror)
+    BLUE_GEM,         # 3: blade accent/gem, y27 — confirmed correct position, don't move
+    BLUE_GEM,         # 4: blade accent/gem, y27 (mirror)
+    BLACK_BLADE,      # 5: main blade, y21-37 — true near-black per reference, not gray
+    STEEL_TIP,        # 6: blade tip, y38-40 — reference shows this as a distinct lighter
+                       #    steel-gray section right before the point, not a continuation of
+                       #    the black blade
+    STEEL_TIP,        # 7: blade, y37-38 — same lighter section, one row below cube 6
     BLUE_GEM,         # 8: tip accent, y40-42
     GOLD,             # 9: guard prong, y19-22 (+z)
     GOLD,             # 10: guard prong, y19-22 (-z)
